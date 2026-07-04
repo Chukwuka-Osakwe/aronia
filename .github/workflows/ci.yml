@@ -1,0 +1,40 @@
+name: CI
+
+# Runs on every push to main and on every pull request. A fresh, clean machine
+# each time — this is what catches "works on my machine" (uncommitted deps, etc.).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Supersede in-flight runs on the same ref so only the latest commit is verified.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Clean, lockfile-exact install — fails if package-lock.json is out of sync.
+      - run: npm ci
+
+      # Types: svelte-check must report 0 errors (0 warnings is the house bar too).
+      - run: npm run check
+
+      # WCAG AA text-contrast gate — fails if any token pair drifts below 4.5:1.
+      - run: npm run check:contrast
+
+      # Build the docs site (prerender) AND package the library (svelte-package +
+      # publint). Catches broken imports, prerender failures, and packaging issues.
+      - run: npm run build

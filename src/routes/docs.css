@@ -1,0 +1,107 @@
+/* Docs-chrome design tokens + base styles.
+ *
+ * These style the documentation SITE itself — deliberately separate from the
+ * component `--nb-*` (Neo-Brutalism) tokens, and neutral so the components stand
+ * out against them. One type scale + one spacing rhythm, referenced everywhere,
+ * so the chrome stays consistent as more styles are added.
+ *
+ * Chrome type is self-hosted so the docs look identical on every platform — not
+ * left to each OS's system font. The chrome is deliberately ALL-MONO: IBM Plex
+ * Mono for everything, with Geist Mono reserved for the details card. Components
+ * bring their own type (e.g. Archivo for Neo-Brutalism); this is the docs' brand.
+ */
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@fontsource/ibm-plex-mono/700.css';
+@import '@fontsource-variable/geist-mono';
+
+:root {
+	/* colour */
+	--doc-ink: #111111;
+	--doc-bg: #f4f4f0;
+	--doc-panel: #ffffff;
+	--doc-line: #e8e8e4; /* hairline dividers */
+	--doc-muted: #6f6f68; /* secondary text */
+	--doc-accent: #ffe600; /* the one brand pop (active nav) */
+
+	/* type */
+	/* Primary docs type — IBM Plex Mono (the chrome is all-mono by design). */
+	--doc-font: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+	/* Geist Mono — reserved for the details card only. */
+	--doc-code: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+	/* type scale */
+	--doc-h1: 2.5rem;
+	--doc-lede: 1.0625rem; /* 17px */
+	--doc-body: 0.9375rem; /* 15px */
+	--doc-sm: 0.8125rem; /* 13px */
+	--doc-xs: 0.75rem; /* 12px section headings */
+	--doc-label: 0.6875rem; /* 11px uppercase micro-labels */
+
+	--doc-tracking-label: 0.09em;
+
+	/* spacing rhythm */
+	--doc-gap-section: 2rem; /* 32px */
+	--doc-gap-pane: 3rem;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--doc-bg);
+	color: var(--doc-ink);
+	font-family: var(--doc-font);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	/* pretty avoids orphans in body copy; inherited, so it reaches everywhere. */
+	text-wrap: pretty;
+}
+
+/* Headings balance across their lines instead of leaving a lonely last word. */
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+
+/* Hidden scrollbars everywhere (functional, no visible bar). */
+* {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
+/* Scroll affordance for the hidden-scrollbar regions: a soft shadow at the top
+   and/or bottom edge that appears ONLY when there's more content that way, and
+   fades out at the extremes. Pure CSS (no JS) via the background-attachment trick:
+   opaque "cover" gradients (attachment: local — they move WITH the content) sit
+   over the shadow at each end and slide away as you scroll to reveal it; the
+   shadows themselves (attachment: scroll) stay pinned to the viewport edges. The
+   covers are panel-white — update the two rgb(255 255 255) stops if --doc-panel
+   ever stops being #fff. */
+.scroll-shadows {
+	/* Consumer-tunable: edge-shadow colour/strength and height. Defaults suit the
+	   narrow nav; wider/airier regions (the props rail) can turn these up. */
+	--scroll-shadow-color: rgb(17 17 17 / 0.16);
+	--scroll-shadow-size: 14px;
+	background:
+		linear-gradient(var(--doc-panel) 30%, rgb(255 255 255 / 0)) center top,
+		linear-gradient(rgb(255 255 255 / 0), var(--doc-panel) 70%) center bottom,
+		radial-gradient(farthest-side at 50% 0, var(--scroll-shadow-color), rgb(17 17 17 / 0)) center top,
+		radial-gradient(farthest-side at 50% 100%, var(--scroll-shadow-color), rgb(17 17 17 / 0)) center bottom;
+	background-repeat: no-repeat;
+	background-size:
+		100% 44px,
+		100% 44px,
+		100% var(--scroll-shadow-size),
+		100% var(--scroll-shadow-size);
+	background-attachment: local, local, scroll, scroll;
+	background-color: var(--doc-panel);
+}

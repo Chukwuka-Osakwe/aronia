@@ -1,0 +1,245 @@
+<script module lang="ts">
+	let uid = 0;
+</script>
+
+<script lang="ts">
+	import type { InputSize } from './options.js';
+	import '../styles/glassmorphism.css';
+
+	// Anchored menu built on two modern platform primitives instead of a JS lib:
+	//   • the native `popover` attribute → top-layer render, light-dismiss, Esc;
+	//   • CSS Anchor Positioning → tracks the trigger, flips up when cramped.
+	// We add role=menu/menuitem semantics + arrow-key roving on top.
+	type Props = {
+		size?: InputSize;
+		label?: string;
+		items?: string[];
+	};
+	let { size = 'md', label = 'Menu', items = [] }: Props = $props();
+
+	const menuId = `glass-menu-${uid++}`;
+	const anchorName = `--${menuId}`;
+	const visible = $derived(items.filter(Boolean));
+
+	let menuEl = $state<HTMLDivElement>();
+	let open = $state(false);
+
+	function menuItems(): HTMLButtonElement[] {
+		return [...(menuEl?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]') ?? [])];
+	}
+
+	function onToggle(e: ToggleEvent) {
+		open = e.newState === 'open';
+		if (open) menuItems()[0]?.focus();
+	}
+
+	function onKeydown(e: KeyboardEvent) {
+		const buttons = menuItems();
+		if (!buttons.length) return;
+		const i = buttons.indexOf(document.activeElement as HTMLButtonElement);
+		if (e.key === 'ArrowDown') {
+			e.preventDefault();
+			buttons[(i + 1) % buttons.length]?.focus();
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault();
+			buttons[(i - 1 + buttons.length) % buttons.length]?.focus();
+		} else if (e.key === 'Home') {
+			e.preventDefault();
+			buttons[0]?.focus();
+		} else if (e.key === 'End') {
+			e.preventDefault();
+			buttons[buttons.length - 1]?.focus();
+		}
+	}
+</script>
+
+<div class="glass-dropdown" data-size={size}>
+	<button
+		type="button"
+		class="glass-dropdown__trigger"
+		popovertarget={menuId}
+		aria-haspopup="menu"
+		aria-expanded={open}
+		style="anchor-name: {anchorName}"
+	>
+		{label}
+		<svg
+			class="glass-dropdown__chevron"
+			data-open={open}
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="3"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<polyline points="6 9 12 15 18 9" />
+		</svg>
+	</button>
+
+	<div
+		bind:this={menuEl}
+		id={menuId}
+		popover
+		class="glass-dropdown__menu"
+		role="menu"
+		tabindex="-1"
+		style="position-anchor: {anchorName}"
+		ontoggle={onToggle}
+		onkeydown={onKeydown}
+	>
+		{#each visible as item (item)}
+			<button
+				type="button"
+				role="menuitem"
+				class="glass-dropdown__item"
+				onclick={() => menuEl?.hidePopover()}
+			>
+				{item}
+			</button>
+		{/each}
+	</div>
+</div>
+
+<style>
+	.glass-dropdown {
+		display: inline-flex;
+	}
+	.glass-dropdown__trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-family: var(--glass-font);
+		font-weight: var(--glass-font-weight);
+		background: var(--glass-primary);
+		color: var(--glass-primary-ink);
+		-webkit-backdrop-filter: blur(var(--glass-blur));
+		backdrop-filter: blur(var(--glass-blur));
+		border: var(--glass-border);
+		border-color: rgba(255, 255, 255, 0.3);
+		border-radius: var(--glass-radius-sm);
+		box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+		cursor: pointer;
+		transition:
+			transform 160ms cubic-bezier(0.2, 0, 0, 1),
+			box-shadow 160ms ease,
+			background-color 160ms ease;
+	}
+	.glass-dropdown[data-size='sm'] .glass-dropdown__trigger {
+		font-size: var(--glass-size-sm-text);
+		padding: var(--glass-size-sm-pad);
+	}
+	.glass-dropdown[data-size='md'] .glass-dropdown__trigger {
+		font-size: var(--glass-size-md-text);
+		padding: var(--glass-size-md-pad);
+	}
+	.glass-dropdown[data-size='lg'] .glass-dropdown__trigger {
+		font-size: var(--glass-size-lg-text);
+		padding: var(--glass-size-lg-pad);
+	}
+	.glass-dropdown__trigger:hover {
+		transform: translateY(-1px);
+		box-shadow: var(--glass-shadow), var(--glass-highlight);
+	}
+	.glass-dropdown__trigger:active {
+		transform: translateY(0);
+	}
+	.glass-dropdown__chevron {
+		width: 1em;
+		height: 1em;
+		transition: transform 150ms ease;
+	}
+	.glass-dropdown__chevron[data-open='true'] {
+		transform: rotate(180deg);
+	}
+
+	.glass-dropdown__menu {
+		/* Reset the popover UA default (centred, margin auto) and anchor to trigger. */
+		margin: 0;
+		inset: auto;
+		top: calc(anchor(bottom) + 0.4rem);
+		left: anchor(left);
+		min-width: anchor-size(width);
+		position-try-fallbacks: flip-block;
+
+		padding: 0.35rem;
+		/* More-solid frosted surface — it floats over unknown content and holds text,
+		   so it leans opaque for reliable item contrast. */
+		background: rgba(255, 255, 255, 0.82);
+		-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.2));
+		backdrop-filter: blur(calc(var(--glass-blur) * 1.2));
+		border: var(--glass-border);
+		border-radius: var(--glass-radius);
+		box-shadow: var(--glass-shadow-lg), var(--glass-highlight);
+		flex-direction: column;
+		gap: 0.15rem;
+		/* Entry/exit: fade + unfold from the top (same treatment as the Modal). The
+		   overlay + display transitions (allow-discrete) keep the menu in the top
+		   layer through its exit, so it animates OUT instead of blinking away.
+		   Progressive enhancement — browsers without @starting-style just snap. */
+		opacity: 0;
+		transform: translateY(-6px) scale(0.97);
+		transform-origin: top center;
+		transition:
+			opacity 150ms ease,
+			transform 150ms cubic-bezier(0.2, 0, 0, 1),
+			overlay 150ms allow-discrete,
+			display 150ms allow-discrete;
+	}
+	.glass-dropdown__menu:popover-open {
+		display: flex;
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+	/* Entry start state (must be a separate rule for @starting-style to apply). */
+	@starting-style {
+		.glass-dropdown__menu:popover-open {
+			opacity: 0;
+			transform: translateY(-6px) scale(0.97);
+		}
+	}
+	.glass-dropdown__item {
+		text-align: left;
+		white-space: nowrap;
+		background: transparent;
+		border: none;
+		border-radius: calc(var(--glass-radius) - 0.35rem);
+		font-family: var(--glass-font);
+		font-weight: var(--glass-font-weight-medium);
+		color: var(--glass-ink);
+		cursor: pointer;
+		transition: background-color 120ms ease;
+	}
+	.glass-dropdown[data-size='sm'] .glass-dropdown__item {
+		font-size: var(--glass-size-xs-text);
+		padding: 0.4rem 0.8rem;
+	}
+	.glass-dropdown[data-size='md'] .glass-dropdown__item {
+		font-size: var(--glass-size-sm-text);
+		padding: 0.55rem 1rem;
+	}
+	.glass-dropdown[data-size='lg'] .glass-dropdown__item {
+		font-size: var(--glass-size-md-text);
+		padding: 0.7rem 1.2rem;
+	}
+	.glass-dropdown__item:hover,
+	.glass-dropdown__item:focus-visible {
+		outline: none;
+		background: color-mix(in srgb, var(--glass-accent) 14%, transparent);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.glass-dropdown__chevron {
+			transition: none;
+		}
+		.glass-dropdown__trigger:hover {
+			transform: none;
+		}
+		/* Snap open/closed — no fade or unfold. */
+		.glass-dropdown__menu,
+		.glass-dropdown__menu:popover-open {
+			transition: none;
+			transform: none;
+		}
+	}
+</style>
