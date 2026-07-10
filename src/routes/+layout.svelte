@@ -8,7 +8,7 @@
 
 	// Component pages use a full-height, non-scrolling content pane (only their
 	// right rail scrolls). Other pages scroll the content pane normally.
-	const fullBleed = $derived($page.route.id === '/[style]/[component]');
+	const fullBleed = $derived($page.route.id === '/[style=noDot]/[component=noDot]');
 
 	// The sidebar is scoped to ONE style ("library") at a time: the active route's
 	// style is expanded (its components listed); every other style collapses to a
