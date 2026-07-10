@@ -8,7 +8,7 @@
 
 	// Component pages use a full-height, non-scrolling content pane (only their
 	// right rail scrolls). Other pages scroll the content pane normally.
-	const fullBleed = $derived($page.route.id === '/[style]/[component]');
+	const fullBleed = $derived($page.route.id === '/[style=noDot]/[component=noDot]');
 
 	// The sidebar is scoped to ONE style ("library") at a time: the active route's
 	// style is expanded (its components listed); every other style collapses to a
@@ -31,7 +31,7 @@
 <div class="shell">
 	<aside class="sidebar">
 		<a class="brand" href="/">
-			Aesthetics<span>agent-friendly UI</span>
+			viny<span>agent-friendly visual library</span>
 		</a>
 
 		<!-- Scrolling middle: every style group lives here. New component items flow
@@ -132,19 +132,18 @@
 		overflow-y: auto;
 	}
 
-	/* Mirrors the right rail's "PROPS" heading: centered uppercase text with a
-	   full-bleed 1px rule spanning the sidebar (negative side margins counteract
-	   the sidebar's 1.25rem padding; padding keeps the text off the edges). */
+	/* A lowercase "viny" wordmark over an uppercase micro-label tagline, above a
+	   full-bleed 1px rule spanning the sidebar (negative side margins counteract the
+	   sidebar's 1.25rem padding; padding keeps the text off the edges). */
 	.brand {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 0.35rem;
 		text-align: center;
-		text-transform: uppercase;
-		font-size: 1rem; /* 16px, matching the PROPS heading */
-		font-weight: 500;
-		letter-spacing: var(--doc-tracking-label);
+		font-size: 1.15rem; /* the wordmark */
+		font-weight: 700;
+		letter-spacing: -0.01em; /* lowercase wants a touch tighter, not label tracking */
 		line-height: 1.1;
 		text-decoration: none;
 		color: var(--doc-ink);

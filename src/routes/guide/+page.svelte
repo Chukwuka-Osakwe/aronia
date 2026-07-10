@@ -32,7 +32,7 @@
 	];
 </script>
 
-<svelte:head><title>How to use · Aesthetics</title></svelte:head>
+<svelte:head><title>How to use · viny</title></svelte:head>
 
 <article class="guide">
 	<header class="guide__head">
