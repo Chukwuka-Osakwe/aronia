@@ -1,0 +1,25 @@
+<!--
+  Glassmorphism — RadioGroup (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./radio-group.css once. One <label> per option; mark the
+  selected option with data-checked on its label (mirror the radio's checked state):
+    data-checked  : "true" on the selected option's label
+    data-disabled : "true" on the group when disabled
+  Give every radio in a group the same `name`.
+-->
+<div class="glass-radio" role="radiogroup" data-disabled="false">
+  <label class="glass-radio__option" data-checked="true">
+    <input type="radio" class="glass-radio__input" name="plan" value="Free" checked />
+    <span class="glass-radio__dot"></span>
+    <span class="glass-radio__label">Free</span>
+  </label>
+  <label class="glass-radio__option" data-checked="false">
+    <input type="radio" class="glass-radio__input" name="plan" value="Pro" />
+    <span class="glass-radio__dot"></span>
+    <span class="glass-radio__label">Pro</span>
+  </label>
+  <label class="glass-radio__option" data-checked="false">
+    <input type="radio" class="glass-radio__input" name="plan" value="Team" />
+    <span class="glass-radio__dot"></span>
+    <span class="glass-radio__label">Team</span>
+  </label>
+</div>

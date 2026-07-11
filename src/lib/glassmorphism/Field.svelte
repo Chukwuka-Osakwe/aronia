@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import '../styles/glassmorphism.css';
+	import './css/field.css';
 
 	// A form-field wrapper: a label (with optional required mark) above a control
 	// (the children), and a help line or an error message below. A <label>, so
@@ -30,30 +31,3 @@
 		<span class="glass-field__msg">{help}</span>
 	{/if}
 </label>
-
-<style>
-	.glass-field {
-		display: inline-flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		font-family: var(--glass-font);
-		color: var(--glass-ink);
-	}
-	.glass-field__label {
-		font-size: var(--glass-size-sm-text);
-		font-weight: var(--glass-font-weight-semibold);
-	}
-	.glass-field__req {
-		color: var(--glass-danger-ink);
-	}
-	/* Help stays full-contrast ink; it's subordinated by SIZE + weight, never by
-	   lowered opacity — a dimmed help line would drop below WCAG AA. */
-	.glass-field__msg {
-		font-size: var(--glass-size-xs-text);
-		font-weight: var(--glass-font-weight-medium);
-	}
-	.glass-field__msg--error {
-		color: var(--glass-danger-ink);
-		font-weight: var(--glass-font-weight-semibold);
-	}
-</style>

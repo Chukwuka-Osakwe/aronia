@@ -1,0 +1,88 @@
+/* Glassmorphism — Toast/Toaster (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for the toast system. Shared by the Svelte skin
+ * (which imports it) and the aronia registry. The Svelte `:global(.glass-alert)`
+ * wrappers are dropped here since this whole file is already global. See
+ * DESIGN.md, Entries 31–34.
+ */
+
+.glass-toaster {
+	position: fixed;
+	top: 1.25rem;
+	right: 1.25rem;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: min(24rem, calc(100vw - 2.5rem));
+	/* Let clicks fall through the empty gaps; the toasts themselves opt back in. */
+	pointer-events: none;
+}
+.glass-toast {
+	position: relative;
+	pointer-events: auto;
+	animation: glass-toast-in 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+/* The toast reuses <Alert>, but a toast is one line, not a paragraph. Alert
+   top-aligns its icon (for multi-line prose); here we centre the icon with the
+   text and reserve room on the right so the message never runs under the ×. */
+.glass-toast .glass-alert {
+	align-items: center;
+	padding-right: 2.5rem;
+}
+.glass-toast .glass-alert__icon {
+	margin-top: 0; /* the 0.1em nudge is only for flex-start alignment */
+}
+@keyframes glass-toast-in {
+	from {
+		opacity: 0;
+		transform: translateX(0.75rem) scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0) scale(1);
+	}
+}
+/* Vertically centred on the toast, in the reserved right padding — aligned with
+   the (now centred) icon and message. */
+.glass-toast__close {
+	position: absolute;
+	top: 50%;
+	right: 0.5rem;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: 50%;
+	color: var(--glass-ink);
+	cursor: pointer;
+}
+/* Extend the click target to 40×40 without enlarging the visible button. */
+.glass-toast__close::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+.glass-toast__close svg {
+	width: 14px;
+	height: 14px;
+}
+.glass-toast__close:hover {
+	background: color-mix(in srgb, var(--glass-ink) 10%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.glass-toast {
+		animation: none;
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"name": "aronia",
+	"version": "0.0.1",
+	"description": "Copy an agent-friendly design language into your repo. `npx aronia add <component> --style <style>`.",
+	"type": "module",
+	"bin": {
+		"aronia": "index.js"
+	},
+	"scripts": {
+		"prepack": "node ../scripts/bundle-cli-registry.mjs"
+	},
+	"files": [
+		"index.js",
+		"r"
+	],
+	"engines": {
+		"node": ">=18"
+	},
+	"keywords": [
+		"design-system",
+		"ai",
+		"agent",
+		"components",
+		"registry"
+	],
+	"license": "MIT"
+}

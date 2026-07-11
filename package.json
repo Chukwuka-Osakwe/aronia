@@ -3,14 +3,18 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && npm run prepack",
+		"build": "npm run registry && vite build && npm run prepack",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync && svelte-package",
 		"prepack": "svelte-kit sync && svelte-package && publint",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"check:contrast": "node scripts/contrast-audit.mjs"
+		"check:contrast": "node scripts/contrast-audit.mjs",
+		"registry": "tsx scripts/build-registry.ts"
 	},
+	"workspaces": [
+		"cli"
+	],
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
@@ -39,6 +43,7 @@
 		"publint": "^0.3.21",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
+		"tsx": "^4.19.2",
 		"typescript": "^6.0.3",
 		"vite": "^7.3.6"
 	},

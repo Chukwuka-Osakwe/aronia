@@ -1,0 +1,19 @@
+<!--
+  Glassmorphism — Field (plain-HTML snippet, universal fallback).
+  A <label> wrapping a single control (Input/Textarea/Select). Include
+  ./tokens.css + ./field.css once. Attribute contract:
+    data-error : "true" when in the error state (swaps help → error treatment)
+  Structure: optional __label (with __req mark) → the control → __msg (help/error).
+-->
+<label class="glass-field" data-error="false">
+  <span class="glass-field__label">Email<span class="glass-field__req"> *</span></span>
+  <!-- your control here, e.g. <input class="glass-input" ...> -->
+  <span class="glass-field__msg">We'll never share it.</span>
+</label>
+
+<!-- Error state -->
+<label class="glass-field" data-error="true">
+  <span class="glass-field__label">Email</span>
+  <!-- control -->
+  <span class="glass-field__msg glass-field__msg--error">Enter a valid email.</span>
+</label>

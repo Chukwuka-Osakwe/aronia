@@ -1,0 +1,58 @@
+/* Glassmorphism — Textarea (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for Textarea. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–34.
+ */
+
+.glass-textarea {
+	display: block;
+	width: 100%;
+	font-family: var(--glass-font);
+	font-weight: var(--glass-font-weight-medium);
+	line-height: 1.5;
+	color: var(--glass-ink);
+	background: var(--glass-surface);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	border: var(--glass-border);
+	border-radius: var(--glass-radius-sm);
+	box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+	transition:
+		box-shadow 160ms ease,
+		border-color 160ms ease,
+		background-color 160ms ease;
+	/* vertical only: horizontal resize would fight the frosted box */
+	resize: vertical;
+}
+.glass-textarea::placeholder {
+	color: var(--glass-ink-soft);
+}
+
+.glass-textarea:focus,
+.glass-textarea[data-state='focus'] {
+	outline: none;
+	background: var(--glass-surface-strong);
+	border-color: var(--glass-accent);
+	box-shadow:
+		var(--glass-shadow-sm),
+		0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
+}
+
+.glass-textarea:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.glass-textarea[data-size='sm'] {
+	font-size: var(--glass-size-sm-text);
+	padding: var(--glass-size-sm-pad);
+}
+.glass-textarea[data-size='md'] {
+	font-size: var(--glass-size-md-text);
+	padding: var(--glass-size-md-pad);
+}
+.glass-textarea[data-size='lg'] {
+	font-size: var(--glass-size-lg-text);
+	padding: var(--glass-size-lg-pad);
+}

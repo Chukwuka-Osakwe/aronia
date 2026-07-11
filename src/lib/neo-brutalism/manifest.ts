@@ -33,6 +33,7 @@ export const neoBrutalism: StyleSpec = {
 		'Thick black borders, hard offset shadows (no blur), flat saturated colour, chunky heavy type (Archivo), and a tactile "shove" on press where the element presses into its own shadow.',
 	whenToUse:
 		'Bold, playful, high-contrast interfaces that want to feel raw, confident, and unmistakably digital.',
+	tokens: 'src/lib/styles/neo-brutalism.css',
 	components: [
 		{
 			id: 'button',
@@ -79,7 +80,17 @@ export const neoBrutalism: StyleSpec = {
 				{ name: 'children', description: 'The text shown on the button.' },
 				{ name: 'icon', description: 'Optional leading icon.' }
 			],
-			states: ['hover', 'active', 'focus']
+			states: ['hover', 'active', 'focus'],
+			styleClass: 'nb-btn',
+			dataAttrs: ['variant', 'size', 'shape'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/button.css',
+				skins: {
+					react: 'registry/neo-brutalism/button/Button.tsx',
+					svelte: 'src/lib/neo-brutalism/Button.svelte',
+					html: 'registry/neo-brutalism/button/button.html'
+				}
+			}
 		},
 		{
 			id: 'link',
@@ -119,7 +130,17 @@ export const neoBrutalism: StyleSpec = {
 				}
 			],
 			snippets: [{ name: 'children', description: 'The link text.' }],
-			states: ['hover', 'focus']
+			states: ['hover', 'focus'],
+			styleClass: 'nb-link',
+			dataAttrs: ['variant', 'active'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/link.css',
+				skins: {
+					react: 'registry/neo-brutalism/link/Link.tsx',
+					svelte: 'src/lib/neo-brutalism/Link.svelte',
+					html: 'registry/neo-brutalism/link/link.html'
+				}
+			}
 		},
 		{
 			id: 'card',
@@ -139,7 +160,17 @@ export const neoBrutalism: StyleSpec = {
 				{ name: 'children', description: 'The content shown inside the card.' },
 				{ name: 'header', description: 'Optional header region, divided by a hard rule.' },
 				{ name: 'footer', description: 'Optional footer region, divided by a hard rule.' }
-			]
+			],
+			styleClass: 'nb-card',
+			dataAttrs: ['variant'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/card.css',
+				skins: {
+					react: 'registry/neo-brutalism/card/Card.tsx',
+					svelte: 'src/lib/neo-brutalism/Card.svelte',
+					html: 'registry/neo-brutalism/card/card.html'
+				}
+			}
 		},
 		{
 			id: 'badge',
@@ -155,7 +186,17 @@ export const neoBrutalism: StyleSpec = {
 					default: 'primary'
 				}
 			],
-			snippets: [{ name: 'children', description: 'The text shown on the badge.' }]
+			snippets: [{ name: 'children', description: 'The text shown on the badge.' }],
+			styleClass: 'nb-badge',
+			dataAttrs: ['variant'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/badge.css',
+				skins: {
+					react: 'registry/neo-brutalism/badge/Badge.tsx',
+					svelte: 'src/lib/neo-brutalism/Badge.svelte',
+					html: 'registry/neo-brutalism/badge/badge.html'
+				}
+			}
 		},
 		{
 			id: 'input',
@@ -190,7 +231,17 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-input',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/input.css',
+				skins: {
+					react: 'registry/neo-brutalism/input/Input.tsx',
+					svelte: 'src/lib/neo-brutalism/Input.svelte',
+					html: 'registry/neo-brutalism/input/input.html'
+				}
+			}
 		},
 		{
 			id: 'textarea',
@@ -232,7 +283,17 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-textarea',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/textarea.css',
+				skins: {
+					react: 'registry/neo-brutalism/textarea/Textarea.tsx',
+					svelte: 'src/lib/neo-brutalism/Textarea.svelte',
+					html: 'registry/neo-brutalism/textarea/textarea.html'
+				}
+			}
 		},
 		{
 			id: 'toggle',
@@ -268,7 +329,17 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-toggle',
+			dataAttrs: ['size', 'checked'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/toggle.css',
+				skins: {
+					react: 'registry/neo-brutalism/toggle/Toggle.tsx',
+					svelte: 'src/lib/neo-brutalism/Toggle.svelte',
+					html: 'registry/neo-brutalism/toggle/toggle.html'
+				}
+			}
 		},
 		{
 			id: 'checkbox',
@@ -304,7 +375,17 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-checkbox',
+			dataAttrs: ['size', 'checked', 'disabled'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/checkbox.css',
+				skins: {
+					react: 'registry/neo-brutalism/checkbox/Checkbox.tsx',
+					svelte: 'src/lib/neo-brutalism/Checkbox.svelte',
+					html: 'registry/neo-brutalism/checkbox/checkbox.html'
+				}
+			}
 		},
 		{
 			id: 'radio-group',
@@ -339,7 +420,17 @@ export const neoBrutalism: StyleSpec = {
 					required: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-radio',
+			dataAttrs: ['checked', 'disabled'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/radio-group.css',
+				skins: {
+					react: 'registry/neo-brutalism/radio-group/RadioGroup.tsx',
+					svelte: 'src/lib/neo-brutalism/RadioGroup.svelte',
+					html: 'registry/neo-brutalism/radio-group/radio-group.html'
+				}
+			}
 		},
 		{
 			id: 'select',
@@ -381,7 +472,17 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				}
 			],
-			states: ['focus']
+			states: ['focus'],
+			styleClass: 'nb-select',
+			dataAttrs: ['size', 'disabled'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/select.css',
+				skins: {
+					react: 'registry/neo-brutalism/select/Select.tsx',
+					svelte: 'src/lib/neo-brutalism/Select.svelte',
+					html: 'registry/neo-brutalism/select/select.html'
+				}
+			}
 		},
 		{
 			id: 'field',
@@ -422,7 +523,17 @@ export const neoBrutalism: StyleSpec = {
 					description: 'The form control the field wraps.',
 					sample: 'input'
 				}
-			]
+			],
+			styleClass: 'nb-field',
+			dataAttrs: ['error'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/field.css',
+				skins: {
+					react: 'registry/neo-brutalism/field/Field.tsx',
+					svelte: 'src/lib/neo-brutalism/Field.svelte',
+					html: 'registry/neo-brutalism/field/field.html'
+				}
+			}
 		},
 		{
 			id: 'modal',
@@ -450,7 +561,17 @@ export const neoBrutalism: StyleSpec = {
 				{ name: 'header', description: 'The title region, divided by a hard rule.' },
 				{ name: 'children', description: 'The modal body content.' },
 				{ name: 'footer', description: 'The actions region, divided by a hard rule.' }
-			]
+			],
+			styleClass: 'nb-modal',
+			dataAttrs: ['has-header'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/modal.css',
+				skins: {
+					react: 'registry/neo-brutalism/modal/Modal.tsx',
+					svelte: 'src/lib/neo-brutalism/Modal.svelte',
+					html: 'registry/neo-brutalism/modal/modal.html'
+				}
+			}
 		},
 		{
 			id: 'alert',
@@ -480,7 +601,17 @@ export const neoBrutalism: StyleSpec = {
 					required: false
 				}
 			],
-			snippets: [{ name: 'children', description: 'The alert message.' }]
+			snippets: [{ name: 'children', description: 'The alert message.' }],
+			styleClass: 'nb-alert',
+			dataAttrs: ['variant', 'size'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/alert.css',
+				skins: {
+					react: 'registry/neo-brutalism/alert/Alert.tsx',
+					svelte: 'src/lib/neo-brutalism/Alert.svelte',
+					html: 'registry/neo-brutalism/alert/alert.html'
+				}
+			}
 		},
 		{
 			id: 'tabs',
@@ -509,7 +640,17 @@ export const neoBrutalism: StyleSpec = {
 					description: 'The active panel content; receives the active tab label.',
 					parameterized: true
 				}
-			]
+			],
+			styleClass: 'nb-tabs',
+			dataAttrs: ['active'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/tabs.css',
+				skins: {
+					react: 'registry/neo-brutalism/tabs/Tabs.tsx',
+					svelte: 'src/lib/neo-brutalism/Tabs.svelte',
+					html: 'registry/neo-brutalism/tabs/tabs.html'
+				}
+			}
 		},
 		{
 			id: 'accordion',
@@ -537,7 +678,16 @@ export const neoBrutalism: StyleSpec = {
 					description: 'The panel content for a section; receives the section label.',
 					parameterized: true
 				}
-			]
+			],
+			styleClass: 'nb-accordion',
+			files: {
+				style: 'src/lib/neo-brutalism/css/accordion.css',
+				skins: {
+					react: 'registry/neo-brutalism/accordion/Accordion.tsx',
+					svelte: 'src/lib/neo-brutalism/Accordion.svelte',
+					html: 'registry/neo-brutalism/accordion/accordion.html'
+				}
+			}
 		},
 		{
 			id: 'dropdown-menu',
@@ -565,7 +715,17 @@ export const neoBrutalism: StyleSpec = {
 					type: 'array',
 					default: ['Edit', 'Duplicate', 'Delete']
 				}
-			]
+			],
+			styleClass: 'nb-dropdown',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/dropdown-menu.css',
+				skins: {
+					react: 'registry/neo-brutalism/dropdown-menu/DropdownMenu.tsx',
+					svelte: 'src/lib/neo-brutalism/DropdownMenu.svelte',
+					html: 'registry/neo-brutalism/dropdown-menu/dropdown-menu.html'
+				}
+			}
 		},
 		{
 			id: 'spinner',
@@ -594,7 +754,17 @@ export const neoBrutalism: StyleSpec = {
 					type: 'string',
 					default: 'Loading'
 				}
-			]
+			],
+			styleClass: 'nb-spinner',
+			dataAttrs: ['size', 'speed'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/spinner.css',
+				skins: {
+					react: 'registry/neo-brutalism/spinner/Spinner.tsx',
+					svelte: 'src/lib/neo-brutalism/Spinner.svelte',
+					html: 'registry/neo-brutalism/spinner/spinner.html'
+				}
+			}
 		},
 		{
 			id: 'progress',
@@ -622,7 +792,17 @@ export const neoBrutalism: StyleSpec = {
 					type: 'boolean',
 					default: false
 				}
-			]
+			],
+			styleClass: 'nb-progress',
+			dataAttrs: ['size', 'show'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/progress.css',
+				skins: {
+					react: 'registry/neo-brutalism/progress/Progress.tsx',
+					svelte: 'src/lib/neo-brutalism/Progress.svelte',
+					html: 'registry/neo-brutalism/progress/progress.html'
+				}
+			}
 		},
 		{
 			id: 'skeleton',
@@ -658,7 +838,16 @@ export const neoBrutalism: StyleSpec = {
 					required: false,
 					placeholder: 'e.g. 8rem'
 				}
-			]
+			],
+			styleClass: 'nb-skeleton',
+			files: {
+				style: 'src/lib/neo-brutalism/css/skeleton.css',
+				skins: {
+					react: 'registry/neo-brutalism/skeleton/Skeleton.tsx',
+					svelte: 'src/lib/neo-brutalism/Skeleton.svelte',
+					html: 'registry/neo-brutalism/skeleton/skeleton.html'
+				}
+			}
 		},
 		{
 			id: 'toast',
@@ -684,7 +873,20 @@ export const neoBrutalism: StyleSpec = {
 					default: 2500
 				}
 			],
-			snippets: [{ name: 'children', description: 'The toast message (the first argument).' }]
+			snippets: [{ name: 'children', description: 'The toast message (the first argument).' }],
+			styleClass: 'nb-toaster',
+			registryDeps: ['alert'],
+			files: {
+				style: 'src/lib/neo-brutalism/css/toast.css',
+				skins: {
+					react: [
+						'registry/neo-brutalism/toast/toast.ts',
+						'registry/neo-brutalism/toast/Toaster.tsx'
+					],
+					svelte: ['src/lib/neo-brutalism/toast.svelte.ts', 'src/lib/neo-brutalism/Toaster.svelte'],
+					html: 'registry/neo-brutalism/toast/toast.html'
+				}
+			}
 		}
 	]
 };

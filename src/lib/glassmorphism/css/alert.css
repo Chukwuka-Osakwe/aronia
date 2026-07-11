@@ -1,0 +1,77 @@
+/* Glassmorphism — Alert (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for Alert. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–34.
+ */
+
+.glass-alert {
+	display: flex;
+	align-items: flex-start;
+	/* light frosted tint of the status colour; saturated colour goes to the rim */
+	background: color-mix(in srgb, var(--_alert-color) 24%, transparent);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	border: 1px solid color-mix(in srgb, var(--_alert-color) 55%, transparent);
+	border-radius: var(--glass-radius);
+	box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+	font-family: var(--glass-font);
+	color: var(--glass-ink);
+	/* base font-size (per size) drives the icon + title via em */
+	font-size: var(--glass-size-md-text);
+}
+
+/* Per-variant status colour — one token the fill, rim, and icon all derive from. */
+.glass-alert[data-variant='info'] {
+	--_alert-color: var(--glass-info);
+}
+.glass-alert[data-variant='success'] {
+	--_alert-color: var(--glass-success);
+}
+.glass-alert[data-variant='warning'] {
+	--_alert-color: var(--glass-warning);
+}
+.glass-alert[data-variant='error'] {
+	--_alert-color: var(--glass-danger);
+}
+
+/* size scale — one font-size + padding/gap per step; icon & title follow via em */
+.glass-alert[data-size='sm'] {
+	font-size: var(--glass-size-sm-text);
+	gap: 0.625rem;
+	padding: 0.75rem 1rem;
+}
+.glass-alert[data-size='md'] {
+	font-size: var(--glass-size-md-text);
+	gap: 0.75rem;
+	padding: 1rem 1.25rem;
+}
+.glass-alert[data-size='lg'] {
+	font-size: var(--glass-size-lg-text);
+	gap: 0.875rem;
+	padding: 1.25rem 1.5rem;
+}
+
+.glass-alert__icon {
+	flex: none;
+	width: 1.5em;
+	height: 1.5em;
+	/* nudge to align with the first line of text */
+	margin-top: 0.1em;
+	color: var(--_alert-color);
+}
+.glass-alert__icon svg {
+	width: 100%;
+	height: 100%;
+}
+
+.glass-alert__title {
+	margin: 0 0 0.25rem;
+	font-size: 1.05em;
+	font-weight: var(--glass-font-weight);
+}
+.glass-alert__message {
+	font-weight: var(--glass-font-weight-regular);
+	font-size: 1em;
+	line-height: 1.4;
+}

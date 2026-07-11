@@ -1,0 +1,54 @@
+/* Neo-Brutalism — Textarea (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on .nb-/[data-*] selectors — the framework-
+ * agnostic design language for Textarea. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–33.
+ */
+
+.nb-textarea {
+	display: block;
+	width: 100%;
+	font-family: var(--nb-font);
+	font-weight: var(--nb-font-weight-medium);
+	line-height: 1.5;
+	color: var(--nb-ink);
+	background: var(--nb-paper);
+	border: var(--nb-border);
+	border-radius: var(--nb-radius);
+	box-shadow: var(--nb-shadow);
+	transition: var(--nb-transition);
+	/* Only vertical resize: horizontal resize would break the hard-shadow box. */
+	resize: vertical;
+}
+.nb-textarea::placeholder {
+	color: var(--nb-ink);
+	opacity: 0.4;
+}
+
+/* Focus keeps the box still (no shove) but pops an accent shadow, exactly like
+   Input. Mirrored by [data-state='focus'] so the docs can force it. */
+.nb-textarea:focus,
+.nb-textarea[data-state='focus'] {
+	outline: none;
+	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
+}
+
+/* Disabled — inert greyed field (matches Input). */
+.nb-textarea:disabled {
+	background: var(--nb-muted);
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.nb-textarea[data-size='sm'] {
+	font-size: var(--nb-size-sm-text);
+	padding: var(--nb-size-sm-pad);
+}
+.nb-textarea[data-size='md'] {
+	font-size: var(--nb-size-md-text);
+	padding: var(--nb-size-md-pad);
+}
+.nb-textarea[data-size='lg'] {
+	font-size: var(--nb-size-lg-text);
+	padding: var(--nb-size-lg-pad);
+}

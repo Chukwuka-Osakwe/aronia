@@ -6,6 +6,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import '../styles/neo-brutalism.css';
+	import './css/modal.css';
 
 	// Built on the native <dialog> + showModal(): top-layer rendering (no z-index or
 	// portal), a real focus trap, Esc-to-close, focus restored to the trigger, and a
@@ -97,78 +98,3 @@
 		<div class="nb-modal__footer">{@render footer()}</div>
 	{/if}
 </dialog>
-
-<style>
-	.nb-modal {
-		padding: 0;
-		border: var(--nb-border);
-		border-radius: var(--nb-radius);
-		background: var(--nb-paper);
-		color: var(--nb-ink);
-		box-shadow: var(--nb-shadow-lg);
-		width: 100%;
-		max-width: min(92vw, 32rem);
-		font-family: var(--nb-font);
-	}
-	/* Flat wash, no blur — that's not NB. */
-	.nb-modal::backdrop {
-		background: var(--nb-backdrop);
-	}
-
-	.nb-modal__close {
-		position: absolute;
-		top: 0.6rem;
-		right: 0.6rem;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		background: transparent;
-		border: none;
-		color: var(--nb-ink);
-		cursor: pointer;
-	}
-	/* Extend the click target to 40×40 without enlarging the visible button. */
-	.nb-modal__close::before {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: 40px;
-		height: 40px;
-		transform: translate(-50%, -50%);
-	}
-	.nb-modal__close svg {
-		width: 18px;
-		height: 18px;
-	}
-	.nb-modal__close:hover {
-		background: var(--nb-muted);
-	}
-
-	.nb-modal__header {
-		padding: 1.25rem 3rem 1.25rem 1.5rem; /* right room for the close button */
-		border-bottom: var(--nb-border);
-		font-size: var(--nb-size-title);
-		font-weight: var(--nb-font-weight);
-	}
-	.nb-modal__body {
-		padding: 1.5rem;
-		font-weight: var(--nb-font-weight-regular);
-		line-height: 1.5;
-	}
-	/* With no header, the close button floats over the body's top-right — give the
-	   body top clearance so its first line drops below the button. */
-	.nb-modal[data-has-header='false'] .nb-modal__body {
-		padding-top: 3rem;
-	}
-	.nb-modal__footer {
-		padding: 1.25rem 1.5rem;
-		border-top: var(--nb-border);
-		display: flex;
-		gap: 0.75rem;
-		justify-content: flex-end;
-	}
-</style>

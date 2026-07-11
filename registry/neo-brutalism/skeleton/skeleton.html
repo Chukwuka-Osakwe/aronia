@@ -1,0 +1,19 @@
+<!--
+  Neo-Brutalism — Skeleton (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./skeleton.css once. Shape via modifier class:
+    nb-skeleton--text   : N stacked lines (make the last one short)
+    nb-skeleton--rect   : a single block (set width + height)
+    nb-skeleton--circle : a disc (width = diameter)
+-->
+<!-- Text: several lines, last one short -->
+<div class="nb-skeleton nb-skeleton--text" role="status" aria-label="Loading">
+  <span class="nb-skeleton__bar" style="width: 100%"></span>
+  <span class="nb-skeleton__bar" style="width: 100%"></span>
+  <span class="nb-skeleton__bar" style="width: 60%"></span>
+</div>
+
+<!-- Rect -->
+<span class="nb-skeleton nb-skeleton--rect" role="status" aria-label="Loading" style="width: 12rem; height: 8rem"></span>
+
+<!-- Circle -->
+<span class="nb-skeleton nb-skeleton--circle" role="status" aria-label="Loading" style="width: 3rem"></span>

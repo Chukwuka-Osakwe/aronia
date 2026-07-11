@@ -1,0 +1,72 @@
+/* Glassmorphism — RadioGroup (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for RadioGroup. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–34.
+ */
+
+.glass-radio {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+.glass-radio[data-disabled='true'] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.glass-radio__option {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.625rem;
+	cursor: pointer;
+	font-family: var(--glass-font);
+	font-weight: var(--glass-font-weight);
+	color: var(--glass-ink);
+}
+
+/* Native input kept present & focusable, visually hidden; the dot mirrors it. */
+.glass-radio__input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+}
+
+.glass-radio__dot {
+	position: relative;
+	flex: none;
+	width: 24px;
+	height: 24px;
+	background: var(--glass-surface-strong);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	border: var(--glass-border);
+	border-radius: 50%;
+	box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+	transition: background-color 160ms ease;
+}
+/* Selected: indigo fill + a white inner dot (≈5:1, over the 3:1 non-text bar). */
+.glass-radio__option[data-checked='true'] .glass-radio__dot {
+	background: var(--glass-primary);
+	border-color: transparent;
+}
+.glass-radio__option[data-checked='true'] .glass-radio__dot::after {
+	content: '';
+	position: absolute;
+	inset: 7px;
+	background: #fff;
+	border-radius: 50%;
+}
+
+/* Focus ring on the dot — real keyboard focus, or docs-forced on the selection. */
+.glass-radio__input:focus-visible + .glass-radio__dot,
+.glass-radio[data-state='focus'] .glass-radio__option[data-checked='true'] .glass-radio__dot {
+	box-shadow:
+		var(--glass-shadow-sm),
+		0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
+}

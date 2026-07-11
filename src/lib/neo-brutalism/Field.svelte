@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import '../styles/neo-brutalism.css';
+	import './css/field.css';
 
 	// A form-field wrapper: a label (with optional required mark) above a control
 	// (the children), and a help line or an error message below. Implemented as a
@@ -32,30 +33,3 @@
 		<span class="nb-field__msg">{help}</span>
 	{/if}
 </label>
-
-<style>
-	.nb-field {
-		display: inline-flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		font-family: var(--nb-font);
-		color: var(--nb-ink);
-	}
-	.nb-field__label {
-		font-size: var(--nb-size-sm-text); /* 14px */
-		font-weight: var(--nb-font-weight-semibold);
-	}
-	.nb-field__req {
-		color: var(--nb-danger-ink);
-	}
-	/* Help is subordinated by SIZE + weight, not opacity — a dimmed help line drops
-	   below WCAG AA. (Full ink at 12px/500 vs the 14px/700 label reads as secondary.) */
-	.nb-field__msg {
-		font-size: var(--nb-size-xs-text); /* 12px */
-		font-weight: var(--nb-font-weight-regular);
-	}
-	.nb-field__msg--error {
-		color: var(--nb-danger-ink);
-		font-weight: var(--nb-font-weight-semibold);
-	}
-</style>
