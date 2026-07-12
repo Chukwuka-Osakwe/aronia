@@ -1,0 +1,18 @@
+# aronia
+
+> An agent-friendly design language delivered shadcn-style: `npx aronia add` copies real component source (tokens, styles, a thin framework skin) plus a machine-readable manifest into a project's repo. Point an agent at the manifest and it can use every component correctly from the schema alone.
+
+Two design-language families, 20 components each: `neo-brutalism` (bold, high-contrast, hard shadows) and `glassmorphism` (frosted, layered — needs a non-uniform backdrop). A component's contract is the same across frameworks; only a ~30-line skin differs, selected via `--framework react|svelte|html`.
+
+## Registry
+
+- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document
+- [Neo-Brutalism manifest](/neo-brutalism/manifest.json): the neo-brutalism family only
+- [Glassmorphism manifest](/glassmorphism/manifest.json): the glassmorphism family only
+- [Registry index](/r/index.json): every per-component item and the frameworks it ships
+- Per-component item — `/r/{style}/{component}.json`: embeds the prop spec, tokens, component CSS, and every framework skin
+
+## Docs
+
+- [Guide](/guide): how to add components and point your agent at them
+- [Home](/): overview and live component playgrounds

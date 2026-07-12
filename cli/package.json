@@ -2,6 +2,13 @@
 	"name": "aronia",
 	"version": "0.0.1",
 	"description": "Copy an agent-friendly design language into your repo. `npx aronia add <component> --style <style>`.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Chukwuka-Osakwe/aronia.git",
+		"directory": "cli"
+	},
+	"homepage": "https://github.com/Chukwuka-Osakwe/aronia#readme",
+	"bugs": "https://github.com/Chukwuka-Osakwe/aronia/issues",
 	"type": "module",
 	"bin": {
 		"aronia": "index.js"

@@ -1,18 +1,40 @@
 <script lang="ts">
 	import { manifest } from '$lib/index.js';
 	import { registry } from './registry.js';
+
+	// The headline call-to-action: aronia is delivered by a command, not an import.
+	const INSTALL = 'npx aronia add button --style neo-brutalism';
+	let copied = $state(false);
+	async function copyInstall() {
+		try {
+			await navigator.clipboard.writeText(INSTALL);
+			copied = true;
+			setTimeout(() => (copied = false), 1500);
+		} catch {
+			// Clipboard blocked (insecure context / permissions) — the command is
+			// still on screen to copy by hand; nothing to recover.
+		}
+	}
 </script>
 
 <div class="home">
 	<header>
-		<p class="eyebrow">Component Library · v{manifest.version}</p>
-		<h1>An agent-friendly aesthetic library</h1>
+		<p class="eyebrow">Design language · v{manifest.version}</p>
+		<h1>An agent-friendly design language</h1>
 		<p class="lede">
-			A Svelte component library indexed by named visual styles, with enumerated APIs and a
-			machine-readable
-			<a href="/manifest.json">manifest</a> — built so both humans and AI agents can use it correctly
-			from the schema alone.
+			Run one command and aronia copies real, editable component source — plus a machine-readable
+			<a href="/manifest.json">manifest</a> — into your repo. Your coding agent reads it as a worked
+			example and builds the rest of your UI in the same style. Not a black-box dependency; a
+			language your agent learns from your own code.
 		</p>
+
+		<div class="install">
+			<code>{INSTALL}</code>
+			<button class="install__copy" onclick={copyInstall} aria-label="Copy install command">
+				{copied ? 'Copied' : 'Copy'}
+			</button>
+		</div>
+		<p class="install__hint">New here? Read the <a href="/guide">guide</a>.</p>
 	</header>
 
 	<!-- One card per style, rendered in that style's OWN Card component — so each
@@ -66,6 +88,52 @@
 		color: var(--doc-muted);
 		line-height: 1.6;
 		margin: 0.9rem 0 0;
+	}
+
+	/* The install command is the primary CTA — a bordered slab with the docs' hard
+	   shadow (same language as the guide's code blocks). Sized to its content so it
+	   reads as one tappable command, not a full-width bar. */
+	.install {
+		display: inline-flex;
+		align-items: center;
+		gap: 1rem;
+		margin: 1.75rem 0 0.75rem;
+		max-width: 100%;
+		background: var(--doc-panel);
+		border: 1px solid var(--doc-ink);
+		box-shadow: 4px 4px 0 0 var(--doc-ink);
+		padding: 0.7rem 0.7rem 0.7rem 1.15rem;
+	}
+	.install code {
+		font-family: var(--doc-code);
+		font-size: 0.95rem;
+		white-space: nowrap;
+		overflow-x: auto;
+	}
+	.install__copy {
+		flex-shrink: 0;
+		font-family: var(--doc-font);
+		font-size: var(--doc-xs);
+		text-transform: uppercase;
+		letter-spacing: var(--doc-tracking-label);
+		border: 1px solid var(--doc-ink);
+		background: transparent;
+		color: var(--doc-ink);
+		padding: 0.35rem 0.7rem;
+		cursor: pointer;
+	}
+	.install__copy:hover {
+		background: var(--doc-ink);
+		color: var(--doc-panel);
+	}
+	.install__hint {
+		font-size: var(--doc-sm);
+		color: var(--doc-muted);
+		margin: 0;
+	}
+	.install__hint a {
+		color: var(--doc-ink);
+		text-underline-offset: 3px;
 	}
 
 	.styles {
