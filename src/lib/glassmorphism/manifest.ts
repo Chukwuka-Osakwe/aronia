@@ -12,6 +12,8 @@ import {
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
 	INPUT_SIZES,
+	INPUT_SHAPES,
+	FIELD_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS
 } from './options.js';
@@ -196,7 +198,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Input',
 			import: 'glassmorphism.Input',
 			styleClass: 'glass-input',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/input.css',
 				skins: {
@@ -214,6 +216,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style — square, or a fully rounded pill.',
+					type: 'enum',
+					values: INPUT_SHAPES,
+					default: 'square'
 				},
 				{
 					name: 'value',
@@ -478,7 +487,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Field',
 			import: 'glassmorphism.Field',
 			styleClass: 'glass-field',
-			dataAttrs: ['error'],
+			dataAttrs: ['error', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/field.css',
 				skins: {
@@ -514,6 +523,13 @@ export const glassmorphism: StyleSpec = {
 					description: 'Shows a required mark after the label.',
 					type: 'boolean',
 					default: false
+				},
+				{
+					name: 'shape',
+					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
+					type: 'enum',
+					values: FIELD_SHAPES,
+					default: 'square'
 				}
 			],
 			snippets: [

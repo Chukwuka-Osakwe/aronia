@@ -29,3 +29,8 @@
 	color: var(--nb-danger-ink);
 	font-weight: var(--nb-font-weight-semibold);
 }
+
+/* shape — pill rounds the wrapped control (Field has no box of its own). */
+.nb-field[data-shape='pill'] .nb-input {
+	border-radius: var(--nb-radius-pill);
+}

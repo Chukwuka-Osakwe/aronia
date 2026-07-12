@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { InputSize } from './options.js';
+	import type { InputSize, InputShape } from './options.js';
 	import '../styles/neo-brutalism.css';
 	import './css/input.css';
 
@@ -9,9 +9,10 @@
 	type Props = {
 		value?: string;
 		size?: InputSize;
+		shape?: InputShape;
 	} & Omit<HTMLInputAttributes, 'size'>;
 
-	let { value = $bindable(''), size = 'md', ...rest }: Props = $props();
+	let { value = $bindable(''), size = 'md', shape = 'square', ...rest }: Props = $props();
 </script>
 
-<input class="nb-input" data-size={size} bind:value {...rest} />
+<input class="nb-input" data-size={size} data-shape={shape} bind:value {...rest} />

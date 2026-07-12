@@ -3,11 +3,12 @@
   A <label> wrapping a single control (Input/Textarea/Select). Include
   ./tokens.css + ./field.css once. Attribute contract:
     data-error : "true" when in the error state (swaps help → error treatment)
+    data-shape : square | pill  (pill rounds the wrapped control; default square)
   Structure: optional __label (with __req mark) → the control → __msg (help/error).
 -->
-<label class="glass-field" data-error="false">
+<label class="glass-field" data-shape="pill" data-error="false">
   <span class="glass-field__label">Email<span class="glass-field__req"> *</span></span>
-  <!-- your control here, e.g. <input class="glass-input" ...> -->
+  <input class="glass-input" placeholder="you@example.com" />
   <span class="glass-field__msg">We'll never share it.</span>
 </label>
 

@@ -29,3 +29,8 @@
 	color: var(--glass-danger-ink);
 	font-weight: var(--glass-font-weight-semibold);
 }
+
+/* shape — pill rounds the wrapped control (Field has no box of its own). */
+.glass-field[data-shape='pill'] .glass-input {
+	border-radius: var(--glass-radius-pill);
+}

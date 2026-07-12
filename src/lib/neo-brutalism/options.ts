@@ -29,6 +29,12 @@ export type LinkVariant = (typeof LINK_VARIANTS)[number];
 export const INPUT_SIZES = ['sm', 'md', 'lg'] as const;
 export type InputSize = (typeof INPUT_SIZES)[number];
 
+export const INPUT_SHAPES = ['square', 'pill'] as const;
+export type InputShape = (typeof INPUT_SHAPES)[number];
+
+export const FIELD_SHAPES = ['square', 'pill'] as const;
+export type FieldShape = (typeof FIELD_SHAPES)[number];
+
 export const ALERT_VARIANTS = ['info', 'success', 'warning', 'error'] as const;
 export type AlertVariant = (typeof ALERT_VARIANTS)[number];
 

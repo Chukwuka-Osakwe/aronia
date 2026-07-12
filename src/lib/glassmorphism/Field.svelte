@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { FieldShape } from './options.js';
 	import '../styles/glassmorphism.css';
 	import './css/field.css';
 
@@ -12,13 +13,14 @@
 		help?: string;
 		error?: string;
 		required?: boolean;
+		shape?: FieldShape;
 		children?: Snippet;
 	};
 
-	let { label, help, error, required = false, children }: Props = $props();
+	let { label, help, error, required = false, shape = 'square', children }: Props = $props();
 </script>
 
-<label class="glass-field" data-error={!!error}>
+<label class="glass-field" data-error={!!error} data-shape={shape}>
 	{#if label}
 		<span class="glass-field__label">
 			{label}{#if required}<span class="glass-field__req"> *</span>{/if}

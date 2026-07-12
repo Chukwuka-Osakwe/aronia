@@ -21,6 +21,8 @@ import {
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
 	INPUT_SIZES,
+	INPUT_SHAPES,
+	FIELD_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS,
 	SKELETON_SHAPES
@@ -212,6 +214,13 @@ export const neoBrutalism: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style — square, or a fully rounded pill.',
+					type: 'enum',
+					values: INPUT_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'value',
 					description: 'The current text value (two-way bindable).',
 					type: 'string',
@@ -233,7 +242,7 @@ export const neoBrutalism: StyleSpec = {
 			],
 			states: ['focus'],
 			styleClass: 'nb-input',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/input.css',
 				skins: {
@@ -515,6 +524,13 @@ export const neoBrutalism: StyleSpec = {
 					description: 'Shows a required mark after the label.',
 					type: 'boolean',
 					default: false
+				},
+				{
+					name: 'shape',
+					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
+					type: 'enum',
+					values: FIELD_SHAPES,
+					default: 'square'
 				}
 			],
 			snippets: [
@@ -525,7 +541,7 @@ export const neoBrutalism: StyleSpec = {
 				}
 			],
 			styleClass: 'nb-field',
-			dataAttrs: ['error'],
+			dataAttrs: ['error', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/field.css',
 				skins: {

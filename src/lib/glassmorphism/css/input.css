@@ -53,3 +53,8 @@
 	font-size: var(--glass-size-lg-text);
 	padding: var(--glass-size-lg-pad);
 }
+
+/* shape — square (default) or a fully rounded pill. */
+.glass-input[data-shape='pill'] {
+	border-radius: var(--glass-radius-pill);
+}

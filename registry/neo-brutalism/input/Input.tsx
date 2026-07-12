@@ -6,12 +6,16 @@ import './tokens.css';
 import './input.css';
 
 export type InputSize = 'sm' | 'md' | 'lg';
+export type InputShape = 'square' | 'pill';
 
 // `size` is renamed off the native input attribute (a number) for our own scale.
-type Props = { size?: InputSize } & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+type Props = { size?: InputSize; shape?: InputShape } & Omit<
+	InputHTMLAttributes<HTMLInputElement>,
+	'size'
+>;
 
-export function Input({ size = 'md', ...rest }: Props) {
-	return <input className="nb-input" data-size={size} {...rest} />;
+export function Input({ size = 'md', shape = 'square', ...rest }: Props) {
+	return <input className="nb-input" data-size={size} data-shape={shape} {...rest} />;
 }
 
 export default Input;

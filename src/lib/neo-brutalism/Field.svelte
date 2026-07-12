@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { FieldShape } from './options.js';
 	import '../styles/neo-brutalism.css';
 	import './css/field.css';
 
@@ -14,13 +15,14 @@
 		help?: string;
 		error?: string;
 		required?: boolean;
+		shape?: FieldShape;
 		children?: Snippet;
 	};
 
-	let { label, help, error, required = false, children }: Props = $props();
+	let { label, help, error, required = false, shape = 'square', children }: Props = $props();
 </script>
 
-<label class="nb-field" data-error={!!error}>
+<label class="nb-field" data-error={!!error} data-shape={shape}>
 	{#if label}
 		<span class="nb-field__label">
 			{label}{#if required}<span class="nb-field__req"> *</span>{/if}

@@ -5,17 +5,20 @@ import type { ReactNode } from 'react';
 import './tokens.css';
 import './field.css';
 
+export type FieldShape = 'square' | 'pill';
+
 type Props = {
 	label?: string;
 	help?: string;
 	error?: string;
 	required?: boolean;
+	shape?: FieldShape;
 	children?: ReactNode;
 };
 
-export function Field({ label, help, error, required = false, children }: Props) {
+export function Field({ label, help, error, required = false, shape = 'square', children }: Props) {
 	return (
-		<label className="nb-field" data-error={!!error}>
+		<label className="nb-field" data-error={!!error} data-shape={shape}>
 			{label ? (
 				<span className="nb-field__label">
 					{label}

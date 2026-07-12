@@ -48,3 +48,8 @@
 	font-size: var(--nb-size-lg-text);
 	padding: var(--nb-size-lg-pad);
 }
+
+/* shape — square (default) or a fully rounded pill. */
+.nb-input[data-shape='pill'] {
+	border-radius: var(--nb-radius-pill);
+}
