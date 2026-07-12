@@ -27,6 +27,15 @@ interface RegistryItem {
 	dataAttrs?: readonly string[];
 	/** The full component contract (props, snippets, states) for agent context. */
 	spec: Omit<ComponentSpec, 'files'>;
+	/** The parent style's identity + composition guidance, denormalized onto every
+	 *  item so `aronia add` can record it in the consumer manifest — telling the
+	 *  agent how to compose tastefully in the style, not just reuse components. */
+	styleGuidance: {
+		name: string;
+		description: string;
+		principles?: readonly string[];
+		avoid?: readonly string[];
+	};
 	/** Other component ids (same family) the CLI must install first. */
 	registryDeps?: readonly string[];
 	/** Layer 1 — written to the consumer as `tokens.css`. */
@@ -128,6 +137,12 @@ for (const style of manifest.styles) {
 			dataAttrs: component.dataAttrs,
 			registryDeps: component.registryDeps,
 			spec,
+			styleGuidance: {
+				name: style.name,
+				description: style.description,
+				principles: style.principles,
+				avoid: style.avoid
+			},
 			tokens: { file: 'tokens.css', content: tokensContent },
 			css: { file: basename(files.style), content: read(files.style) },
 			skins

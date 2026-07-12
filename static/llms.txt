@@ -6,7 +6,7 @@ Two design-language families, 20 components each: `neo-brutalism` (bold, high-co
 
 ## Registry
 
-- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document
+- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document — each style also carries `principles` (how to compose tastefully in that design language) and `avoid` (anti-patterns)
 - [Neo-Brutalism manifest](/neo-brutalism/manifest.json): the neo-brutalism family only
 - [Glassmorphism manifest](/glassmorphism/manifest.json): the glassmorphism family only
 - [Registry index](/r/index.json): every per-component item and the frameworks it ships

@@ -62,7 +62,12 @@ function installItem(item, framework, cwd) {
 	const manifestPath = join(cwd, 'aronia', 'aronia.manifest.json');
 	const manifest = existsSync(manifestPath)
 		? JSON.parse(readFileSync(manifestPath, 'utf8'))
-		: { name: 'aronia', components: [] };
+		: { name: 'aronia', styles: {}, components: [] };
+	// Record the style's identity + composition guidance once per style, so the
+	// consumer's agent can read HOW to compose tastefully in this design language
+	// (principles + anti-patterns), not just reuse the components.
+	manifest.styles ??= {};
+	if (item.styleGuidance) manifest.styles[item.style] = item.styleGuidance;
 	manifest.components = manifest.components.filter(
 		(c) => !(c.style === item.style && c.component === item.component && c.framework === framework)
 	);

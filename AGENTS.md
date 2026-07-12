@@ -10,7 +10,10 @@ build or edit UI:
 1. **Read `aronia/aronia.manifest.json` first.** It's the authoritative contract
    for every component that's been added — its style class, `data-*` attributes,
    files, and full prop spec. Match it exactly; do not invent props, values, or
-   class names.
+   class names. It also carries each style's `principles` (how to compose in the
+   design language) and `avoid` (anti-patterns) under `styles.<style>` — **follow
+   them when laying out whole pages**, so the UI reads as the style, not just as a
+   pile of its components.
 2. **Read the real source in `aronia/<style>/`** as a worked example, and build
    new UI in the same design language — the same tokens, the same `data-*`
    conventions, the same structure. Consistency with the existing components is

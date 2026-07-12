@@ -35,6 +35,19 @@ export const neoBrutalism: StyleSpec = {
 		'Thick black borders, hard offset shadows (no blur), flat saturated colour, chunky heavy type (Archivo), and a tactile "shove" on press where the element presses into its own shadow.',
 	whenToUse:
 		'Bold, playful, high-contrast interfaces that want to feel raw, confident, and unmistakably digital.',
+	principles: [
+		'Lead with oversized, heavy type — typography is the primary visual driver.',
+		'Outline elements in thick black borders; keep corners square.',
+		'Give interactive/raised elements a hard offset shadow (no blur, solid colour); flat containers rely on the border alone.',
+		'Use bold, clashing, high-contrast fills — flat saturated colour, pure black and white; do not be timid.',
+		'Make interaction tactile and obvious — elements "shove" into their shadow on press, with big, unmistakable hover and focus states.'
+	],
+	avoid: [
+		'Soft or blurred shadows, gradients, or glassy translucency.',
+		'Muted, low-contrast, or pastel-timid palettes.',
+		'Polished "corporate minimal" restraint, or heavily rounded corners.',
+		'Thin, subtle borders — keep them thick and black.'
+	],
 	tokens: 'src/lib/styles/neo-brutalism.css',
 	components: [
 		{

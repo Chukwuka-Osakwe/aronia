@@ -25,6 +25,19 @@ export const glassmorphism: StyleSpec = {
 		'Frosted translucent surfaces over a backdrop blur, soft hairline borders (a light rim highlight), diffuse low-opacity shadows for depth, and generous rounded corners — light, airy, and layered. Elements float on hover rather than pressing.',
 	whenToUse:
 		'Modern, elegant, depth-layered interfaces — overlays, dashboards, and hero sections set over vivid gradient or photographic backdrops, where the frosted blur can shine.',
+	principles: [
+		'Layer translucent, frosted surfaces over a blurred background so context shows through.',
+		'Always place glass over a non-uniform backdrop (gradient, image, or overlapping content) — see `requires`.',
+		'Edge each surface with a subtle light rim / hairline border to suggest the thickness of glass.',
+		'Keep depth soft — diffuse low-opacity shadows and generous rounded corners; elements float on hover rather than pressing.',
+		'Use glass sparingly on key surfaces (cards, modals, nav), not the whole layout; keep text on a strong-enough tint to clear WCAG AA.'
+	],
+	avoid: [
+		'Frosted glass on a flat, single-colour background (it degrades to a plain card).',
+		'Low-contrast text over busy blur.',
+		'Hard offset shadows, thick opaque borders, or flat brutalist fills.',
+		'Over-using the effect everywhere — it loses impact and hurts readability and performance.'
+	],
 	requires:
 		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
 	tokens: 'src/lib/styles/glassmorphism.css',
