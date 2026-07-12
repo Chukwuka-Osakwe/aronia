@@ -12,7 +12,6 @@
 	color: var(--nb-ink);
 	border: var(--nb-border);
 	border-radius: var(--nb-radius);
-	box-shadow: var(--nb-shadow);
 	font-family: var(--nb-font);
 	overflow: hidden;
 }

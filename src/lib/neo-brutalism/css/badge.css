@@ -19,7 +19,6 @@
 	background: var(--nb-paper);
 	border: 2px solid var(--nb-ink);
 	border-radius: var(--nb-radius);
-	box-shadow: var(--nb-shadow);
 	white-space: nowrap;
 }
 

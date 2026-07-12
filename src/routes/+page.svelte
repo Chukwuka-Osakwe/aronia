@@ -101,7 +101,6 @@
 		max-width: 100%;
 		background: var(--doc-panel);
 		border: 1px solid var(--doc-ink);
-		box-shadow: 4px 4px 0 0 var(--doc-ink);
 		padding: 0.7rem 0.7rem 0.7rem 1.15rem;
 	}
 	.install code {

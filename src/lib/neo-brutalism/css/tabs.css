@@ -47,7 +47,6 @@
 	min-width: 100%;
 	border: var(--nb-border);
 	border-radius: var(--nb-radius);
-	box-shadow: var(--nb-shadow);
 	padding: 1.5rem;
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight-regular);

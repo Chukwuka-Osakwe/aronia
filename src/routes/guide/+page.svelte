@@ -244,7 +244,6 @@ and match the components in aronia/.`}</code></pre>
 	pre {
 		background: var(--doc-panel);
 		border: 1px solid var(--doc-ink);
-		box-shadow: 4px 4px 0 0 var(--doc-ink);
 		padding: 1.25rem 1.5rem;
 		overflow-x: auto;
 		margin: 0 0 1rem;

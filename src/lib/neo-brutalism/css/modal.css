@@ -11,7 +11,6 @@
 	border-radius: var(--nb-radius);
 	background: var(--nb-paper);
 	color: var(--nb-ink);
-	box-shadow: var(--nb-shadow-lg);
 	width: 100%;
 	max-width: min(92vw, 32rem);
 	font-family: var(--nb-font);

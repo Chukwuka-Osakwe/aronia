@@ -145,7 +145,7 @@
 	   style is the privileged default. */
 	.workbench__main[data-style='neo-brutalism'] {
 		--doc-card-border: 1px solid var(--doc-ink);
-		--doc-card-shadow: 6px 6px 0 0 var(--doc-ink);
+		--doc-card-shadow: none;
 		--doc-card-radius: 0;
 	}
 	/* On the glass gradient the muted grey description drops below WCAG AA (1.9–3.8:1

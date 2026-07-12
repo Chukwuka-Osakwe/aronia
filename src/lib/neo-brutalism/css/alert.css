@@ -10,7 +10,6 @@
 	align-items: flex-start;
 	border: var(--nb-border);
 	border-radius: var(--nb-radius);
-	box-shadow: var(--nb-shadow);
 	font-family: var(--nb-font);
 	color: var(--nb-ink);
 	/* base font-size (per size) drives the icon + title via em */
