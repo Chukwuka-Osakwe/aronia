@@ -8,11 +8,6 @@ source — tokens, styles, and a thin skin in your framework — into your repo,
 alongside a machine-readable manifest. Your coding agent reads that source as a
 worked example and builds the rest of your UI in the same style, unsupervised.
 
-> **Status:** the CLI is live on npm — `npx aronia …` works today. The docs site
-> isn't deployed yet, so the hosted registry/docs URLs referenced below aren't
-> live (the CLI ships with a bundled copy of the registry, so it works offline
-> regardless). See [Open threads](#open-threads-pre-launch).
-
 ## Quick start
 
 ```sh
@@ -83,8 +78,7 @@ aronia is built to be read by agents, not just humans:
   served as JSON: `/manifest.json` (whole catalog), `/<style>/manifest.json` (one
   family), and `/r/index.json` → `/r/<style>/<component>.json` (per-component
   items embedding spec, tokens, CSS, and framework skins). A machine-readable
-  index is at [`/llms.txt`](./static/llms.txt). *(Live at the docs URL once
-  deployed — see Open threads.)*
+  index is at [`/llms.txt`](./static/llms.txt).
 
 ## Using the Svelte components directly (optional)
 
@@ -100,17 +94,6 @@ import { neoBrutalism } from '@aronia/svelte';
 ```
 
 Svelte 5 + Vite/SvelteKit consumers only.
-
-## Open threads (pre-launch)
-
-- **Deploy target / live docs URL** — not chosen yet (`adapter-auto` detects no
-  environment). Once deployed, the hosted registry (`/manifest.json`, `/r/…`,
-  `/llms.txt`) goes live and its base URL fills in throughout this README.
-- **Visual parity check** — the extracted CSS for both families hasn't been
-  eyeballed against the reference docs in a browser.
-- **`AGENTS.md` scope** — currently scoped to agents in a project *using* aronia.
-  Open question: repurpose (or split) it to also guide agents *contributing* to
-  aronia itself, once that becomes a need.
 
 ## Development
 
