@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { AlertVariant, InputSize } from './options.js';
 	import '../styles/neo-brutalism.css';
+	import './css/alert.css';
 
 	// Inline status message: a bold full-colour NB box with a per-variant icon.
 	// Severity picks the aria role — error/warning announce assertively (`alert`),
@@ -46,68 +47,3 @@
 		<div class="nb-alert__message">{@render children?.()}</div>
 	</div>
 </div>
-
-<style>
-	.nb-alert {
-		display: flex;
-		align-items: flex-start;
-		border: var(--nb-border);
-		border-radius: var(--nb-radius);
-		box-shadow: var(--nb-shadow);
-		font-family: var(--nb-font);
-		color: var(--nb-ink);
-		/* base font-size (per size) drives the icon + title via em */
-		font-size: var(--nb-size-md-text);
-	}
-	/* size scale — one font-size + padding/gap per step; icon & title follow via em */
-	.nb-alert[data-size='sm'] {
-		font-size: var(--nb-size-sm-text);
-		gap: 0.625rem;
-		padding: 0.75rem 1rem;
-	}
-	.nb-alert[data-size='md'] {
-		font-size: var(--nb-size-md-text);
-		gap: 0.75rem;
-		padding: 1rem 1.25rem;
-	}
-	.nb-alert[data-size='lg'] {
-		font-size: var(--nb-size-lg-text);
-		gap: 0.875rem;
-		padding: 1.25rem 1.5rem;
-	}
-	.nb-alert[data-variant='info'] {
-		background: var(--nb-info);
-	}
-	.nb-alert[data-variant='success'] {
-		background: var(--nb-success);
-	}
-	.nb-alert[data-variant='warning'] {
-		background: var(--nb-warning);
-	}
-	.nb-alert[data-variant='error'] {
-		background: var(--nb-danger);
-	}
-
-	.nb-alert__icon {
-		flex: none;
-		width: 1.5em;
-		height: 1.5em;
-		/* nudge to align with the first line of text */
-		margin-top: 0.1em;
-	}
-	.nb-alert__icon svg {
-		width: 100%;
-		height: 100%;
-	}
-
-	.nb-alert__title {
-		margin: 0 0 0.25rem;
-		font-size: 1.05em;
-		font-weight: var(--nb-font-weight);
-	}
-	.nb-alert__message {
-		font-weight: var(--nb-font-weight-regular);
-		font-size: 1em;
-		line-height: 1.4;
-	}
-</style>

@@ -1,0 +1,24 @@
+<!--
+  Glassmorphism — Toaster (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./toast.css + ./alert.css (a toast reuses the Alert skin).
+  Toast is IMPERATIVE: mount this .glass-toaster once, then append/remove .glass-toast
+  children from your own queue logic (auto-dismiss via a timer, e.g. 2500ms).
+  Structure of one toast (success shown):
+-->
+<div class="glass-toaster" role="region" aria-label="Notifications">
+  <div class="glass-toast">
+    <div class="glass-alert" data-variant="success" data-size="sm" role="status">
+      <span class="glass-alert__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" /><polyline points="8 12 11 15 16 9" />
+        </svg>
+      </span>
+      <div class="glass-alert__content"><div class="glass-alert__message">Saved!</div></div>
+    </div>
+    <button type="button" class="glass-toast__close" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+        <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+      </svg>
+    </button>
+  </div>
+</div>

@@ -2,6 +2,7 @@
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import type { InputSize } from './options.js';
 	import '../styles/glassmorphism.css';
+	import './css/toggle.css';
 
 	// A11y: a real <button role="switch"> with aria-checked — keyboard-operable and
 	// announced correctly. The on/off STATE is carried by the track colour (frosted
@@ -39,91 +40,3 @@
 	</span>
 	{#if label}<span class="glass-toggle__label">{label}</span>{/if}
 </button>
-
-<style>
-	.glass-toggle {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.625rem;
-		background: none;
-		border: none;
-		padding: 0;
-		cursor: pointer;
-		font-family: var(--glass-font);
-		font-weight: var(--glass-font-weight);
-		color: var(--glass-ink);
-	}
-	/* Size scale — track dims + thumb are the only per-size values; the thumb
-	   auto-centres and its travel derives from track-w − track-h via calc. Smallest
-	   track is 24px tall to keep the switch's hit target within WCAG 2.5.8 reach. */
-	.glass-toggle[data-size='sm'] {
-		--_track-w: 44px;
-		--_track-h: 24px;
-		--_thumb: 18px;
-		font-size: var(--glass-size-sm-text);
-	}
-	.glass-toggle[data-size='md'] {
-		--_track-w: 52px;
-		--_track-h: 28px;
-		--_thumb: 22px;
-		font-size: var(--glass-size-md-text);
-	}
-	.glass-toggle[data-size='lg'] {
-		--_track-w: 64px;
-		--_track-h: 34px;
-		--_thumb: 28px;
-		font-size: var(--glass-size-lg-text);
-	}
-	.glass-toggle:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-	.glass-toggle:focus-visible {
-		outline: none;
-	}
-
-	.glass-toggle__track {
-		position: relative;
-		display: inline-block;
-		width: var(--_track-w);
-		height: var(--_track-h);
-		background: var(--glass-surface-strong);
-		-webkit-backdrop-filter: blur(var(--glass-blur));
-		backdrop-filter: blur(var(--glass-blur));
-		border: var(--glass-border);
-		border-radius: var(--glass-radius-pill);
-		box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
-		transition: background-color 160ms ease;
-	}
-	.glass-toggle[data-checked='true'] .glass-toggle__track {
-		background: var(--glass-primary);
-	}
-	.glass-toggle:focus-visible .glass-toggle__track,
-	.glass-toggle[data-state='focus'] .glass-toggle__track {
-		box-shadow:
-			var(--glass-shadow-sm),
-			0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
-	}
-
-	/* White floating thumb — a soft drop shadow + hairline give it an edge against
-	   the light (off) track without a hard NB border. */
-	.glass-toggle__thumb {
-		position: absolute;
-		/* Track is border-box, so --_track-h includes its border; subtract both border
-		   widths before centring so the thumb doesn't sit low by a border width. Same
-		   corrected inset on left keeps the travel symmetric. (Only 1px here, but the
-		   NB toggle had the same bug at 3px — fixed identically.) */
-		top: calc((var(--_track-h) - 2 * var(--glass-border-width) - var(--_thumb)) / 2);
-		left: calc((var(--_track-h) - 2 * var(--glass-border-width) - var(--_thumb)) / 2);
-		width: var(--_thumb);
-		height: var(--_thumb);
-		background: #fff;
-		border: 1px solid rgba(0, 0, 0, 0.06);
-		border-radius: 50%;
-		box-shadow: 0 1px 3px rgba(17, 24, 39, 0.28);
-		transition: transform 160ms cubic-bezier(0.2, 0, 0, 1);
-	}
-	.glass-toggle[data-checked='true'] .glass-toggle__thumb {
-		transform: translateX(calc(var(--_track-w) - var(--_track-h)));
-	}
-</style>

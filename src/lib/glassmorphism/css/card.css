@@ -1,0 +1,49 @@
+/* Glassmorphism — Card (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for Card. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–34.
+ */
+
+.glass-card {
+	display: flex;
+	flex-direction: column;
+	background: var(--glass-surface);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	color: var(--glass-ink);
+	border: var(--glass-border);
+	border-radius: var(--glass-radius);
+	box-shadow: var(--glass-shadow), var(--glass-highlight);
+	font-family: var(--glass-font);
+	overflow: hidden;
+}
+
+.glass-card[data-variant='strong'] {
+	background: var(--glass-surface-strong);
+}
+.glass-card[data-variant='primary'] {
+	background: var(--glass-primary);
+	color: var(--glass-primary-ink);
+}
+.glass-card[data-variant='secondary'] {
+	background: var(--glass-secondary);
+	color: #fff;
+}
+
+.glass-card__header,
+.glass-card__footer {
+	padding: 0.875rem 1.25rem;
+	font-weight: var(--glass-font-weight);
+}
+.glass-card__header {
+	border-bottom: var(--glass-divider);
+}
+.glass-card__footer {
+	border-top: var(--glass-divider);
+}
+.glass-card__body {
+	padding: 1.25rem;
+	font-weight: var(--glass-font-weight-regular);
+	line-height: 1.5;
+}

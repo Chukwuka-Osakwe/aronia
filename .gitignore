@@ -9,6 +9,10 @@ node_modules
 /build
 /dist
 
+# Generated registry (built from the manifest by `npm run registry`)
+/static/r
+/cli/r
+
 # OS
 .DS_Store
 Thumbs.db

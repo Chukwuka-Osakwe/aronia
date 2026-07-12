@@ -32,33 +32,79 @@
 	];
 </script>
 
-<svelte:head><title>How to use · viny</title></svelte:head>
+<svelte:head><title>How to use · aronia</title></svelte:head>
 
 <article class="guide">
 	<header class="guide__head">
 		<p class="eyebrow">Guide</p>
 		<h1>How to use</h1>
 		<p class="lede">
-			Import a component, drop it in, and — when you want it to look like <em>your</em> product —
-			re-skin it by overriding a handful of CSS custom properties.
+			Copy a component into your repo with one command, point your agent at it, and — when you want
+			it to look like <em>your</em> product — re-skin it by overriding a handful of CSS custom
+			properties.
 		</p>
 	</header>
 
 	<section>
-		<h2>Import &amp; use</h2>
-		<p>Every family is a namespaced import; props are the closed, documented API.</p>
-		<pre><code>{`import { neoBrutalism } from '$lib';
-const { Button, Alert } = neoBrutalism;`}</code></pre>
-		<pre><code>{`<Button variant="primary" size="md">Save</Button>
-<Alert variant="success" title="Done">Your changes were saved.</Alert>`}</code></pre>
+		<h2>Add to your repo</h2>
+		<p>
+			aronia is delivered by a command, not a package install. Pick a component and a style family
+			and it writes real, editable source into <code>aronia/&lt;style&gt;/</code> — yours to keep and
+			change.
+		</p>
+		<pre><code>{`npx aronia add button --style neo-brutalism`}</code></pre>
+		<p>That writes the tokens, the component's styles, and a thin skin in your framework — plus a manifest:</p>
+		<pre><code>{`aronia/
+  neo-brutalism/
+    tokens.css     # design tokens (written once per style)
+    button.css     # the component's styles — the actual "language"
+    Button.tsx     # a thin skin in your framework
+  aronia.manifest.json`}</code></pre>
+		<p>
+			Choose your framework with <code>--framework react|svelte|html</code> (defaults to
+			<code>react</code>). Also: <code>--cwd &lt;dir&gt;</code> to write somewhere other than the
+			current directory, and <code>--registry &lt;url|dir&gt;</code> to point at a specific registry.
+			Components pull in their dependencies automatically (e.g. <code>toast</code> also adds
+			<code>alert</code>).
+		</p>
 	</section>
 
 	<section>
-		<h2>The manifest</h2>
+		<h2>Point your agent at it</h2>
 		<p>
-			Every component, prop, enum, and slot is described in a machine-readable
-			<a href="/manifest.json">manifest.json</a>. It's the single source of truth the docs are built
-			from — and what lets an AI agent use the library correctly from the schema alone.
+			This is the real payoff: your coding agent reads the copied source as a worked example and
+			builds the rest of your UI in the same language. After adding a component or two, tell it —
+		</p>
+		<pre><code>{`Use aronia for all UI — read aronia/aronia.manifest.json
+and match the components in aronia/.`}</code></pre>
+		<p>
+			<code>aronia/aronia.manifest.json</code> records every component you've added — its style
+			class, data attributes, files, and full prop spec — so the agent works from the exact
+			contract, not a guess.
+		</p>
+	</section>
+
+	<section>
+		<h2>Use it</h2>
+		<p>Import the file that landed and drop it in — props are the closed, documented API (identical across frameworks).</p>
+		<pre><code>{`import { Button } from './aronia/neo-brutalism/Button';
+
+<Button variant="primary" size="md">Save</Button>`}</code></pre>
+	</section>
+
+	<section>
+		<h2>Manifest &amp; registry</h2>
+		<p>
+			Two manifests, two audiences. Locally, <code>aronia/aronia.manifest.json</code> is the
+			consumer-facing contract for the components you've added — the file your agent reads.
+		</p>
+		<p>
+			Hosted here is the full registry the CLI and agents pull from: the whole catalog at
+			<a href="/manifest.json">/manifest.json</a> (or a single family at
+			<code>/&lt;style&gt;/manifest.json</code>), and per-component items indexed by
+			<a href="/r/index.json">/r/index.json</a> → <code>/r/&lt;style&gt;/&lt;component&gt;.json</code>,
+			each embedding the prop spec, tokens, CSS, and every framework skin. It's the single source of
+			truth the docs, the CLI, and any agent build from.
 		</p>
 	</section>
 

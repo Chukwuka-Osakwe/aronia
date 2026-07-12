@@ -1,0 +1,71 @@
+/* Glassmorphism — Tabs (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on class/[data-*] selectors — the framework-
+ * agnostic design language for Tabs. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–34.
+ */
+
+/* Shrink-wrap to the tab row; the panel fills that width (below) so its right
+   edge lines up with the last tab. */
+.glass-tabs {
+	width: fit-content;
+	max-width: 100%;
+}
+.glass-tabs__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 0.75rem;
+}
+.glass-tabs__tab {
+	font-family: var(--glass-font);
+	font-weight: var(--glass-font-weight);
+	font-size: var(--glass-size-md-text);
+	padding: 0.5rem 1rem;
+	background: var(--glass-surface);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	color: var(--glass-ink);
+	border: var(--glass-border);
+	border-radius: var(--glass-radius-sm);
+	box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+	cursor: pointer;
+	transition:
+		background-color 160ms ease,
+		box-shadow 160ms ease;
+}
+.glass-tabs__tab:hover {
+	background: var(--glass-surface-strong);
+}
+/* Active tab fills indigo with white text (AA-tuned, 5.1:1). */
+.glass-tabs__tab[data-active='true'] {
+	background: var(--glass-primary);
+	color: var(--glass-primary-ink);
+	border-color: transparent;
+}
+.glass-tabs__tab:focus-visible {
+	outline: none;
+	box-shadow:
+		var(--glass-shadow-sm),
+		0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
+}
+
+.glass-tabs__panel {
+	/* width:0 + min-width:100% => the panel never widens the set (so the tab row
+	   defines the width) but always fills it, keeping its right edge flush with
+	   the last tab. */
+	width: 0;
+	min-width: 100%;
+	background: var(--glass-surface);
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	backdrop-filter: blur(var(--glass-blur));
+	border: var(--glass-border);
+	border-radius: var(--glass-radius);
+	box-shadow: var(--glass-shadow), var(--glass-highlight);
+	padding: 1.5rem;
+	font-family: var(--glass-font);
+	font-weight: var(--glass-font-weight-regular);
+	line-height: 1.5;
+	color: var(--glass-ink);
+	min-height: 4rem;
+}

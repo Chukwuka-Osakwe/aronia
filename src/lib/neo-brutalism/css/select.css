@@ -1,0 +1,71 @@
+/* Neo-Brutalism — Select (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on .nb-/[data-*] selectors — the framework-
+ * agnostic design language for Select. Shared by the Svelte skin (which
+ * imports it) and the aronia registry. See DESIGN.md, Entries 31–33.
+ */
+
+.nb-select {
+	position: relative;
+	display: inline-block;
+	min-width: 16rem;
+}
+.nb-select[data-disabled='true'] {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.nb-select__field {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 100%;
+	font-family: var(--nb-font);
+	font-weight: var(--nb-font-weight-medium);
+	color: var(--nb-ink);
+	background: var(--nb-paper);
+	border: var(--nb-border);
+	border-radius: var(--nb-radius);
+	box-shadow: var(--nb-shadow);
+	cursor: pointer;
+	transition: var(--nb-transition);
+}
+.nb-select__field:disabled {
+	background: var(--nb-muted);
+	cursor: not-allowed;
+}
+
+/* Focus keeps the box still and pops the accent shadow, like Input. */
+.nb-select__field:focus,
+.nb-select[data-state='focus'] .nb-select__field {
+	outline: none;
+	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
+}
+
+/* Shared control size scale for text + padding; a trailing rule (same
+   specificity, later source order) reserves room for the chevron on the right. */
+.nb-select__field[data-size='sm'] {
+	font-size: var(--nb-size-sm-text);
+	padding: var(--nb-size-sm-pad);
+}
+.nb-select__field[data-size='md'] {
+	font-size: var(--nb-size-md-text);
+	padding: var(--nb-size-md-pad);
+}
+.nb-select__field[data-size='lg'] {
+	font-size: var(--nb-size-lg-text);
+	padding: var(--nb-size-lg-pad);
+}
+.nb-select__field[data-size] {
+	padding-right: 2.75rem;
+}
+
+.nb-select__chevron {
+	position: absolute;
+	top: 50%;
+	right: 0.9rem;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	color: var(--nb-ink);
+	pointer-events: none;
+}

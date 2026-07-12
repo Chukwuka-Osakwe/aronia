@@ -1,65 +1,127 @@
-# Svelte library
+# aronia
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+**An agent-friendly design language you copy into your repo — not a black-box dependency.**
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+aronia isn't a component library you `npm install` and import from. It's a design
+*language* delivered shadcn-style: one command copies real, editable component
+source — tokens, styles, and a thin skin in your framework — into your repo,
+alongside a machine-readable manifest. Your coding agent reads that source as a
+worked example and builds the rest of your UI in the same style, unsupervised.
 
-## Creating a project
+> **Status:** the CLI is live on npm — `npx aronia …` works today. The docs site
+> isn't deployed yet, so the hosted registry/docs URLs referenced below aren't
+> live (the CLI ships with a bundled copy of the registry, so it works offline
+> regardless). See [Open threads](#open-threads-pre-launch).
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
+## Quick start
 
 ```sh
-# recreate this project
-npx sv@0.16.1 create --template library --types ts --install npm .
+npx aronia add button --style neo-brutalism
 ```
 
-## Developing
+That writes the tokens, the component's styles, and a thin skin in your framework
+into `aronia/`, and records the component in a manifest:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```
+aronia/
+  neo-brutalism/
+    tokens.css     # design tokens (written once per style)
+    button.css     # the component's styles — the actual "language"
+    Button.tsx     # a thin skin in your framework
+  aronia.manifest.json
+```
+
+Then **point your agent at it**:
+
+> Use aronia for all UI — read `aronia/aronia.manifest.json` and match the
+> components in `aronia/`.
+
+`aronia/aronia.manifest.json` records every component you've added — its style
+class, `data-*` attributes, files, and full prop spec — so the agent works from
+the exact contract, not a guess.
+
+## Styles
+
+Two design languages, 20 components each. Add `--style <id>` to any command.
+
+- **`neo-brutalism`** — thick black borders, hard offset shadows (no blur), flat
+  saturated colour, chunky heavy type, and a tactile "shove" on press. For bold,
+  playful, high-contrast interfaces.
+- **`glassmorphism`** — frosted translucent surfaces over a backdrop blur, soft
+  hairline borders, diffuse shadows, generous rounded corners. For modern,
+  layered interfaces over vivid gradients or imagery. *(Needs a non-uniform
+  backdrop — glass is invisible on a flat solid fill.)*
+
+Both families ship: Button, Link, Card, Badge, Input, Textarea, Toggle, Checkbox,
+RadioGroup, Select, Field, Modal, Alert, Tabs, Accordion, Dropdown Menu, Spinner,
+Progress, Skeleton, and Toast.
+
+## CLI
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+aronia add <component> --style <style> [options]
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+| Option | Description | Default |
+| --- | --- | --- |
+| `--style <id>` | Design-language family (`neo-brutalism`, `glassmorphism`). **Required.** | — |
+| `--framework <fw>` | `react`, `svelte`, or `html`. | `react` |
+| `--cwd <dir>` | Where to write the `aronia/` folder. | current dir |
+| `--registry <src>` | Registry URL or local directory. | bundled |
 
-## Building
+Components pull in their dependencies automatically (e.g. `toast` also adds
+`alert`). Run `aronia add` again with a different `--component`/`--style` to grow
+your set; the manifest is merged, not overwritten.
 
-To build your library:
+## For AI agents
+
+aronia is built to be read by agents, not just humans:
+
+- **In a project using aronia**, the contract lives in `aronia/aronia.manifest.json`
+  and the real source in `aronia/<style>/`. See [AGENTS.md](./AGENTS.md).
+- **The full registry** (every style, component, prop, enum, and behaviour) is
+  served as JSON: `/manifest.json` (whole catalog), `/<style>/manifest.json` (one
+  family), and `/r/index.json` → `/r/<style>/<component>.json` (per-component
+  items embedding spec, tokens, CSS, and framework skins). A machine-readable
+  index is at [`/llms.txt`](./static/llms.txt). *(Live at the docs URL once
+  deployed — see Open threads.)*
+
+## Using the Svelte components directly (optional)
+
+The copy-into-repo flow is the point, but the Svelte components are also
+importable as a package if you'd rather depend on them:
 
 ```sh
-npm pack
+npm i github:Chukwuka-Osakwe/aronia
 ```
 
-To create a production version of your showcase app:
+```js
+import { neoBrutalism } from '@aronia/svelte';
+```
+
+Svelte 5 + Vite/SvelteKit consumers only.
+
+## Open threads (pre-launch)
+
+- **Deploy target / live docs URL** — not chosen yet (`adapter-auto` detects no
+  environment). Once deployed, the hosted registry (`/manifest.json`, `/r/…`,
+  `/llms.txt`) goes live and its base URL fills in throughout this README.
+- **Visual parity check** — the extracted CSS for both families hasn't been
+  eyeballed against the reference docs in a browser.
+- **`AGENTS.md` scope** — currently scoped to agents in a project *using* aronia.
+  Open question: repurpose (or split) it to also guide agents *contributing* to
+  aronia itself, once that becomes a need.
+
+## Development
+
+This repo is the registry source **and** the docs site (SvelteKit).
 
 ```sh
-npm run build
+npm install
+npm run dev        # docs site + live registry endpoints
+npm run registry   # rebuild static/r/ from the manifest + skins
+npm run check      # svelte-check
+npm run build      # prerender the docs + registry
 ```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```sh
-npm publish
-```
+Design decisions and history live in [DESIGN.md](./DESIGN.md).

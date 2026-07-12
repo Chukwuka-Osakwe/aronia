@@ -31,7 +31,7 @@
 <div class="shell">
 	<aside class="sidebar">
 		<a class="brand" href="/">
-			viny<span>agent-friendly visual library</span>
+			aronia<span>agent-friendly visual library</span>
 		</a>
 
 		<!-- Scrolling middle: every style group lives here. New component items flow
@@ -132,7 +132,7 @@
 		overflow-y: auto;
 	}
 
-	/* A lowercase "viny" wordmark over an uppercase micro-label tagline, above a
+	/* A lowercase "aronia" wordmark over an uppercase micro-label tagline, above a
 	   full-bleed 1px rule spanning the sidebar (negative side margins counteract the
 	   sidebar's 1.25rem padding; padding keeps the text off the edges). */
 	.brand {

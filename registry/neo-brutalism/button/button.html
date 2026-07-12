@@ -1,0 +1,42 @@
+<!--
+  Neo-Brutalism — Button (plain-HTML snippet, the universal fallback)
+
+  The design language is just a class + data-attributes, so an agent can
+  translate this into ANY framework (Vue, Solid, Angular, Svelte, htmx, vanilla)
+  by mapping props onto these attributes. Include the two stylesheets once:
+
+    <link rel="stylesheet" href="./tokens.css" />   <!-- Layer 1: tokens -->
+    <link rel="stylesheet" href="./button.css" />   <!-- Layer 2: the style -->
+
+  Attribute contract:
+    data-variant : primary | secondary | muted | ghost | quiet   (default primary)
+    data-size    : xs | sm | md | lg                              (default md)
+    data-shape   : square | pill                                  (default square)
+    disabled     : present → inert; render as <button>. For a link, use <a href>.
+-->
+
+<!-- Default: primary button -->
+<button class="nb-btn" data-variant="primary" data-size="md" data-shape="square">
+  <span class="nb-btn__label">Click me</span>
+</button>
+
+<!-- With a leading icon (icon markup is the caller's) -->
+<button class="nb-btn" data-variant="secondary" data-size="md" data-shape="square">
+  <span class="nb-btn__icon"><!-- svg / icon here --></span>
+  <span class="nb-btn__label">Save</span>
+</button>
+
+<!-- Link variant: an <a> with href renders as a button-styled link -->
+<a class="nb-btn" data-variant="primary" data-size="md" data-shape="square" href="/somewhere">
+  <span class="nb-btn__label">Go</span>
+</a>
+
+<!-- Pill shape, large -->
+<button class="nb-btn" data-variant="primary" data-size="lg" data-shape="pill">
+  <span class="nb-btn__label">Get started</span>
+</button>
+
+<!-- Disabled -->
+<button class="nb-btn" data-variant="primary" data-size="md" data-shape="square" disabled>
+  <span class="nb-btn__label">Unavailable</span>
+</button>

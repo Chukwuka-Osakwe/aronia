@@ -25,11 +25,22 @@ export const glassmorphism: StyleSpec = {
 		'Modern, elegant, depth-layered interfaces — overlays, dashboards, and hero sections set over vivid gradient or photographic backdrops, where the frosted blur can shine.',
 	requires:
 		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
+	tokens: 'src/lib/styles/glassmorphism.css',
 	components: [
 		{
 			id: 'button',
 			name: 'Button',
 			import: 'glassmorphism.Button',
+			styleClass: 'glass-btn',
+			dataAttrs: ['variant', 'size', 'shape'],
+			files: {
+				style: 'src/lib/glassmorphism/css/button.css',
+				skins: {
+					react: 'registry/glassmorphism/button/Button.tsx',
+					svelte: 'src/lib/glassmorphism/Button.svelte',
+					html: 'registry/glassmorphism/button/button.html'
+				}
+			},
 			description: 'Primary action. Renders as a <button>, or an <a> when given an href.',
 			props: [
 				{
@@ -77,6 +88,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'link',
 			name: 'Link',
 			import: 'glassmorphism.Link',
+			styleClass: 'glass-link',
+			dataAttrs: ['variant', 'active'],
+			files: {
+				style: 'src/lib/glassmorphism/css/link.css',
+				skins: {
+					react: 'registry/glassmorphism/link/Link.tsx',
+					svelte: 'src/lib/glassmorphism/Link.svelte',
+					html: 'registry/glassmorphism/link/link.html'
+				}
+			},
 			description:
 				"Navigation — the counterpart to Button's action. Always renders an <a>. Use `inline` inside prose and `nav` for sidebar/menu items.",
 			props: [
@@ -117,6 +138,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'card',
 			name: 'Card',
 			import: 'glassmorphism.Card',
+			styleClass: 'glass-card',
+			dataAttrs: ['variant'],
+			files: {
+				style: 'src/lib/glassmorphism/css/card.css',
+				skins: {
+					react: 'registry/glassmorphism/card/Card.tsx',
+					svelte: 'src/lib/glassmorphism/Card.svelte',
+					html: 'registry/glassmorphism/card/card.html'
+				}
+			},
 			description:
 				'A frosted translucent surface with optional header and footer regions, divided by faint rules.',
 			props: [
@@ -138,6 +169,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'badge',
 			name: 'Badge',
 			import: 'glassmorphism.Badge',
+			styleClass: 'glass-badge',
+			dataAttrs: ['variant'],
+			files: {
+				style: 'src/lib/glassmorphism/css/badge.css',
+				skins: {
+					react: 'registry/glassmorphism/badge/Badge.tsx',
+					svelte: 'src/lib/glassmorphism/Badge.svelte',
+					html: 'registry/glassmorphism/badge/badge.html'
+				}
+			},
 			description: 'A small, uppercase inline pill — a translucent tinted chip.',
 			props: [
 				{
@@ -154,6 +195,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'input',
 			name: 'Input',
 			import: 'glassmorphism.Input',
+			styleClass: 'glass-input',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/glassmorphism/css/input.css',
+				skins: {
+					react: 'registry/glassmorphism/input/Input.tsx',
+					svelte: 'src/lib/glassmorphism/Input.svelte',
+					html: 'registry/glassmorphism/input/input.html'
+				}
+			},
 			description:
 				'A single-line text field — a frosted surface with a bindable value and a soft accent glow on focus.',
 			props: [
@@ -190,6 +241,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'alert',
 			name: 'Alert',
 			import: 'glassmorphism.Alert',
+			styleClass: 'glass-alert',
+			dataAttrs: ['variant', 'size'],
+			files: {
+				style: 'src/lib/glassmorphism/css/alert.css',
+				skins: {
+					react: 'registry/glassmorphism/alert/Alert.tsx',
+					svelte: 'src/lib/glassmorphism/Alert.svelte',
+					html: 'registry/glassmorphism/alert/alert.html'
+				}
+			},
 			description:
 				'An inline status message — a light frosted tint of the status colour, with the saturated colour on the icon + rim. Severity sets the aria role (error/warning announce assertively, info/success politely).',
 			props: [
@@ -220,6 +281,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'textarea',
 			name: 'Textarea',
 			import: 'glassmorphism.Textarea',
+			styleClass: 'glass-textarea',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/glassmorphism/css/textarea.css',
+				skins: {
+					react: 'registry/glassmorphism/textarea/Textarea.tsx',
+					svelte: 'src/lib/glassmorphism/Textarea.svelte',
+					html: 'registry/glassmorphism/textarea/textarea.html'
+				}
+			},
 			description:
 				'A multiline text field — the same frosted field styling as Input, with a resizable height.',
 			props: [
@@ -262,6 +333,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'toggle',
 			name: 'Toggle',
 			import: 'glassmorphism.Toggle',
+			styleClass: 'glass-toggle',
+			dataAttrs: ['size', 'checked'],
+			files: {
+				style: 'src/lib/glassmorphism/css/toggle.css',
+				skins: {
+					react: 'registry/glassmorphism/toggle/Toggle.tsx',
+					svelte: 'src/lib/glassmorphism/Toggle.svelte',
+					html: 'registry/glassmorphism/toggle/toggle.html'
+				}
+			},
 			description:
 				'An accessible on/off switch (button role="switch") with a bindable checked state and a sliding round thumb; the track fills indigo when on.',
 			props: [
@@ -298,6 +379,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'checkbox',
 			name: 'Checkbox',
 			import: 'glassmorphism.Checkbox',
+			styleClass: 'glass-checkbox',
+			dataAttrs: ['size', 'checked', 'disabled'],
+			files: {
+				style: 'src/lib/glassmorphism/css/checkbox.css',
+				skins: {
+					react: 'registry/glassmorphism/checkbox/Checkbox.tsx',
+					svelte: 'src/lib/glassmorphism/Checkbox.svelte',
+					html: 'registry/glassmorphism/checkbox/checkbox.html'
+				}
+			},
 			description:
 				'An accessible checkbox — a native <input type="checkbox"> restyled as a frosted box that fills indigo with a white tick when checked. Bindable checked state.',
 			props: [
@@ -334,6 +425,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'select',
 			name: 'Select',
 			import: 'glassmorphism.Select',
+			styleClass: 'glass-select',
+			dataAttrs: ['size', 'disabled'],
+			files: {
+				style: 'src/lib/glassmorphism/css/select.css',
+				skins: {
+					react: 'registry/glassmorphism/select/Select.tsx',
+					svelte: 'src/lib/glassmorphism/Select.svelte',
+					html: 'registry/glassmorphism/select/select.html'
+				}
+			},
 			description:
 				'A native <select> restyled to the frosted field language with a custom chevron. Single-select from a list of options, with the same size scale as Input.',
 			props: [
@@ -376,6 +477,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'field',
 			name: 'Field',
 			import: 'glassmorphism.Field',
+			styleClass: 'glass-field',
+			dataAttrs: ['error'],
+			files: {
+				style: 'src/lib/glassmorphism/css/field.css',
+				skins: {
+					react: 'registry/glassmorphism/field/Field.tsx',
+					svelte: 'src/lib/glassmorphism/Field.svelte',
+					html: 'registry/glassmorphism/field/field.html'
+				}
+			},
 			description:
 				'A form-field wrapper: a label (with optional required mark) above a control, and a help line or error message below. Wrap a single text-style control (Input, Textarea, Select).',
 			props: [
@@ -417,6 +528,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'modal',
 			name: 'Modal',
 			import: 'glassmorphism.Modal',
+			styleClass: 'glass-modal',
+			dataAttrs: ['has-header'],
+			files: {
+				style: 'src/lib/glassmorphism/css/modal.css',
+				skins: {
+					react: 'registry/glassmorphism/modal/Modal.tsx',
+					svelte: 'src/lib/glassmorphism/Modal.svelte',
+					html: 'registry/glassmorphism/modal/modal.html'
+				}
+			},
 			description:
 				'A dialog built on the native <dialog> element: top-layer rendering, a real focus trap, Esc-to-close, and a blurred backdrop, all skinned as frosted glass. Controlled via a bindable open state.',
 			trigger: 'Open Modal',
@@ -445,6 +566,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'tabs',
 			name: 'Tabs',
 			import: 'glassmorphism.Tabs',
+			styleClass: 'glass-tabs',
+			dataAttrs: ['active'],
+			files: {
+				style: 'src/lib/glassmorphism/css/tabs.css',
+				skins: {
+					react: 'registry/glassmorphism/tabs/Tabs.tsx',
+					svelte: 'src/lib/glassmorphism/Tabs.svelte',
+					html: 'registry/glassmorphism/tabs/tabs.html'
+				}
+			},
 			description:
 				'A single-select tab set using the WAI-ARIA roving-tabindex pattern (Arrow/Home/End move focus and selection). The panel content is a snippet that receives the active tab label.',
 			props: [
@@ -474,6 +605,15 @@ export const glassmorphism: StyleSpec = {
 			id: 'accordion',
 			name: 'Accordion',
 			import: 'glassmorphism.Accordion',
+			styleClass: 'glass-accordion',
+			files: {
+				style: 'src/lib/glassmorphism/css/accordion.css',
+				skins: {
+					react: 'registry/glassmorphism/accordion/Accordion.tsx',
+					svelte: 'src/lib/glassmorphism/Accordion.svelte',
+					html: 'registry/glassmorphism/accordion/accordion.html'
+				}
+			},
 			description:
 				'Stacked disclosure built on native <details>/<summary> (open/close, keyboard, and a11y for free). In exclusive mode the native `name` attribute keeps only one section open at a time. The panel body is a snippet that receives the section label.',
 			props: [
@@ -502,6 +642,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'spinner',
 			name: 'Spinner',
 			import: 'glassmorphism.Spinner',
+			styleClass: 'glass-spinner',
+			dataAttrs: ['size', 'speed'],
+			files: {
+				style: 'src/lib/glassmorphism/css/spinner.css',
+				skins: {
+					react: 'registry/glassmorphism/spinner/Spinner.tsx',
+					svelte: 'src/lib/glassmorphism/Spinner.svelte',
+					html: 'registry/glassmorphism/spinner/spinner.html'
+				}
+			},
 			description:
 				'Indeterminate loading: a round frosted ring with one indigo arc, rotating. role="status" with an accessible label.',
 			props: [
@@ -531,6 +681,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'progress',
 			name: 'Progress',
 			import: 'glassmorphism.Progress',
+			styleClass: 'glass-progress',
+			dataAttrs: ['size', 'show'],
+			files: {
+				style: 'src/lib/glassmorphism/css/progress.css',
+				skins: {
+					react: 'registry/glassmorphism/progress/Progress.tsx',
+					svelte: 'src/lib/glassmorphism/Progress.svelte',
+					html: 'registry/glassmorphism/progress/progress.html'
+				}
+			},
 			description:
 				'Determinate progress: an indigo fill in a pill-shaped frosted track. role="progressbar" with aria-valuenow. `value` is 0–100.',
 			props: [
@@ -559,6 +719,15 @@ export const glassmorphism: StyleSpec = {
 			id: 'skeleton',
 			name: 'Skeleton',
 			import: 'glassmorphism.Skeleton',
+			styleClass: 'glass-skeleton',
+			files: {
+				style: 'src/lib/glassmorphism/css/skeleton.css',
+				skins: {
+					react: 'registry/glassmorphism/skeleton/Skeleton.tsx',
+					svelte: 'src/lib/glassmorphism/Skeleton.svelte',
+					html: 'registry/glassmorphism/skeleton/skeleton.html'
+				}
+			},
 			description:
 				'A loading placeholder — a frosted surface with a highlight that sweeps across (shimmer) while content loads. `text` renders N lines (last one short); `rect`/`circle` are single blocks sized by width/height. Decorative — role="status", aria-label="Loading".',
 			props: [
@@ -595,6 +764,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'radio-group',
 			name: 'RadioGroup',
 			import: 'glassmorphism.RadioGroup',
+			styleClass: 'glass-radio',
+			dataAttrs: ['checked', 'disabled'],
+			files: {
+				style: 'src/lib/glassmorphism/css/radio-group.css',
+				skins: {
+					react: 'registry/glassmorphism/radio-group/RadioGroup.tsx',
+					svelte: 'src/lib/glassmorphism/RadioGroup.svelte',
+					html: 'registry/glassmorphism/radio-group/radio-group.html'
+				}
+			},
 			description:
 				'A single-select group of options built on native <input type="radio">. Each option shows a round frosted dot that fills indigo with a white inner dot when selected.',
 			props: [
@@ -630,6 +809,16 @@ export const glassmorphism: StyleSpec = {
 			id: 'dropdown-menu',
 			name: 'Dropdown Menu',
 			import: 'glassmorphism.DropdownMenu',
+			styleClass: 'glass-dropdown',
+			dataAttrs: ['size'],
+			files: {
+				style: 'src/lib/glassmorphism/css/dropdown-menu.css',
+				skins: {
+					react: 'registry/glassmorphism/dropdown-menu/DropdownMenu.tsx',
+					svelte: 'src/lib/glassmorphism/DropdownMenu.svelte',
+					html: 'registry/glassmorphism/dropdown-menu/dropdown-menu.html'
+				}
+			},
 			description:
 				'An anchored menu on the native `popover` attribute (top-layer, light-dismiss, Esc) + CSS Anchor Positioning (tracks the trigger, flips up when cramped) — no JS positioning library. Adds role=menu semantics and arrow-key navigation.',
 			props: [
@@ -660,6 +849,22 @@ export const glassmorphism: StyleSpec = {
 			// Imperative, not a rendered element: call the function; a single
 			// <Toaster /> mounted at the app root shows the stack.
 			import: 'glassmorphism.toast',
+			styleClass: 'glass-toaster',
+			registryDeps: ['alert'],
+			files: {
+				style: 'src/lib/glassmorphism/css/toast.css',
+				skins: {
+					react: [
+						'registry/glassmorphism/toast/toast.ts',
+						'registry/glassmorphism/toast/Toaster.tsx'
+					],
+					svelte: [
+						'src/lib/glassmorphism/toast.svelte.ts',
+						'src/lib/glassmorphism/Toaster.svelte'
+					],
+					html: 'registry/glassmorphism/toast/toast.html'
+				}
+			},
 			description:
 				'A transient notification fired imperatively — call toast(message) (or toast.success/error/…) and a <Toaster /> mounted once at the app root shows it, top-right, auto-dismissing. Each toast reuses the frosted Alert skin.',
 			trigger: 'Show toast',

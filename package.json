@@ -1,16 +1,28 @@
 {
-	"name": "@chukwuka-osakwe/viny",
+	"name": "@aronia/svelte",
 	"version": "0.0.1",
+	"description": "The aronia design language as importable Svelte 5 components (neo-brutalism, glassmorphism). The primary delivery is the `aronia` CLI (copy-into-repo); this package is the optional Svelte-import path.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Chukwuka-Osakwe/aronia.git"
+	},
+	"homepage": "https://github.com/Chukwuka-Osakwe/aronia#readme",
+	"bugs": "https://github.com/Chukwuka-Osakwe/aronia/issues",
+	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build && npm run prepack",
+		"build": "npm run registry && vite build && npm run prepack",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync && svelte-package",
 		"prepack": "svelte-kit sync && svelte-package && publint",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"check:contrast": "node scripts/contrast-audit.mjs"
+		"check:contrast": "node scripts/contrast-audit.mjs",
+		"registry": "tsx scripts/build-registry.ts"
 	},
+	"workspaces": [
+		"cli"
+	],
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
@@ -39,6 +51,7 @@
 		"publint": "^0.3.21",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
+		"tsx": "^4.19.2",
 		"typescript": "^6.0.3",
 		"vite": "^7.3.6"
 	},

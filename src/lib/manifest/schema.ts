@@ -36,6 +36,16 @@ export interface SnippetSpec {
  * Components mirror the matching pseudo-class with a `[data-state='…']` selector. */
 export type StateName = 'hover' | 'active' | 'focus';
 
+/** Registry payload for a component — repo-relative source paths the aronia CLI
+ *  copies into a consumer's repo (`aronia/<style>/…`). See DESIGN.md, Entries 31–32. */
+export interface ComponentFiles {
+	/** Layer-2 stylesheet — the design language for this component (global, unscoped). */
+	style: string;
+	/** Layer-3 skins by framework — thin prop→data-attribute mappers over the CSS. A
+	 *  skin may be one file or several (e.g. the toast store + its `<Toaster/>`). */
+	skins: Partial<Record<'react' | 'svelte' | 'html', string | string[]>>;
+}
+
 export interface ComponentSpec {
 	id: string;
 	name: string;
@@ -50,6 +60,16 @@ export interface ComponentSpec {
 	 *  docs render to open it. Preview owns the open-state and wires `open`+`onClose`
 	 *  rather than rendering the component inline. */
 	trigger?: string;
+	/** Registry: the base CSS class the style hooks hang off (e.g. "nb-btn"). */
+	styleClass?: string;
+	/** Registry: the data-attribute names that drive styling (e.g. ["variant","size"]). */
+	dataAttrs?: readonly string[];
+	/** Registry: the files the aronia CLI copies into a consumer's repo. Absent on
+	 *  components not yet ported to the copy-into-repo registry. */
+	files?: ComponentFiles;
+	/** Registry: other component ids (same family) this one needs; the aronia CLI
+	 *  installs them too (e.g. toast reuses alert). */
+	registryDeps?: readonly string[];
 }
 
 export interface StyleSpec {
@@ -63,6 +83,9 @@ export interface StyleSpec {
 	 *  Glassmorphism needs a non-uniform backdrop or its frosted surfaces render
 	 *  invisible. Omitted when the style has no such dependency (most don't). */
 	requires?: string;
+	/** Layer-1 token stylesheet (repo-relative) — the CSS custom properties every
+	 *  component in this family depends on. The aronia CLI ships it once per style. */
+	tokens?: string;
 	components: ComponentSpec[];
 }
 
