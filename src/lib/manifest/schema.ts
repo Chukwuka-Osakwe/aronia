@@ -79,6 +79,13 @@ export interface StyleSpec {
 	description: string;
 	/** When this style is the right choice. */
 	whenToUse: string;
+	/** How to COMPOSE tastefully in this language — the grammar (grid, hierarchy,
+	 *  colour discipline, whitespace) an agent needs to build a whole cohesive
+	 *  page in the style, not just drop individual components on it. */
+	principles?: readonly string[];
+	/** Anti-patterns — the things that break the language (e.g. gradients/blur
+	 *  for Swiss). The counterpart to `principles`. */
+	avoid?: readonly string[];
 	/** A hard usage constraint an agent MUST honour to get a correct result — e.g.
 	 *  Glassmorphism needs a non-uniform backdrop or its frosted surfaces render
 	 *  invisible. Omitted when the style has no such dependency (most don't). */

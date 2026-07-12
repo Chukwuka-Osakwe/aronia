@@ -1,0 +1,120 @@
+/* Swiss — Button (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-btn` + `[data-*]` attributes — the
+ * framework-agnostic design language for the Button. Depends only on the
+ * Layer-1 tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ */
+
+.swiss-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-medium);
+	line-height: 1;
+	text-decoration: none;
+	color: var(--swiss-ink);
+	background: var(--swiss-paper);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	cursor: pointer;
+	transition: var(--swiss-transition);
+	white-space: nowrap;
+	user-select: none;
+}
+
+/* Restrained interaction: a quiet background shift, never a transform. Focus is
+   a 2px accent ring, offset so it reads on the white page even around the
+   orange primary. Mirrored by `[data-state]` so the docs can force it. */
+.swiss-btn:focus-visible,
+.swiss-btn[data-state='focus'] {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+
+/* variants — one bold accent (primary), a strong ink neutral (secondary), then
+   progressively quieter. */
+.swiss-btn[data-variant='primary'] {
+	background: var(--swiss-accent);
+	color: var(--swiss-accent-ink);
+}
+.swiss-btn[data-variant='primary']:hover,
+.swiss-btn[data-variant='primary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--swiss-accent) 88%, #000);
+}
+
+.swiss-btn[data-variant='secondary'] {
+	background: var(--swiss-ink);
+	color: var(--swiss-on-ink);
+}
+.swiss-btn[data-variant='secondary']:hover,
+.swiss-btn[data-variant='secondary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--swiss-ink) 82%, #fff);
+}
+
+.swiss-btn[data-variant='muted'] {
+	background: var(--swiss-muted);
+}
+.swiss-btn[data-variant='muted']:hover,
+.swiss-btn[data-variant='muted'][data-state='hover'] {
+	background: color-mix(in srgb, var(--swiss-muted) 92%, #000);
+}
+
+/* ghost — transparent, but keeps the hairline border: an outline button. */
+.swiss-btn[data-variant='ghost'] {
+	background: transparent;
+}
+.swiss-btn[data-variant='ghost']:hover,
+.swiss-btn[data-variant='ghost'][data-state='hover'] {
+	background: var(--swiss-muted);
+}
+
+/* quiet — transparent AND borderless (a bare text button, e.g. nav items). The
+   border stays present but transparent so its footprint matches the others. */
+.swiss-btn[data-variant='quiet'] {
+	background: transparent;
+	border-color: transparent;
+}
+.swiss-btn[data-variant='quiet']:hover,
+.swiss-btn[data-variant='quiet'][data-state='hover'] {
+	background: var(--swiss-muted);
+}
+
+/* sizes */
+.swiss-btn[data-size='xs'] {
+	font-size: var(--swiss-size-xs-text);
+	padding: var(--swiss-size-xs-pad);
+}
+.swiss-btn[data-size='sm'] {
+	font-size: var(--swiss-size-sm-text);
+	padding: var(--swiss-size-sm-pad);
+}
+.swiss-btn[data-size='md'] {
+	font-size: var(--swiss-size-md-text);
+	padding: var(--swiss-size-md-pad);
+}
+.swiss-btn[data-size='lg'] {
+	font-size: var(--swiss-size-lg-text);
+	padding: var(--swiss-size-lg-pad);
+}
+
+/* shape */
+.swiss-btn[data-shape='pill'] {
+	border-radius: var(--swiss-radius-pill);
+}
+
+/* disabled — uniform inert: flat grey, muted text, hairline border, no interaction. */
+.swiss-btn:disabled,
+.swiss-btn[aria-disabled='true'] {
+	background: var(--swiss-muted);
+	color: var(--swiss-ink-soft);
+	border-color: var(--swiss-line);
+	cursor: not-allowed;
+}
+
+.swiss-btn__icon {
+	display: inline-flex;
+	align-items: center;
+}

@@ -43,7 +43,15 @@ const CASES = [
 	{ label: 'glass: link-ink on white (link/nav active)', fg: '#4f46e5', bg: '#ffffff' },
 	{ label: 'glass: white label on primary fill', fg: 'white', bg: 'rgba(79,70,229,0.9)' },
 	{ label: 'glass: white label on secondary fill', fg: 'white', bg: 'rgba(190,24,93,0.9)' },
-	{ label: 'glass: white label on info fill', fg: 'white', bg: 'rgba(29,78,216,0.9)' }
+	{ label: 'glass: white label on info fill', fg: 'white', bg: 'rgba(29,78,216,0.9)' },
+
+	// --- Swiss: near-monochrome + one hazard-orange accent ---
+	{ label: 'swiss: ink on paper', fg: '#141414', bg: '#ffffff' },
+	{ label: 'swiss: ink-soft on paper (secondary text)', fg: '#666666', bg: '#ffffff' },
+	{ label: 'swiss: ink on accent fill (primary button)', fg: '#141414', bg: '#f24405' },
+	{ label: 'swiss: white on ink fill (secondary button)', fg: '#ffffff', bg: '#141414' },
+	{ label: 'swiss: ink on muted fill (muted button)', fg: '#141414', bg: '#f4f4f4' },
+	{ label: 'swiss: accent-text on paper (link/emphasis)', fg: '#c2350a', bg: '#ffffff' }
 ];
 
 let failures = 0;

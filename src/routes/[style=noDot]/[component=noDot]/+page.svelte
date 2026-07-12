@@ -171,6 +171,13 @@
 			radial-gradient(140% 140% at 50% 120%, #7dd3fc 0%, transparent 55%),
 			linear-gradient(135deg, #c4b5fd, #bae6fd);
 	}
+	/* Swiss: flat, hairline-bordered card chrome — no shadow, crisp 2px corners,
+	   matching the family's own restraint. */
+	.workbench__main[data-style='swiss'] {
+		--doc-card-border: 1px solid var(--doc-line);
+		--doc-card-shadow: none;
+		--doc-card-radius: 2px;
+	}
 	.workbench__side {
 		border-left: 1px solid var(--doc-ink);
 		/* Background comes from the global `.scroll-shadows` utility (panel + the
@@ -212,6 +219,9 @@
 	}
 	header[data-style='glassmorphism'] h1 {
 		font-family: var(--glass-font);
+	}
+	header[data-style='swiss'] h1 {
+		font-family: var(--swiss-font);
 	}
 	.desc {
 		font-size: 1rem; /* 16px */

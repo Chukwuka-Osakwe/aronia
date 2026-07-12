@@ -1,0 +1,17 @@
+<!--
+  Swiss — Link (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./link.css once. Attribute contract:
+    data-variant : inline | nav            (default inline)
+    data-active  : "true" on the current nav item (also set aria-current="page")
+    external     : add target="_blank" rel="noopener noreferrer" + the ↗ mark
+-->
+<!-- Inline text link (the one accent, as darkened-orange underlined text) -->
+<a class="swiss-link" data-variant="inline" href="/docs">read the docs</a>
+
+<!-- Active nav item -->
+<a class="swiss-link" data-variant="nav" data-active="true" aria-current="page" href="/home">Home</a>
+
+<!-- External -->
+<a class="swiss-link" data-variant="inline" href="https://example.com" target="_blank" rel="noopener noreferrer">
+  example<span class="swiss-link__ext" aria-hidden="true">↗</span>
+</a>

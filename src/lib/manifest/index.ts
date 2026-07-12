@@ -5,10 +5,11 @@
 import type { Manifest } from './schema.js';
 import { neoBrutalism } from '../neo-brutalism/manifest.js';
 import { glassmorphism } from '../glassmorphism/manifest.js';
+import { swiss } from '../swiss/manifest.js';
 
 export * from './schema.js';
 
 export const manifest: Manifest = {
 	version: '0.1.0',
-	styles: [neoBrutalism, glassmorphism]
+	styles: [neoBrutalism, glassmorphism, swiss]
 };
