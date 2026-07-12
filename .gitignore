@@ -13,6 +13,9 @@ node_modules
 /static/r
 /cli/r
 
+# Design-research reading notes (personal, never committed)
+/research
+
 # OS
 .DS_Store
 Thumbs.db
