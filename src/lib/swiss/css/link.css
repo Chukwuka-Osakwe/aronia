@@ -38,21 +38,23 @@
 	color: color-mix(in srgb, var(--swiss-accent-text) 80%, #000);
 }
 
-/* nav — quiet ink at rest (no underline) so the accent active item stands out.
-   Hover fades a thin underline in; active is accent + semibold + underline. */
+/* nav — state rides on COLOUR, never font-weight (a weight change alters glyph
+   advance width and would reflow the whole nav list on select). Muted secondary ink
+   at rest (--swiss-ink-soft), hover leaps to full ink, active is the accent + a
+   persistent underline (+ aria-current). Constant weight → zero reflow. */
 .swiss-link[data-variant='nav'] {
 	display: inline-block;
 	padding: 0.3rem 0.5rem;
 	font-size: var(--swiss-size-sm-text);
 	font-weight: var(--swiss-font-weight-medium);
+	color: var(--swiss-ink-soft);
 }
 .swiss-link[data-variant='nav']:hover,
 .swiss-link[data-variant='nav'][data-state='hover'] {
-	text-decoration-color: currentColor;
+	color: var(--swiss-ink);
 }
 .swiss-link[data-variant='nav'][data-active='true'] {
 	color: var(--swiss-accent-text);
-	font-weight: var(--swiss-font-weight-semibold);
 	text-decoration-color: currentColor;
 }
 

@@ -37,9 +37,11 @@
 	text-decoration-color: currentColor;
 }
 
-/* nav — quiet ink at rest (no underline), so the coloured active item stands out.
-   Same hover as inline. Active is the "stuck hover", coloured: bold + --nb-link-ink
-   + a persistent underline, with aria-current for assistive tech. */
+/* nav — state rides on COLOUR, never font-weight (a weight change alters glyph
+   advance width and would reflow the whole nav list on hover/select). Neo stays
+   high-contrast — a muted grey rest would be off-brand — so it pops the other way:
+   full ink at rest, hover leaps to the saturated link-blue, active is that blue +
+   a persistent underline (+ aria-current). Constant weight → zero reflow. */
 .nb-link[data-variant='nav'] {
 	display: inline-block;
 	padding: 0.3rem 0.5rem;
@@ -48,12 +50,10 @@
 }
 .nb-link[data-variant='nav']:hover,
 .nb-link[data-variant='nav'][data-state='hover'] {
-	font-weight: var(--nb-font-weight-bold);
-	text-decoration-color: currentColor;
+	color: var(--nb-link-ink);
 }
 .nb-link[data-variant='nav'][data-active='true'] {
 	color: var(--nb-link-ink);
-	font-weight: var(--nb-font-weight-bold);
 	text-decoration-color: currentColor;
 }
 

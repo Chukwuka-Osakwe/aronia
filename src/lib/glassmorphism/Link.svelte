@@ -9,11 +9,13 @@
 	// link in prose) and `nav` (a compact, active-aware sidebar/menu item).
 	// `external` adds a new-tab + ↗ affordance.
 	//
-	// Interaction language (both variants): coloured text at rest, then hover steps up
-	// the weight and fades a native underline in.
+	// Interaction language: coloured text at rest. `inline` steps up the weight and
+	// fades a native underline in on hover; `nav` holds a constant weight — a weight
+	// change would reflow the nav list — and signals hover/active with the underline
+	// + colour instead.
 	type Props = {
 		variant?: LinkVariant;
-		/** For `nav`: marks the current page (weight + colour + persistent underline + aria-current). */
+		/** For `nav`: marks the current page (colour + persistent underline + aria-current). */
 		active?: boolean;
 		external?: boolean;
 		href?: string;

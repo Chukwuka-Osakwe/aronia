@@ -9,7 +9,7 @@ export type LinkVariant = 'inline' | 'nav';
 
 type Props = {
 	variant?: LinkVariant;
-	/** For `nav`: marks the current page (weight + colour + underline + aria-current). */
+	/** For `nav`: marks the current page (colour + underline + aria-current). */
 	active?: boolean;
 	external?: boolean;
 	href?: string;

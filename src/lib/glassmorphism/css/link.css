@@ -38,24 +38,24 @@
 	text-decoration-color: currentColor;
 }
 
-/* nav — quiet ink at rest, so the coloured active item stands out. Same hover as
-   inline. Active is the "stuck hover", coloured: bold + indigo + a persistent
-   underline, with aria-current for assistive tech. */
+/* nav — state rides on COLOUR, never font-weight (a weight change alters glyph
+   advance width and would reflow the whole nav list on hover/select). Muted at rest
+   (--glass-ink-soft), hover leaps to full ink, active is the indigo emphasis + a
+   persistent underline (+ aria-current). Constant weight → zero reflow. */
 .glass-link[data-variant='nav'] {
 	display: inline-block;
 	padding: 0.3rem 0.55rem;
 	font-size: var(--glass-size-sm-text);
 	font-weight: var(--glass-font-weight-medium);
 	border-radius: var(--glass-radius-sm);
+	color: var(--glass-ink-soft);
 }
 .glass-link[data-variant='nav']:hover,
 .glass-link[data-variant='nav'][data-state='hover'] {
-	font-weight: var(--glass-font-weight-bold);
-	text-decoration-color: currentColor;
+	color: var(--glass-ink);
 }
 .glass-link[data-variant='nav'][data-active='true'] {
 	color: var(--glass-link-ink);
-	font-weight: var(--glass-font-weight-bold);
 	text-decoration-color: currentColor;
 }
 
