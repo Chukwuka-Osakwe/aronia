@@ -1,7 +1,8 @@
 {
 	"name": "@aronia/svelte",
 	"version": "0.0.1",
-	"description": "The aronia design language as importable Svelte 5 components (neo-brutalism, glassmorphism). The primary delivery is the `aronia` CLI (copy-into-repo); this package is the optional Svelte-import path.",
+	"private": true,
+	"description": "The aronia registry source + docs site (SvelteKit). aronia ships as the `aronia` CLI (copy-into-repo); this repo is not published as an importable package.",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Chukwuka-Osakwe/aronia.git"
@@ -11,10 +12,9 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "npm run registry && vite build && npm run prepack",
+		"build": "npm run registry && vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync && svelte-package",
-		"prepack": "svelte-kit sync && svelte-package && publint",
+		"prepare": "svelte-kit sync",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"check:contrast": "node scripts/contrast-audit.mjs",
@@ -23,26 +23,7 @@
 	"workspaces": [
 		"cli"
 	],
-	"files": [
-		"dist",
-		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*"
-	],
-	"sideEffects": [
-		"**/*.css"
-	],
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
 	"type": "module",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
-		}
-	},
-	"peerDependencies": {
-		"svelte": "^5.0.0"
-	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/kit": "^2.63.0",
@@ -55,9 +36,6 @@
 		"typescript": "^6.0.3",
 		"vite": "^7.3.6"
 	},
-	"keywords": [
-		"svelte"
-	],
 	"dependencies": {
 		"@fontsource-variable/archivo": "^5.2.8",
 		"@fontsource-variable/geist-mono": "^5.2.8",

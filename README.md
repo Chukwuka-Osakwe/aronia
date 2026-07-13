@@ -83,21 +83,6 @@ aronia is built to be read by agents, not just humans:
   items embedding spec, tokens, CSS, and framework skins). A machine-readable
   index is at [`/llms.txt`](./static/llms.txt).
 
-## Using the Svelte components directly (optional)
-
-The copy-into-repo flow is the point, but the Svelte components are also
-importable as a package if you'd rather depend on them:
-
-```sh
-npm i github:Chukwuka-Osakwe/aronia
-```
-
-```js
-import { neoBrutalism } from '@aronia/svelte';
-```
-
-Svelte 5 + Vite/SvelteKit consumers only.
-
 ## Development
 
 This repo is the registry source **and** the docs site (SvelteKit).
