@@ -2,6 +2,7 @@
 // enum `values` imported from ./options.ts (single source of truth); prose
 // fields (description/whenToUse/principles/avoid) are the agent-facing guidance.
 import type { StyleSpec } from '../manifest/schema.js';
+import { SHARED_LAYOUT } from '../manifest/composition-base.js';
 import {
 	BUTTON_VARIANTS,
 	BUTTON_SIZES,
@@ -42,6 +43,25 @@ export const swiss: StyleSpec = {
 		'Centred body text or justified columns.'
 	],
 	tokens: 'src/lib/styles/swiss.css',
+	// Page-level composition — per-style type + media identity; structural ramp is
+	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
+	composition: {
+		typeScale: {
+			display: { size: 'clamp(2.5rem, 6vw, 4.5rem)', weight: '--swiss-font-weight-bold' },
+			h1: { size: 'clamp(2rem, 4vw, 3rem)', weight: '--swiss-font-weight-bold' },
+			h2: { size: 'clamp(1.6rem, 3vw, 2.25rem)', weight: '--swiss-font-weight-bold' },
+			h3: { size: '1.375rem', weight: '--swiss-font-weight-semibold' }, // = --swiss-size-title
+			character:
+				'Tight tracking on large headings (down to -0.02em on display); flush-left, ragged-right; hierarchy from weight, never colour.'
+		},
+		...SHARED_LAYOUT,
+		media: {
+			filter: 'grayscale(1) contrast(1.04)',
+			radius: '--swiss-radius',
+			edge: 'Rides the universal neutral inset outline — no themed override; or borderless for full-bleed editorial.',
+			shadow: 'none'
+		}
+	},
 	components: [
 		{
 			id: 'button',

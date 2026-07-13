@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join, basename, dirname } from 'node:path';
 import { manifest } from '../src/lib/manifest/index.js';
-import type { ComponentSpec } from '../src/lib/manifest/schema.js';
+import type { ComponentSpec, CompositionSpec } from '../src/lib/manifest/schema.js';
 
 const ROOT = process.cwd();
 const OUT = join(ROOT, 'static', 'r');
@@ -36,6 +36,11 @@ interface RegistryItem {
 		principles?: readonly string[];
 		avoid?: readonly string[];
 	};
+	/** The parent style's page-level composition vocabulary (per-style type/media
+	 *  identity + the shared structural ramp), denormalized like styleGuidance so
+	 *  `aronia add` records how to compose a whole PAGE in the style, not just how
+	 *  to reuse the component. Absent for styles without a composition block. */
+	composition?: CompositionSpec;
 	/** Other component ids (same family) the CLI must install first. */
 	registryDeps?: readonly string[];
 	/** Layer 1 — written to the consumer as `tokens.css`. */
@@ -143,6 +148,7 @@ for (const style of manifest.styles) {
 				principles: style.principles,
 				avoid: style.avoid
 			},
+			composition: style.composition,
 			tokens: { file: 'tokens.css', content: tokensContent },
 			css: { file: basename(files.style), content: read(files.style) },
 			skins

@@ -13,6 +13,7 @@
 // The manifest array order is the order shown in the docs. See DESIGN.md, Entry 8.
 
 import type { StyleSpec } from '../manifest/schema.js';
+import { SHARED_LAYOUT } from '../manifest/composition-base.js';
 import {
 	BUTTON_VARIANTS,
 	BUTTON_SIZES,
@@ -49,6 +50,25 @@ export const neoBrutalism: StyleSpec = {
 		'Thin, subtle borders — keep them thick and black.'
 	],
 	tokens: 'src/lib/styles/neo-brutalism.css',
+	// Page-level composition — per-style type + media identity; structural ramp is
+	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
+	composition: {
+		typeScale: {
+			display: { size: 'clamp(3rem, 8vw, 6rem)', weight: '--nb-font-weight-bold' },
+			h1: { size: 'clamp(2.25rem, 5vw, 3.5rem)', weight: '--nb-font-weight-bold' },
+			h2: { size: 'clamp(1.75rem, 3.5vw, 2.5rem)', weight: '--nb-font-weight-semibold' },
+			h3: { size: '1.375rem', weight: '--nb-font-weight-semibold' }, // = --nb-size-title
+			character:
+				'Biggest and chunkiest; extra-tight display line-height (~0.95); often UPPERCASE — when uppercased add positive tracking (~0.02em) to keep caps from crowding.'
+		},
+		...SHARED_LAYOUT,
+		media: {
+			filter: 'none',
+			radius: '--nb-radius',
+			edge: 'Themed override of the neutral default: --nb-border (3px solid ink). The hard frame is the identity.',
+			shadow: '--nb-shadow-lg'
+		}
+	},
 	components: [
 		{
 			id: 'button',

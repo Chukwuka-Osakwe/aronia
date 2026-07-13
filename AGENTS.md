@@ -11,9 +11,10 @@ build or edit UI:
    for every component that's been added — its style class, `data-*` attributes,
    files, and full prop spec. Match it exactly; do not invent props, values, or
    class names. It also carries each style's `principles` (how to compose in the
-   design language) and `avoid` (anti-patterns) under `styles.<style>` — **follow
-   them when laying out whole pages**, so the UI reads as the style, not just as a
-   pile of its components.
+   design language), `avoid` (anti-patterns), and `composition` (page-level type
+   scale, spacing ramp, breakpoints, container, and media treatment) under
+   `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
+   as the style, not just as a pile of its components.
 2. **Read the real source in `aronia/<style>/`** as a worked example, and build
    new UI in the same design language — the same tokens, the same `data-*`
    conventions, the same structure. Consistency with the existing components is
@@ -28,3 +29,18 @@ build or edit UI:
 The full hosted reference (whole catalog and per-component items with tokens,
 CSS, and framework skins) is `/manifest.json` and `/r/<style>/<component>.json`;
 see [`static/llms.txt`](./static/llms.txt) for the machine-readable index.
+
+## Recommended companion skills
+
+aronia's `composition` guidance covers only what's specific to each style — its
+type scale, spacing, breakpoints, container, and media treatment. It deliberately
+does **not** restate universal design hygiene (line-height by role, capping the
+measure, neutral image outlines, concentric radius, and the like). For that layer,
+install and apply Jakub Krehel's design skills — they're the authoritative source,
+and pairing them with aronia is the intended setup:
+
+- **[jakubkrehel/skills](https://github.com/jakubkrehel/skills)** — `better-typography`,
+  `better-ui`, `better-colors`. Install: `npx skills add jakubkrehel/skills`.
+
+Use aronia for the per-style vocabulary and those skills for the universal polish;
+the two are complementary, not overlapping.

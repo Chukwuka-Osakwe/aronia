@@ -37,7 +37,7 @@ the exact contract, not a guess.
 
 ## Styles
 
-Two design languages, 20 components each. Add `--style <id>` to any command.
+Three design languages, 20 components each. Add `--style <id>` to any command.
 
 - **`neo-brutalism`** — thick black borders, hard offset shadows (no blur), flat
   saturated colour, chunky heavy type, and a tactile "shove" on press. For bold,
@@ -46,8 +46,11 @@ Two design languages, 20 components each. Add `--style <id>` to any command.
   hairline borders, diffuse shadows, generous rounded corners. For modern,
   layered interfaces over vivid gradients or imagery. *(Needs a non-uniform
   backdrop — glass is invisible on a flat solid fill.)*
+- **`swiss`** — clean, grid-driven minimalism: near-monochrome ink on white,
+  hairline borders, crisp corners, flat surfaces, and a single hazard-orange
+  accent. For precise, content-first, understated interfaces.
 
-Both families ship: Button, Link, Card, Badge, Input, Textarea, Toggle, Checkbox,
+All three families ship: Button, Link, Card, Badge, Input, Textarea, Toggle, Checkbox,
 RadioGroup, Select, Field, Modal, Alert, Tabs, Accordion, Dropdown Menu, Spinner,
 Progress, Skeleton, and Toast.
 

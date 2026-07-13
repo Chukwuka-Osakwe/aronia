@@ -3,6 +3,7 @@
 // hand-authored. Prop order: appearance → binding/behavior → state. See DESIGN.md.
 
 import type { StyleSpec } from '../manifest/schema.js';
+import { SHARED_LAYOUT } from '../manifest/composition-base.js';
 import {
 	BUTTON_VARIANTS,
 	BUTTON_SIZES,
@@ -41,6 +42,24 @@ export const glassmorphism: StyleSpec = {
 	requires:
 		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
 	tokens: 'src/lib/styles/glassmorphism.css',
+	// Page-level composition — per-style type + media identity; structural ramp is
+	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
+	composition: {
+		typeScale: {
+			display: { size: 'clamp(2.5rem, 6vw, 4.5rem)', weight: '--glass-font-weight-bold' },
+			h1: { size: 'clamp(2rem, 4vw, 3rem)', weight: '--glass-font-weight-bold' },
+			h2: { size: 'clamp(1.5rem, 3vw, 2rem)', weight: '--glass-font-weight-semibold' },
+			h3: { size: '1.25rem', weight: '--glass-font-weight-semibold' }, // = --glass-size-title
+			character: 'Softest and airiest; looser heading line-heights, lightest weights of the three.'
+		},
+		...SHARED_LAYOUT,
+		media: {
+			filter: 'none',
+			radius: '--glass-radius',
+			edge: 'Soft themed override: --glass-border + --glass-highlight (the frosted rim).',
+			shadow: '--glass-shadow'
+		}
+	},
 	components: [
 		{
 			id: 'button',
