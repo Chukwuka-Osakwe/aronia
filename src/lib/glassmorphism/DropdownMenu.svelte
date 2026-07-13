@@ -31,7 +31,12 @@
 
 	function onToggle(e: ToggleEvent) {
 		open = e.newState === 'open';
-		if (open) menuItems()[0]?.focus();
+		// preventScroll: the menu is a top-layer popover; without it, .focus()
+		// scrolls the nearest scrollable ancestor (the document, when the menu
+		// overflows the viewport) to reveal the item — which shoves a fixed-height
+		// page layout and reads as a jitter. We never need to scroll to a top-layer
+		// element, so suppress it.
+		if (open) menuItems()[0]?.focus({ preventScroll: true });
 	}
 
 	function onKeydown(e: KeyboardEvent) {

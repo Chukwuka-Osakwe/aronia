@@ -13,14 +13,10 @@
 	const Comp = $derived(registry[data.styleId][data.componentId]);
 
 	// For wrapper components (e.g. Field): if the children snippet names a `sample`
-	// component, resolve the live component + its display name so Preview can render
-	// a real control inside and the code-gen can print it.
+	// component, resolve the live component so Preview can render a real control inside.
 	const childSnippet = $derived(spec.snippets?.find((s) => s.name === 'children'));
 	const SampleChild = $derived(
 		childSnippet?.sample ? registry[data.styleId][childSnippet.sample] : undefined
-	);
-	const sampleName = $derived(
-		childSnippet?.sample ? style.components.find((c) => c.id === childSnippet.sample)?.name : undefined
 	);
 
 	// The style's own Button drives overlay triggers (Modal) — same real-component
@@ -100,7 +96,6 @@
 				{slots}
 				{forced}
 				{SampleChild}
-				{sampleName}
 				{StyleButton}
 				{fireAction}
 			/>
@@ -109,7 +104,9 @@
 
 	<aside class="workbench__side scroll-shadows">
 		<section>
-			<h2>Props</h2>
+			<!-- Surfaces the active library on the playground as a crumb: e.g. SWISS / PROPS.
+			     The library name reads in ink; PROPS takes the brand accent to stand out. -->
+			<h2>{style.name} <span class="crumb-sep">/</span> <span class="crumb-props">Props</span></h2>
 			{#key spec.id}
 				<Controls {spec} {values} {slots} {forced} onForce={(s) => (forced = s)} />
 			{/key}
@@ -250,6 +247,16 @@
 		top: 0;
 		z-index: 10;
 		background: var(--doc-panel, #fff);
+	}
+	/* Crumb separator between the library name and PROPS — muted so the library
+	   reads as the surfaced context and the slash stays quiet. */
+	h2 .crumb-sep {
+		color: var(--doc-muted);
+		font-weight: 400;
+	}
+	/* PROPS takes the aronia brand accent so the active section stands out. */
+	h2 .crumb-props {
+		color: var(--doc-accent);
 	}
 
 	@media (max-width: 900px) {

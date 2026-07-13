@@ -1,35 +1,124 @@
 <script lang="ts">
 	// Static "How to use" guide: import, the manifest, and the theme contract.
-	// The theming section is the load-bearing part — it's the same token list
-	// recorded in DESIGN.md, surfaced for humans (and agents) who want to rebrand.
+	// The theming section is STYLE-AWARE — the three families expose genuinely
+	// different token vocabularies (Swiss has status -ink tones and no primary/
+	// shadow-offset; glass has blur/surface; nb has primary/shadow). Pick a family
+	// and its own tokens + example load. Same lists recorded in DESIGN.md.
+	type Row = [token: string, role: string];
+	interface Theme {
+		id: string;
+		name: string;
+		/** Palette — safe to override; recolours without touching the structure. */
+		brand: Row[];
+		/** Structure — IS the style; override deliberately. */
+		structure: Row[];
+		/** Component knobs — a prop gives presets, the token takes any value. */
+		component: Row[];
+		example: string;
+		structureNote: string;
+		paletteNote: string;
+	}
 
-	// Brand palette — safe to override; changes colour without touching the style.
-	const brandTokens: [string, string][] = [
-		['--nb-ink', 'Text, borders, and shadows (the “black”).'],
-		['--nb-paper', 'Surface / card background (the “white”).'],
-		['--nb-primary', 'Primary emphasis — primary buttons, active tab, checkbox/radio fill.'],
-		['--nb-secondary', 'Secondary emphasis — secondary buttons.'],
-		['--nb-muted', 'Muted surfaces — disabled, ghost hover, toggle track.'],
-		['--nb-accent', 'Focus rings and error / required marks.'],
-		['--nb-info · --nb-success · --nb-warning · --nb-danger', 'Alert & status colours.'],
-		['--nb-backdrop', 'Modal / overlay dim (derives from --nb-ink).'],
-		['--nb-font · --nb-font-weight', 'Display font family and weight.']
+	const THEMES: Theme[] = [
+		{
+			id: 'neo-brutalism',
+			name: 'Neo-Brutalism',
+			brand: [
+				['--nb-ink', 'Text, borders, and shadows (the “black”).'],
+				['--nb-paper', 'Surface / card background (the “white”).'],
+				['--nb-primary', 'Primary emphasis — primary buttons, active tab, checkbox/radio fill.'],
+				['--nb-secondary', 'Secondary emphasis — secondary buttons.'],
+				['--nb-muted', 'Muted surfaces — disabled, ghost hover, toggle track.'],
+				['--nb-accent', 'Focus rings and error / required marks.'],
+				['--nb-info · --nb-success · --nb-warning · --nb-danger', 'Alert & status colours.'],
+				['--nb-backdrop', 'Modal / overlay dim (derives from --nb-ink).'],
+				['--nb-font · --nb-font-weight', 'Display font family and weight.']
+			],
+			structure: [
+				['--nb-border-width', 'Border thickness (3px).'],
+				['--nb-radius', 'Corner radius (0 = square). Raise it and it stops reading as NB.'],
+				['--nb-shadow-offset', 'Control shadow depth (1.5px).'],
+				['--nb-shadow-lg-offset', 'Large-surface (Modal) shadow depth (4px).']
+			],
+			component: [
+				['--nb-spinner-duration', 'Spinner rotation duration — any value; overrides the `speed` preset.']
+			],
+			example: `:root {
+  --nb-primary:   #6b4eff;   /* brand purple replaces the yellow */
+  --nb-secondary: #00c2b8;
+  --nb-ink:       #14121f;
+  --nb-accent:    #ff3d7f;
+  --nb-success:   #1db954;
+}`,
+			structureNote: 'These change the style’s identity itself — raise the radius and it stops reading as NB.',
+			paletteNote:
+				'<code>--nb-primary</code> paints <em>every</em> primary surface at once (buttons, active tab, checkbox fill). That’s deliberate — consistent brand — but it’s broad reach.'
+		},
+		{
+			id: 'glassmorphism',
+			name: 'Glassmorphism',
+			brand: [
+				['--glass-ink · --glass-ink-soft', 'Primary and secondary text over the frost.'],
+				['--glass-surface · --glass-surface-strong', 'Frosted surface fills (strong = raised / hover).'],
+				['--glass-primary', 'Primary emphasis — a translucent fill that carries white text.'],
+				['--glass-secondary', 'Secondary emphasis — secondary buttons.'],
+				['--glass-accent · --glass-link-ink', 'Focus ring (accent) and link / active text (AA as text).'],
+				['--glass-info · --glass-success · --glass-warning · --glass-danger', 'Alert & status fills.'],
+				['--glass-font · --glass-font-weight', 'Display font family and weight.']
+			],
+			structure: [
+				['--glass-blur', 'Backdrop blur radius (14px) — the frost itself.'],
+				['--glass-border-color', 'The light rim highlight on edges.'],
+				['--glass-radius', 'Corner radius (16px — soft). Lower it and it stops reading as glass.'],
+				['--glass-shadow', 'Diffuse depth shadow (no hard offset).']
+			],
+			component: [
+				['--glass-spinner-duration', 'Spinner rotation duration — any value; overrides the `speed` preset.']
+			],
+			example: `:root {
+  --glass-primary: rgba(124, 58, 237, 0.9);  /* violet, keep it dark for white text */
+  --glass-accent:  #7c3aed;
+  --glass-ink:     #16162a;
+  --glass-radius:  20px;
+}`,
+			structureNote: 'These change the style’s identity — drop the blur or the radius and it stops reading as glass.',
+			paletteNote:
+				'<code>--glass-primary</code> is a <em>translucent</em> fill tuned to carry white text on any backdrop — keep a new value dark enough (≥4.5:1 over white) or the label drops below AA.'
+		},
+		{
+			id: 'swiss',
+			name: 'Swiss',
+			brand: [
+				['--swiss-ink', 'Text and hairline borders (the “ink”).'],
+				['--swiss-paper', 'Surface / card background (the “paper”).'],
+				['--swiss-accent', 'The single accent — used sparingly (primary button, toggle-on, progress fill, focus rings).'],
+				['--swiss-accent-ink · --swiss-accent-text', 'Text ON the accent fill, and the darker accent for link / emphasis TEXT.'],
+				['--swiss-muted · --swiss-ink-soft', 'Subtle grey fills, and secondary text (help lines, placeholders).'],
+				['--swiss-info · --swiss-success · --swiss-warning · --swiss-danger (+ -ink)', 'Status colours; the -ink tones are AA as text & icons.'],
+				['--swiss-backdrop', 'Modal / overlay dim (derives from --swiss-ink).'],
+				['--swiss-font · --swiss-font-weight', 'Display font family and weight.']
+			],
+			structure: [
+				['--swiss-border-width', 'Hairline border thickness (1px).'],
+				['--swiss-radius', 'Corner radius (2px — crisp). Raise it and it drifts from Swiss.'],
+				['--swiss-shadow-overlay', 'The one elevation — modal / menu / toast lift (flat everywhere else).']
+			],
+			component: [
+				['--swiss-spinner-duration', 'Spinner rotation duration — any value; overrides the `speed` preset.']
+			],
+			example: `:root {
+  --swiss-accent:      #1f6feb;   /* a blue accent */
+  --swiss-accent-ink:  #ffffff;   /* white text on the blue fill */
+  --swiss-accent-text: #1a5fd0;   /* darker blue for link text (AA) */
+}`,
+			structureNote: 'These change the style’s identity — raise the radius or add shadow and it stops reading as Swiss.',
+			paletteNote:
+				'Swiss reserves the accent for one emphasis at a time, so <code>--swiss-accent</code> recolours the primary button, toggle-on, progress fill, and focus rings together. Move <code>--swiss-accent-ink</code> and <code>--swiss-accent-text</code> with it so text on/off the accent stays AA.'
+		}
 	];
 
-	// Structure — this IS the style. Override deliberately; it changes NB's identity.
-	const structureTokens: [string, string][] = [
-		['--nb-border-width', 'Border thickness (3px).'],
-		['--nb-radius', 'Corner radius (0 = square). Raise it and it stops looking NB.'],
-		['--nb-shadow-offset', 'Control shadow depth (1.5px).'],
-		['--nb-shadow-lg-offset', 'Large-surface (Modal) shadow depth (4px).']
-	];
-
-	// Component-level tokens — a prop gives presets, the token takes any value and
-	// wins over the preset (it's read first in the var() chain, so no specificity
-	// fight). This table grows as components expose their own knobs.
-	const componentTokens: [string, string][] = [
-		['--nb-spinner-duration', 'Spinner rotation duration — any value; overrides the `speed` preset.']
-	];
+	let activeId = $state(THEMES[0].id);
+	const theme = $derived(THEMES.find((t) => t.id === activeId) ?? THEMES[0]);
 </script>
 
 <svelte:head><title>How to use · aronia</title></svelte:head>
@@ -111,17 +200,31 @@ and match the components in aronia/.`}</code></pre>
 	<section>
 		<h2>Theming: bring your own brand</h2>
 		<p class="split">
-			The tokens split cleanly into two layers.
-			<strong>Structure</strong> — border width, square corners, the hard shadow — <em>is</em>
-			Neo-Brutalism and normally stays put. <strong>Palette</strong> is your brand. Override the
-			palette and every component follows, because these are CSS custom properties that cascade
-			through the components' scoped styles.
+			The tokens split cleanly into two layers. <strong>Structure</strong> — border width, corners,
+			shadow — <em>is</em> the style and normally stays put. <strong>Palette</strong> is your brand.
+			Override the palette and every component follows, because these are CSS custom properties that
+			cascade through the components' scoped styles. Each family prefixes its own tokens — pick one:
 		</p>
+
+		<!-- Style-aware: each family exposes a genuinely different token vocabulary. -->
+		<div class="theme-switch" role="group" aria-label="Style family">
+			{#each THEMES as t (t.id)}
+				<button
+					type="button"
+					class="theme-switch__btn"
+					data-active={t.id === activeId}
+					aria-pressed={t.id === activeId}
+					onclick={() => (activeId = t.id)}
+				>
+					{t.name}
+				</button>
+			{/each}
+		</div>
 
 		<h3>Brand colours (override freely)</h3>
 		<table>
 			<tbody>
-				{#each brandTokens as [token, role] (token)}
+				{#each theme.brand as [token, role] (token)}
 					<tr>
 						<td><code>{token}</code></td>
 						<td>{role}</td>
@@ -131,24 +234,14 @@ and match the components in aronia/.`}</code></pre>
 		</table>
 
 		<p>Drop this <em>after</em> the library's styles (so it wins the cascade), or scope it to a subtree:</p>
-		<pre><code>{`:root {
-  --nb-primary:   #6b4eff;   /* brand purple replaces the yellow */
-  --nb-secondary: #00c2b8;
-  --nb-ink:       #14121f;
-  --nb-accent:    #ff3d7f;
-  --nb-success:   #1db954;
-}`}</code></pre>
-		<p class="note">
-			One thing to know: <code>--nb-primary</code> paints <em>every</em> primary surface at once
-			(buttons, active tab, checkbox fill). That's deliberate — consistent brand — but it's broad
-			reach.
-		</p>
+		<pre><code>{theme.example}</code></pre>
+		<p class="note">{@html theme.paletteNote}</p>
 
 		<h3>Structure (override deliberately)</h3>
-		<p>These change the style's identity itself — raise the radius and it stops reading as NB.</p>
+		<p>{theme.structureNote}</p>
 		<table>
 			<tbody>
-				{#each structureTokens as [token, role] (token)}
+				{#each theme.structure as [token, role] (token)}
 					<tr>
 						<td><code>{token}</code></td>
 						<td>{role}</td>
@@ -166,7 +259,7 @@ and match the components in aronia/.`}</code></pre>
 		</p>
 		<table>
 			<tbody>
-				{#each componentTokens as [token, role] (token)}
+				{#each theme.component as [token, role] (token)}
 					<tr>
 						<td><code>{token}</code></td>
 						<td>{role}</td>
@@ -174,8 +267,8 @@ and match the components in aronia/.`}</code></pre>
 				{/each}
 			</tbody>
 		</table>
-		<pre><code>{`<Spinner speed="fast" />                 <!-- preset -->
-:root { --nb-spinner-duration: 1.2s; }   /* any value — wins over the preset */`}</code></pre>
+		<pre><code>{`<Spinner speed="fast" />   <!-- preset -->
+:root { ${theme.component[0][0]}: 1.2s; }   /* any value — wins over the preset */`}</code></pre>
 	</section>
 </article>
 
@@ -240,6 +333,32 @@ and match the components in aronia/.`}</code></pre>
 		color: var(--doc-muted);
 		border-left: 3px solid var(--doc-line);
 		padding-left: 1rem;
+	}
+	/* Style-family selector — the active family takes the aronia brand accent. */
+	.theme-switch {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0 0 1.75rem;
+	}
+	.theme-switch__btn {
+		font-family: var(--doc-font);
+		font-size: var(--doc-xs);
+		text-transform: uppercase;
+		letter-spacing: var(--doc-tracking-label);
+		border: 1px solid var(--doc-ink);
+		background: transparent;
+		color: var(--doc-ink);
+		padding: 0.4rem 0.8rem;
+		cursor: pointer;
+	}
+	.theme-switch__btn:hover {
+		background: color-mix(in srgb, var(--doc-ink) 8%, transparent);
+	}
+	.theme-switch__btn[data-active='true'] {
+		background: var(--doc-accent);
+		color: var(--doc-panel);
+		border-color: var(--doc-accent);
 	}
 	pre {
 		background: var(--doc-panel);

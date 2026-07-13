@@ -146,7 +146,7 @@
 		letter-spacing: -0.01em; /* lowercase wants a touch tighter, not label tracking */
 		line-height: 1.1;
 		text-decoration: none;
-		color: var(--doc-ink);
+		color: var(--doc-accent); /* the wordmark carries the aronia brand accent */
 		border-bottom: 1px solid var(--doc-ink);
 		padding: 0 1.25rem 1.25rem;
 		margin: 0 -1.25rem 1.5rem;
@@ -220,6 +220,7 @@
 	}
 	.group li a.active {
 		background: var(--doc-accent);
+		color: var(--doc-panel); /* light text — the brand accent is a dark purple */
 		border: 2px solid var(--doc-ink);
 		box-shadow: 3px 3px 0 0 var(--doc-ink);
 	}

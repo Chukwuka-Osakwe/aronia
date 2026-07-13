@@ -1,20 +1,14 @@
 <script lang="ts">
 	import { manifest } from '$lib/index.js';
 	import { registry } from './registry.js';
+	import CopyMenu, { type Framework } from './CopyMenu.svelte';
 
 	// The headline call-to-action: aronia is delivered by a command, not an import.
-	const INSTALL = 'npx aronia add button --style neo-brutalism';
-	let copied = $state(false);
-	async function copyInstall() {
-		try {
-			await navigator.clipboard.writeText(INSTALL);
-			copied = true;
-			setTimeout(() => (copied = false), 1500);
-		} catch {
-			// Clipboard blocked (insecure context / permissions) — the command is
-			// still on screen to copy by hand; nothing to recover.
-		}
-	}
+	// The Copy control is a framework dropdown; react is the CLI default so its flag
+	// stays implicit — one language, any framework.
+	const DISPLAY_INSTALL = 'npx aronia add button --style neo-brutalism';
+	const installFor = (fw: Framework) =>
+		`${DISPLAY_INSTALL}${fw === 'react' ? '' : ` --framework ${fw}`}`;
 </script>
 
 <div class="home">
@@ -29,10 +23,8 @@
 		</p>
 
 		<div class="install">
-			<code>{INSTALL}</code>
-			<button class="install__copy" onclick={copyInstall} aria-label="Copy install command">
-				{copied ? 'Copied' : 'Copy'}
-			</button>
+			<code>{DISPLAY_INSTALL}</code>
+			<CopyMenu label="Copy" getText={installFor} />
 		</div>
 		<p class="install__hint">New here? Read the <a href="/guide">guide</a>.</p>
 	</header>
@@ -71,7 +63,7 @@
 		letter-spacing: var(--doc-tracking-label);
 		font-size: var(--doc-label);
 		font-weight: 700;
-		color: var(--doc-muted);
+		color: var(--doc-accent); /* brand pop atop the hero */
 		margin: 0 0 0.6rem;
 	}
 	h1 {
@@ -108,22 +100,6 @@
 		font-size: 0.95rem;
 		white-space: nowrap;
 		overflow-x: auto;
-	}
-	.install__copy {
-		flex-shrink: 0;
-		font-family: var(--doc-font);
-		font-size: var(--doc-xs);
-		text-transform: uppercase;
-		letter-spacing: var(--doc-tracking-label);
-		border: 1px solid var(--doc-ink);
-		background: transparent;
-		color: var(--doc-ink);
-		padding: 0.35rem 0.7rem;
-		cursor: pointer;
-	}
-	.install__copy:hover {
-		background: var(--doc-ink);
-		color: var(--doc-panel);
 	}
 	.install__hint {
 		font-size: var(--doc-sm);

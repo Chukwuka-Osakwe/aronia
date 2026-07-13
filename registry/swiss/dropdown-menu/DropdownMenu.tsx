@@ -46,7 +46,12 @@ export function DropdownMenu({ size = 'md', label = 'Menu', items = [] }: Props)
 		const handler = () => {
 			const isOpen = el.matches(':popover-open');
 			setOpen(isOpen);
-			if (isOpen) menuItems()[0]?.focus(); // move focus into the menu on open
+			// preventScroll: the menu is a top-layer popover; without it, .focus()
+			// scrolls the nearest scrollable ancestor (the document, when the menu
+			// overflows the viewport) to reveal the item — which shoves a fixed-height
+			// page layout and reads as a jitter. We never need to scroll to a top-layer
+			// element, so suppress it.
+			if (isOpen) menuItems()[0]?.focus({ preventScroll: true }); // move focus into the menu on open
 		};
 		el.addEventListener('toggle', handler);
 		return () => el.removeEventListener('toggle', handler);

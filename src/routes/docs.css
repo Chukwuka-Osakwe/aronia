@@ -23,7 +23,7 @@
 	--doc-panel: #ffffff;
 	--doc-line: #e8e8e4; /* hairline dividers */
 	--doc-muted: #6f6f68; /* secondary text */
-	--doc-accent: #ffe600; /* the one brand pop (active nav) */
+	--doc-accent: #8b2d8f; /* aronia berry — the brand/chrome accent (PROPS crumb, active-nav fallback). Named for the aronia berry; distinct from every style accent (nb pink / glass indigo / swiss orange). 7.3:1 on the white panel. */
 
 	/* type */
 	/* Primary docs type — IBM Plex Mono (the chrome is all-mono by design). */
@@ -48,6 +48,21 @@
 
 * {
 	box-sizing: border-box;
+}
+
+/* Viewport-locked root on desktop. The shell already fills the window (height:
+   100vh) and each region manages its own overflow, so the root itself never needs
+   to scroll here. Pinning it to `overflow: hidden` stops a transient root scrollbar
+   from EVER appearing: when a top-layer popover (DropdownMenu) opens past the
+   viewport it would otherwise extend the document, flash the root scrollbar in, and
+   reflow every column a few px left (a scrollbar-induced layout shift). Top-layer
+   elements aren't clipped by root overflow, so the menu still paints in full — only
+   IT extends; the page holds still. Below 900px the shell unlocks and the window
+   scrolls normally, so this must stay desktop-only. */
+@media (min-width: 901px) {
+	html {
+		overflow: hidden;
+	}
 }
 
 body {
