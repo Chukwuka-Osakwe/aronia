@@ -10,6 +10,6 @@ import { swiss } from '../swiss/manifest.js';
 export * from './schema.js';
 
 export const manifest: Manifest = {
-	version: '0.2.0',
+	version: '0.3.0',
 	styles: [neoBrutalism, glassmorphism, swiss]
 };
