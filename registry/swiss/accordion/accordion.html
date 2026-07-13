@@ -1,0 +1,22 @@
+<!--
+  Swiss — Accordion (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./accordion.css once. Built on native <details>/<summary>
+  (open/close + keyboard + a11y for free). Give every <details> in a group the same
+  `name` to make it single-open (exclusive).
+-->
+<div class="swiss-accordion">
+  <details class="swiss-accordion__item" name="faq">
+    <summary class="swiss-accordion__summary">
+      <span>Getting started</span>
+      <svg class="swiss-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+    </summary>
+    <div class="swiss-accordion__panel">Panel content for this section.</div>
+  </details>
+  <details class="swiss-accordion__item" name="faq">
+    <summary class="swiss-accordion__summary">
+      <span>Billing</span>
+      <svg class="swiss-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+    </summary>
+    <div class="swiss-accordion__panel">Panel content for this section.</div>
+  </details>
+</div>

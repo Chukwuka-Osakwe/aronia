@@ -1,0 +1,109 @@
+/* Swiss — DropdownMenu (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-dropdown` + `[data-*]` attributes — the
+ * framework-agnostic design language for DropdownMenu. Depends only on the
+ * Layer-1 tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * The trigger is a quiet neutral button (paper + hairline border, flat). The
+ * menu is a true overlay — the second place Swiss spends elevation via
+ * `--swiss-shadow-overlay`. Items are borderless; hover/focus shifts to muted.
+ */
+
+.swiss-dropdown {
+	display: inline-flex;
+}
+.swiss-dropdown__trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-medium);
+	background: var(--swiss-paper);
+	color: var(--swiss-ink);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	cursor: pointer;
+	transition: var(--swiss-transition);
+	/* font/padding set per size below */
+}
+.swiss-dropdown[data-size='sm'] .swiss-dropdown__trigger {
+	font-size: var(--swiss-size-sm-text);
+	padding: var(--swiss-size-sm-pad);
+}
+.swiss-dropdown[data-size='md'] .swiss-dropdown__trigger {
+	font-size: var(--swiss-size-md-text);
+	padding: var(--swiss-size-md-pad);
+}
+.swiss-dropdown[data-size='lg'] .swiss-dropdown__trigger {
+	font-size: var(--swiss-size-lg-text);
+	padding: var(--swiss-size-lg-pad);
+}
+.swiss-dropdown__trigger:hover {
+	background: var(--swiss-muted);
+}
+.swiss-dropdown__trigger:focus-visible {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+.swiss-dropdown__chevron {
+	width: 1em;
+	height: 1em;
+	transition: transform 150ms ease;
+}
+.swiss-dropdown__chevron[data-open='true'] {
+	transform: rotate(180deg);
+}
+
+.swiss-dropdown__menu {
+	/* Reset the popover UA default (centred, margin auto) and place it against
+	   the trigger with anchor positioning. */
+	margin: 0;
+	inset: auto;
+	top: calc(anchor(bottom) + 0.4rem);
+	left: anchor(left);
+	min-width: anchor-size(width);
+	position-try-fallbacks: flip-block;
+
+	padding: 0;
+	background: var(--swiss-paper);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	box-shadow: var(--swiss-shadow-overlay);
+	flex-direction: column;
+}
+.swiss-dropdown__menu:popover-open {
+	display: flex;
+}
+.swiss-dropdown__item {
+	text-align: left;
+	white-space: nowrap;
+	background: transparent;
+	border: none;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-regular);
+	color: var(--swiss-ink);
+	cursor: pointer;
+}
+.swiss-dropdown[data-size='sm'] .swiss-dropdown__item {
+	font-size: var(--swiss-size-xs-text);
+	padding: 0.4rem 0.8rem;
+}
+.swiss-dropdown[data-size='md'] .swiss-dropdown__item {
+	font-size: var(--swiss-size-sm-text);
+	padding: 0.55rem 1rem;
+}
+.swiss-dropdown[data-size='lg'] .swiss-dropdown__item {
+	font-size: var(--swiss-size-md-text);
+	padding: 0.7rem 1.2rem;
+}
+.swiss-dropdown__item:hover,
+.swiss-dropdown__item:focus-visible {
+	outline: none;
+	background: var(--swiss-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+	.swiss-dropdown__chevron {
+		transition: none;
+	}
+}

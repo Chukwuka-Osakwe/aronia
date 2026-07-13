@@ -1,0 +1,80 @@
+/* Swiss — Alert (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-alert` + `[data-*]` attributes — the
+ * framework-agnostic design language for Alert. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * Restraint over flood: where a louder style fills the whole box with the status
+ * colour, Swiss keeps ink text on a paper box and signals severity with a 2px
+ * coloured border + a coloured icon. A whisper of the status hue tints the
+ * background. One `--_c` var per variant drives the border, the icon, and the
+ * tint together (DRY).
+ */
+
+.swiss-alert {
+	display: flex;
+	align-items: flex-start;
+	border: 2px solid var(--_c);
+	border-radius: var(--swiss-radius);
+	background: color-mix(in srgb, var(--_c) 7%, var(--swiss-paper));
+	font-family: var(--swiss-font);
+	color: var(--swiss-ink);
+	/* base font-size (per size) drives the icon + title via em */
+	font-size: var(--swiss-size-md-text);
+}
+
+/* one variable per severity → border colour + icon colour + tint all follow */
+.swiss-alert[data-variant='info'] {
+	--_c: var(--swiss-info-ink);
+}
+.swiss-alert[data-variant='success'] {
+	--_c: var(--swiss-success-ink);
+}
+.swiss-alert[data-variant='warning'] {
+	--_c: var(--swiss-warning-ink);
+}
+.swiss-alert[data-variant='error'] {
+	--_c: var(--swiss-danger-ink);
+}
+
+/* size scale — one font-size + padding/gap per step; icon & title follow via em */
+.swiss-alert[data-size='sm'] {
+	font-size: var(--swiss-size-sm-text);
+	gap: 0.625rem;
+	padding: 0.75rem 1rem;
+}
+.swiss-alert[data-size='md'] {
+	font-size: var(--swiss-size-md-text);
+	gap: 0.75rem;
+	padding: 1rem 1.25rem;
+}
+.swiss-alert[data-size='lg'] {
+	font-size: var(--swiss-size-lg-text);
+	gap: 0.875rem;
+	padding: 1.25rem 1.5rem;
+}
+
+.swiss-alert__icon {
+	flex: none;
+	width: 1.4em;
+	height: 1.4em;
+	color: var(--_c);
+	/* nudge to align with the first line of text */
+	margin-top: 0.1em;
+}
+.swiss-alert__icon svg {
+	width: 100%;
+	height: 100%;
+}
+
+.swiss-alert__title {
+	margin: 0 0 0.2rem;
+	font-size: 1.05em;
+	font-weight: var(--swiss-font-weight-semibold);
+}
+.swiss-alert__message {
+	font-weight: var(--swiss-font-weight-regular);
+	font-size: 1em;
+	line-height: 1.45;
+}

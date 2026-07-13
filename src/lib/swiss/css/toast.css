@@ -1,0 +1,94 @@
+/* Swiss — Toast/Toaster (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-*` selectors — the framework-agnostic
+ * design language for the toast system. Depends only on the Layer-1 tokens
+ * (styles/swiss.css). Shared by the Svelte skin (which imports it) and the aronia
+ * registry. Each toast reuses the Swiss <Alert> skin (2px coloured border + icon).
+ */
+
+.swiss-toaster {
+	position: fixed;
+	top: 1.25rem;
+	right: 1.25rem;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: min(24rem, calc(100vw - 2.5rem));
+	/* Let clicks fall through the empty gaps; the toasts themselves opt back in. */
+	pointer-events: none;
+}
+.swiss-toast {
+	position: relative;
+	pointer-events: auto;
+	/* Toasts sit above the page, so they earn the reserved overlay shadow. */
+	box-shadow: var(--swiss-shadow-overlay);
+	border-radius: var(--swiss-radius);
+	animation: swiss-toast-in 150ms ease;
+}
+/* The toast reuses <Alert>, but a toast is one line, not a paragraph. Alert
+   top-aligns its icon (right for multi-line prose); here we centre the icon with
+   the text and reserve room on the right so the message never runs under the ×. */
+.swiss-toast .swiss-alert {
+	align-items: center;
+	padding-right: 2.5rem;
+}
+.swiss-toast .swiss-alert__icon {
+	margin-top: 0; /* the 0.1em nudge is only for flex-start alignment */
+}
+@keyframes swiss-toast-in {
+	from {
+		opacity: 0;
+		transform: translateX(0.75rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+/* Vertically centred on the toast, in the reserved right padding — aligned with
+   the (now centred) icon and message. */
+.swiss-toast__close {
+	position: absolute;
+	top: 50%;
+	right: 0.5rem;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: var(--swiss-radius);
+	color: var(--swiss-ink);
+	cursor: pointer;
+}
+/* Extend the click target to 40×40 without enlarging the visible button. */
+.swiss-toast__close::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+.swiss-toast__close svg {
+	width: 14px;
+	height: 14px;
+}
+.swiss-toast__close:hover {
+	background: var(--swiss-muted);
+}
+.swiss-toast__close:focus-visible {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.swiss-toast {
+		animation: none;
+	}
+}

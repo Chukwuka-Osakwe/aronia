@@ -1,0 +1,19 @@
+<!--
+  Swiss — DropdownMenu (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./dropdown-menu.css once. Uses the native `popover`
+  attribute (top-layer, light-dismiss, Esc) + CSS Anchor Positioning (Chromium-
+  mostly today). The trigger's popovertarget must match the menu's id, and the
+  anchor-name/position-anchor pair must match too.
+    data-size : sm | md | lg on .swiss-dropdown
+-->
+<div class="swiss-dropdown" data-size="md">
+  <button type="button" class="swiss-dropdown__trigger" popovertarget="menu-1" aria-haspopup="menu" style="anchor-name: --menu-1">
+    Menu
+    <svg class="swiss-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+  </button>
+  <div id="menu-1" popover class="swiss-dropdown__menu" role="menu" tabindex="-1" style="position-anchor: --menu-1">
+    <button type="button" role="menuitem" class="swiss-dropdown__item">Edit</button>
+    <button type="button" role="menuitem" class="swiss-dropdown__item">Duplicate</button>
+    <button type="button" role="menuitem" class="swiss-dropdown__item">Delete</button>
+  </div>
+</div>

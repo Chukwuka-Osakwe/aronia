@@ -1,0 +1,70 @@
+/* Swiss — Spinner (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-spinner` + `[data-*]` attributes — the
+ * framework-agnostic design language for Spinner. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * The classic minimalist spinner: a CIRCULAR ring (not a brutalist square) with
+ * one ink arc on a quiet grey ring, rotating. Monochrome — a spinner is ambient
+ * and often ubiquitous, so it keeps the accent reserved for real emphasis.
+ */
+
+.swiss-spinner {
+	display: inline-flex;
+}
+.swiss-spinner__box {
+	box-sizing: border-box;
+	border-style: solid;
+	border-color: var(--swiss-line);
+	border-top-color: var(--swiss-ink);
+	border-radius: 50%;
+	/* Duration resolves public override → speed preset → default: a consumer can
+	   set --swiss-spinner-duration at ANY specificity and it wins (it takes
+	   precedence in the var() chain rather than competing with the preset rules).
+	   The `speed` prop just fills the private preset. */
+	animation: swiss-spin var(--swiss-spinner-duration, var(--_swiss-spinner-speed, 0.9s)) linear
+		infinite;
+}
+
+/* speed prop → private preset duration (public --swiss-spinner-duration overrides) */
+.swiss-spinner[data-speed='slow'] {
+	--_swiss-spinner-speed: 1.6s;
+}
+.swiss-spinner[data-speed='normal'] {
+	--_swiss-spinner-speed: 0.9s;
+}
+.swiss-spinner[data-speed='fast'] {
+	--_swiss-spinner-speed: 0.5s;
+}
+
+/* size → box dimensions + ring thickness (thin, in the Swiss hairline spirit) */
+.swiss-spinner[data-size='sm'] .swiss-spinner__box {
+	width: 1.25rem;
+	height: 1.25rem;
+	border-width: 2px;
+}
+.swiss-spinner[data-size='md'] .swiss-spinner__box {
+	width: 1.75rem;
+	height: 1.75rem;
+	border-width: 3px;
+}
+.swiss-spinner[data-size='lg'] .swiss-spinner__box {
+	width: 2.5rem;
+	height: 2.5rem;
+	border-width: 3px;
+}
+
+@keyframes swiss-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Reduced-motion wins over the prop AND a consumer's --swiss-spinner-duration —
+   set the longhand directly (accessibility takes priority over customisation). */
+@media (prefers-reduced-motion: reduce) {
+	.swiss-spinner .swiss-spinner__box {
+		animation-duration: 2.4s;
+	}
+}

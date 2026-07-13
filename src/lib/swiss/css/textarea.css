@@ -1,0 +1,56 @@
+/* Swiss — Textarea (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-textarea` + `[data-*]` attributes —
+ * the framework-agnostic design language for Textarea. Depends only on the
+ * Layer-1 tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * The multiline sibling of Input: identical Swiss field language (hairline
+ * border, 2px corners, flat, accent focus ring), plus a `rows` height.
+ */
+
+.swiss-textarea {
+	display: block;
+	width: 100%;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-medium);
+	line-height: 1.5;
+	color: var(--swiss-ink);
+	background: var(--swiss-paper);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	transition: var(--swiss-transition);
+	/* Only vertical resize — horizontal resize would break the grid alignment. */
+	resize: vertical;
+}
+.swiss-textarea::placeholder {
+	color: var(--swiss-ink-soft);
+}
+
+/* Focus: the family's 2px accent ring, exactly like Input. */
+.swiss-textarea:focus,
+.swiss-textarea[data-state='focus'] {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+
+/* Disabled — inert greyed field (matches Input). */
+.swiss-textarea:disabled {
+	background: var(--swiss-muted);
+	color: var(--swiss-ink-soft);
+	border-color: var(--swiss-line);
+	cursor: not-allowed;
+}
+
+.swiss-textarea[data-size='sm'] {
+	font-size: var(--swiss-size-sm-text);
+	padding: var(--swiss-size-sm-pad);
+}
+.swiss-textarea[data-size='md'] {
+	font-size: var(--swiss-size-md-text);
+	padding: var(--swiss-size-md-pad);
+}
+.swiss-textarea[data-size='lg'] {
+	font-size: var(--swiss-size-lg-text);
+	padding: var(--swiss-size-lg-pad);
+}

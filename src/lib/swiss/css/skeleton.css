@@ -1,0 +1,62 @@
+/* Swiss — Skeleton (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-skeleton` + `[data-*]` attributes — the
+ * framework-agnostic design language for Skeleton. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A flat muted-grey placeholder with crisp 2px corners and a blunt opacity pulse
+ * — no shimmer sweep (that's a glass/gradient effect Swiss avoids).
+ */
+
+.swiss-skeleton--text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	/* Concrete default width (not 100%) so it has intrinsic size when standalone
+	   — e.g. the docs' shrink-to-content stage, where 100% collapses to zero.
+	   Overridable via the `width` prop; caps at the container. */
+	width: 22rem;
+	max-width: 100%;
+}
+.swiss-skeleton__bar {
+	height: 0.85rem;
+	width: 100%;
+	background: var(--swiss-skeleton);
+	border-radius: var(--swiss-radius);
+	animation: swiss-skeleton-pulse 1.2s ease-in-out infinite;
+}
+.swiss-skeleton--rect {
+	display: block;
+	width: 22rem;
+	max-width: 100%;
+	height: 8rem;
+	background: var(--swiss-skeleton);
+	border-radius: var(--swiss-radius);
+	animation: swiss-skeleton-pulse 1.2s ease-in-out infinite;
+}
+.swiss-skeleton--circle {
+	display: block;
+	width: 3.5rem;
+	aspect-ratio: 1;
+	background: var(--swiss-skeleton);
+	border-radius: 50%;
+	animation: swiss-skeleton-pulse 1.2s ease-in-out infinite;
+}
+@keyframes swiss-skeleton-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+/* No pulse for reduced motion — a static placeholder still communicates "loading". */
+@media (prefers-reduced-motion: reduce) {
+	.swiss-skeleton__bar,
+	.swiss-skeleton--rect,
+	.swiss-skeleton--circle {
+		animation: none;
+	}
+}

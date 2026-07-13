@@ -1,0 +1,41 @@
+/* Swiss — Field (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-field` + `[data-*]` attributes — the
+ * framework-agnostic design language for Field. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * Hierarchy comes from type weight + size, not colour: a semibold label above
+ * the control, a quiet smaller help/error line below.
+ */
+
+.swiss-field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	font-family: var(--swiss-font);
+	color: var(--swiss-ink);
+}
+.swiss-field__label {
+	font-size: var(--swiss-size-sm-text); /* 14px */
+	font-weight: var(--swiss-font-weight-semibold);
+}
+.swiss-field__req {
+	color: var(--swiss-danger-ink);
+}
+/* Help is subordinated by SIZE + weight, not opacity — full ink at 12px/400
+   below the 14px/600 label reads as secondary while staying above WCAG AA. */
+.swiss-field__msg {
+	font-size: var(--swiss-size-xs-text); /* 12px */
+	font-weight: var(--swiss-font-weight-regular);
+	color: var(--swiss-ink-soft);
+}
+.swiss-field__msg--error {
+	color: var(--swiss-danger-ink);
+	font-weight: var(--swiss-font-weight-medium);
+}
+
+/* shape — pill rounds the wrapped control (Field has no box of its own). */
+.swiss-field[data-shape='pill'] .swiss-input {
+	border-radius: var(--swiss-radius-pill);
+}

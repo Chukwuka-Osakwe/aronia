@@ -1,0 +1,96 @@
+/* Swiss — Accordion (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-accordion` + `[data-*]` attributes —
+ * the framework-agnostic design language for Accordion. Depends only on the
+ * Layer-1 tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * Stacked disclosure on native <details>/<summary>: flat, hairline borders that
+ * collapse into one line between items, a muted summary hover, and an inset
+ * accent focus ring (kept inside the item's border).
+ */
+
+.swiss-accordion {
+	width: 28rem;
+	max-width: 100%;
+	font-family: var(--swiss-font);
+	color: var(--swiss-ink);
+	/* lets ::details-content below animate block-size to/from `auto` */
+	interpolate-size: allow-keywords;
+}
+.swiss-accordion__item {
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+}
+/* Collapse the shared border between stacked items into one line, and drop the
+   inner radii so the stack reads as one crisp block. */
+.swiss-accordion__item + .swiss-accordion__item {
+	border-top: none;
+}
+.swiss-accordion__item:not(:first-child) {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+.swiss-accordion__item:not(:last-child) {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.swiss-accordion__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	font-weight: var(--swiss-font-weight-semibold);
+	user-select: none;
+	list-style: none; /* drop the default disclosure triangle */
+}
+.swiss-accordion__summary::-webkit-details-marker {
+	display: none;
+}
+.swiss-accordion__summary:hover {
+	background: var(--swiss-muted);
+}
+.swiss-accordion__summary:focus-visible {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: -2px;
+}
+.swiss-accordion__chevron {
+	flex: none;
+	width: 1.1em;
+	height: 1.1em;
+	transition: transform 260ms ease;
+}
+.swiss-accordion__item[open] .swiss-accordion__chevron {
+	transform: rotate(180deg);
+}
+
+/* Animate the native open/close. ::details-content is the collapsible box;
+   interpolate-size (above) lets its block-size ease to/from auto, and
+   allow-discrete keeps the content rendered through the collapse. Progressive
+   enhancement — browsers without ::details-content simply snap as before. */
+.swiss-accordion__item::details-content {
+	block-size: 0;
+	overflow: clip;
+	transition-property: block-size, content-visibility;
+	transition-duration: 260ms;
+	transition-timing-function: ease;
+	transition-behavior: allow-discrete;
+}
+.swiss-accordion__item[open]::details-content {
+	block-size: auto;
+}
+
+.swiss-accordion__panel {
+	padding: 1rem;
+	border-top: var(--swiss-border);
+	font-weight: var(--swiss-font-weight-regular);
+	line-height: 1.5;
+}
+@media (prefers-reduced-motion: reduce) {
+	.swiss-accordion__chevron,
+	.swiss-accordion__item::details-content {
+		transition: none;
+	}
+}

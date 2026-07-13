@@ -1,0 +1,25 @@
+<!--
+  Swiss — RadioGroup (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./radio-group.css once. One <label> per option; mark the
+  selected option with data-checked on its label (mirror the radio's checked state):
+    data-checked  : "true" on the selected option's label
+    data-disabled : "true" on the group when disabled
+  Give every radio in a group the same `name`.
+-->
+<div class="swiss-radio" role="radiogroup" data-disabled="false">
+  <label class="swiss-radio__option" data-checked="true">
+    <input type="radio" class="swiss-radio__input" name="plan" value="Free" checked />
+    <span class="swiss-radio__dot"></span>
+    <span class="swiss-radio__label">Free</span>
+  </label>
+  <label class="swiss-radio__option" data-checked="false">
+    <input type="radio" class="swiss-radio__input" name="plan" value="Pro" />
+    <span class="swiss-radio__dot"></span>
+    <span class="swiss-radio__label">Pro</span>
+  </label>
+  <label class="swiss-radio__option" data-checked="false">
+    <input type="radio" class="swiss-radio__input" name="plan" value="Team" />
+    <span class="swiss-radio__dot"></span>
+    <span class="swiss-radio__label">Team</span>
+  </label>
+</div>

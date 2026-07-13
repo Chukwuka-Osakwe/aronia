@@ -55,10 +55,30 @@ export const registry: Record<string, Record<string, Component<any>>> = {
 		// instance and fires the action instead; the app root mounts it).
 		toast: glassmorphism.Toaster
 	},
-	// Swiss family — vertical slice so far (Button + Link).
+	// Swiss family — Button/Link slice + full forms surface.
 	swiss: {
 		button: swiss.Button,
-		link: swiss.Link
+		link: swiss.Link,
+		input: swiss.Input,
+		textarea: swiss.Textarea,
+		field: swiss.Field,
+		checkbox: swiss.Checkbox,
+		'radio-group': swiss.RadioGroup,
+		select: swiss.Select,
+		toggle: swiss.Toggle,
+		card: swiss.Card,
+		alert: swiss.Alert,
+		badge: swiss.Badge,
+		modal: swiss.Modal,
+		'dropdown-menu': swiss.DropdownMenu,
+		progress: swiss.Progress,
+		spinner: swiss.Spinner,
+		skeleton: swiss.Skeleton,
+		tabs: swiss.Tabs,
+		accordion: swiss.Accordion,
+		// Toaster host stands in for `toast` (imperative — Preview skips the inline
+		// instance and fires the action instead; the app root mounts it).
+		toast: swiss.Toaster
 	}
 };
 
@@ -80,6 +100,14 @@ export const triggerActions: Record<
 	glassmorphism: {
 		toast: (a) =>
 			glassmorphism.toast(a.message || 'Notification', {
+				variant: a.variant as AlertVariant,
+				duration:
+					typeof a.duration === 'number' && Number.isFinite(a.duration) ? a.duration : undefined
+			})
+	},
+	swiss: {
+		toast: (a) =>
+			swiss.toast(a.message || 'Notification', {
 				variant: a.variant as AlertVariant,
 				duration:
 					typeof a.duration === 'number' && Number.isFinite(a.duration) ? a.duration : undefined

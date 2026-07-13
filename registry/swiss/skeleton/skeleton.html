@@ -1,0 +1,19 @@
+<!--
+  Swiss — Skeleton (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./skeleton.css once. Shape via modifier class:
+    swiss-skeleton--text   : N stacked lines (make the last one short)
+    swiss-skeleton--rect   : a single block (set width + height)
+    swiss-skeleton--circle : a disc (width = diameter)
+-->
+<!-- Text: several lines, last one short -->
+<div class="swiss-skeleton swiss-skeleton--text" role="status" aria-label="Loading">
+  <span class="swiss-skeleton__bar" style="width: 100%"></span>
+  <span class="swiss-skeleton__bar" style="width: 100%"></span>
+  <span class="swiss-skeleton__bar" style="width: 60%"></span>
+</div>
+
+<!-- Rect -->
+<span class="swiss-skeleton swiss-skeleton--rect" role="status" aria-label="Loading" style="width: 12rem; height: 8rem"></span>
+
+<!-- Circle -->
+<span class="swiss-skeleton swiss-skeleton--circle" role="status" aria-label="Loading" style="width: 3rem"></span>

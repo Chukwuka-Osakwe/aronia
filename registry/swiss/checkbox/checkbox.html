@@ -1,0 +1,17 @@
+<!--
+  Swiss — Checkbox (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./checkbox.css once. The fill is driven by data-checked on
+  the <label> (set it to mirror the input's checked state in your framework):
+    data-size     : sm | md | lg
+    data-checked  : "true" when ticked
+    data-disabled : "true" when disabled
+-->
+<label class="swiss-checkbox" data-size="md" data-checked="true" data-disabled="false">
+  <input type="checkbox" class="swiss-checkbox__input" checked />
+  <span class="swiss-checkbox__box">
+    <svg class="swiss-checkbox__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  </span>
+  <span class="swiss-checkbox__label">Email me updates</span>
+</label>

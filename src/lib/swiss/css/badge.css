@@ -1,0 +1,47 @@
+/* Swiss — Badge (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-badge` + `[data-*]` attributes — the
+ * framework-agnostic design language for Badge. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A small uppercase, letter-spaced label — the International-Typographic caption.
+ * Flat, hairline border, 2px corners. Neutral (outline) is the restrained
+ * default; solid/muted/accent step up emphasis.
+ */
+
+.swiss-badge {
+	display: inline-flex;
+	align-items: center;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-semibold);
+	font-size: var(--swiss-size-xs-text);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	line-height: 1;
+	padding: 0.25rem 0.5rem;
+	color: var(--swiss-ink);
+	background: var(--swiss-paper);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	white-space: nowrap;
+}
+
+/* neutral — the default: paper + hairline ink border + ink text (already the
+   base rule; listed for clarity). */
+.swiss-badge[data-variant='neutral'] {
+	background: var(--swiss-paper);
+}
+.swiss-badge[data-variant='solid'] {
+	background: var(--swiss-ink);
+	color: var(--swiss-on-ink);
+	border-color: var(--swiss-ink);
+}
+.swiss-badge[data-variant='muted'] {
+	background: var(--swiss-muted);
+}
+.swiss-badge[data-variant='accent'] {
+	background: var(--swiss-accent);
+	color: var(--swiss-accent-ink);
+	border-color: var(--swiss-accent);
+}

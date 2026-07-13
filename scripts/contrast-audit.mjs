@@ -51,7 +51,11 @@ const CASES = [
 	{ label: 'swiss: ink on accent fill (primary button)', fg: '#141414', bg: '#f24405' },
 	{ label: 'swiss: white on ink fill (secondary button)', fg: '#ffffff', bg: '#141414' },
 	{ label: 'swiss: ink on muted fill (muted button)', fg: '#141414', bg: '#f4f4f4' },
-	{ label: 'swiss: accent-text on paper (link/emphasis)', fg: '#c2350a', bg: '#ffffff' }
+	{ label: 'swiss: accent-text on paper (link/emphasis)', fg: '#c2350a', bg: '#ffffff' },
+	{ label: 'swiss: danger-ink on paper (field required/error/alert)', fg: '#cf222e', bg: '#ffffff' },
+	{ label: 'swiss: info-ink on paper (alert bar/icon)', fg: '#175cd3', bg: '#ffffff' },
+	{ label: 'swiss: success-ink on paper (alert bar/icon)', fg: '#157f3c', bg: '#ffffff' },
+	{ label: 'swiss: warning-ink on paper (alert bar/icon)', fg: '#8a5a00', bg: '#ffffff' }
 ];
 
 let failures = 0;

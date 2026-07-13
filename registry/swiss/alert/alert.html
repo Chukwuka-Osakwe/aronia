@@ -1,0 +1,21 @@
+<!--
+  Swiss — Alert (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./alert.css once. Attribute contract:
+    data-variant : info | success | warning | error   (default info)
+    data-size    : sm | md | lg                        (default md)
+    role         : "alert" for error/warning, "status" for info/success
+  Swap the <svg> for the matching variant icon (info shown below).
+-->
+<div class="swiss-alert" data-variant="info" data-size="md" role="status">
+  <span class="swiss-alert__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  </span>
+  <div class="swiss-alert__content">
+    <p class="swiss-alert__title">Heads up</p>
+    <div class="swiss-alert__message">This is an informational message.</div>
+  </div>
+</div>

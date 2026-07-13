@@ -16,6 +16,7 @@
   --swiss-paper: #ffffff; /* surfaces */
   --swiss-muted: #f4f4f4; /* subtle fills (muted button, disabled) */
   --swiss-line: #e2e2e2; /* hairline dividers, lighter than ink */
+  --swiss-skeleton: #dcdcdc; /* loading placeholder — muted is too pale to read on paper */
   --swiss-ink-soft: #666666; /* secondary text — 5.7:1 on paper */
   --swiss-on-ink: #ffffff; /* text on an ink fill */
 
@@ -26,10 +27,16 @@
   --swiss-accent-ink: #141414; /* ink on the orange fill — 4.9:1 */
   --swiss-accent-text: #c2350a; /* darkened orange for accent TEXT — 5.5:1 on white */
 
-  /* semantic status (Alert/Badge, later) — restrained; AA as fills w/ ink text */
+  /* semantic status — restrained. Two tones each: the bright hue (for light
+     tint fills) and a darkened "-ink" tone that clears WCAG AA as TEXT on paper
+     AND ≥3:1 as a graphical element (icons, the Alert left-bar). Swiss uses the
+     -ink tones for any coloured mark; the bright hue only as a low-% tint. */
   --swiss-info: #1f6feb;
+  --swiss-info-ink: #175cd3; /* AA as text on paper */
   --swiss-success: #1a7f37;
+  --swiss-success-ink: #157f3c; /* AA as text on paper */
   --swiss-warning: #f2a005;
+  --swiss-warning-ink: #8a5a00; /* raw amber fails 3:1 on white; this clears AA */
   --swiss-danger: #cf222e;
   --swiss-danger-ink: #cf222e; /* AA as text on paper */
 

@@ -1,0 +1,75 @@
+/* Swiss — Select (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-select` + `[data-*]` attributes — the
+ * framework-agnostic design language for Select. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * Input's field language (flat, hairline border, 2px corners, accent focus ring)
+ * with the native arrow stripped and a custom ink chevron overlaid.
+ */
+
+.swiss-select {
+	position: relative;
+	display: inline-block;
+	min-width: 16rem;
+}
+.swiss-select[data-disabled='true'] {
+	cursor: not-allowed;
+}
+
+.swiss-select__field {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 100%;
+	font-family: var(--swiss-font);
+	font-weight: var(--swiss-font-weight-medium);
+	color: var(--swiss-ink);
+	background: var(--swiss-paper);
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	cursor: pointer;
+	transition: var(--swiss-transition);
+}
+.swiss-select__field:disabled {
+	background: var(--swiss-muted);
+	color: var(--swiss-ink-soft);
+	border-color: var(--swiss-line);
+	cursor: not-allowed;
+}
+
+/* Focus: the family's 2px accent ring (offset), like Input. */
+.swiss-select__field:focus,
+.swiss-select[data-state='focus'] .swiss-select__field {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+
+/* Shared control size scale for text + padding; a trailing rule (same
+   specificity, later source order) reserves room for the chevron on the right. */
+.swiss-select__field[data-size='sm'] {
+	font-size: var(--swiss-size-sm-text);
+	padding: var(--swiss-size-sm-pad);
+}
+.swiss-select__field[data-size='md'] {
+	font-size: var(--swiss-size-md-text);
+	padding: var(--swiss-size-md-pad);
+}
+.swiss-select__field[data-size='lg'] {
+	font-size: var(--swiss-size-lg-text);
+	padding: var(--swiss-size-lg-pad);
+}
+.swiss-select__field[data-size] {
+	padding-right: 2.75rem;
+}
+
+.swiss-select__chevron {
+	position: absolute;
+	top: 50%;
+	right: 0.9rem;
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+	color: var(--swiss-ink);
+	pointer-events: none;
+}

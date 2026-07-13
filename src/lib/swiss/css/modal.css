@@ -1,0 +1,90 @@
+/* Swiss — Modal (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.swiss-modal` + `[data-*]` attributes — the
+ * framework-agnostic design language for Modal. Depends only on the Layer-1
+ * tokens (styles/swiss.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A true overlay, so this is one of the two places Swiss spends elevation:
+ * `--swiss-shadow-overlay` lifts the flat paper panel off the page. Hairline ink
+ * border, 2px corners, header/footer divided by hairline rules.
+ */
+
+.swiss-modal {
+	padding: 0;
+	border: var(--swiss-border);
+	border-radius: var(--swiss-radius);
+	box-shadow: var(--swiss-shadow-overlay);
+	background: var(--swiss-paper);
+	color: var(--swiss-ink);
+	width: 100%;
+	max-width: min(92vw, 32rem);
+	font-family: var(--swiss-font);
+}
+/* Flat dim wash, no blur. */
+.swiss-modal::backdrop {
+	background: var(--swiss-backdrop);
+}
+
+.swiss-modal__close {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: var(--swiss-radius);
+	color: var(--swiss-ink);
+	cursor: pointer;
+	transition: var(--swiss-transition);
+}
+/* Extend the click target to 40×40 without enlarging the visible button. */
+.swiss-modal__close::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+.swiss-modal__close svg {
+	width: 18px;
+	height: 18px;
+}
+.swiss-modal__close:hover {
+	background: var(--swiss-muted);
+}
+.swiss-modal__close:focus-visible {
+	outline: 2px solid var(--swiss-accent);
+	outline-offset: 2px;
+}
+
+.swiss-modal__header {
+	padding: 1.25rem 3rem 1.25rem 1.5rem; /* right room for the close button */
+	border-bottom: var(--swiss-border);
+	font-size: var(--swiss-size-title);
+	font-weight: var(--swiss-font-weight-semibold);
+}
+.swiss-modal__body {
+	padding: 1.5rem;
+	font-weight: var(--swiss-font-weight-regular);
+	line-height: 1.5;
+}
+/* With no header, the close button floats over the body's top-right — give the
+   body top clearance so its first line drops below the button. */
+.swiss-modal[data-has-header='false'] .swiss-modal__body {
+	padding-top: 3rem;
+}
+.swiss-modal__footer {
+	padding: 1.25rem 1.5rem;
+	border-top: var(--swiss-border);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+}
