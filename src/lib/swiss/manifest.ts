@@ -11,8 +11,11 @@ import {
 	INPUT_SIZES,
 	INPUT_SHAPES,
 	FIELD_SHAPES,
+	CHECKBOX_SHAPES,
+	TOGGLE_SHAPES,
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
+	BADGE_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS,
 	SKELETON_SHAPES
@@ -347,6 +350,13 @@ export const swiss: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the box — square, or fully round (a circle).',
+					type: 'enum',
+					values: CHECKBOX_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'checked',
 					description: 'Whether the box is ticked (two-way bindable).',
 					type: 'boolean',
@@ -368,7 +378,7 @@ export const swiss: StyleSpec = {
 			],
 			states: ['focus'],
 			styleClass: 'swiss-checkbox',
-			dataAttrs: ['size', 'checked', 'disabled'],
+			dataAttrs: ['size', 'checked', 'disabled', 'shape'],
 			files: {
 				style: 'src/lib/swiss/css/checkbox.css',
 				skins: {
@@ -490,6 +500,13 @@ export const swiss: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Track/thumb style — square, or a pill track with a round thumb.',
+					type: 'enum',
+					values: TOGGLE_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'checked',
 					description: 'Whether the switch is on (two-way bindable).',
 					type: 'boolean',
@@ -511,7 +528,7 @@ export const swiss: StyleSpec = {
 			],
 			states: ['focus'],
 			styleClass: 'swiss-toggle',
-			dataAttrs: ['size', 'checked'],
+			dataAttrs: ['size', 'checked', 'shape'],
 			files: {
 				style: 'src/lib/swiss/css/toggle.css',
 				skins: {
@@ -606,11 +623,18 @@ export const swiss: StyleSpec = {
 					type: 'enum',
 					values: BADGE_VARIANTS,
 					default: 'neutral'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style — square, or a fully rounded pill.',
+					type: 'enum',
+					values: BADGE_SHAPES,
+					default: 'square'
 				}
 			],
 			snippets: [{ name: 'children', description: 'The text shown on the badge.' }],
 			styleClass: 'swiss-badge',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'shape'],
 			files: {
 				style: 'src/lib/swiss/css/badge.css',
 				skins: {

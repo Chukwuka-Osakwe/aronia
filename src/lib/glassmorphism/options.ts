@@ -18,6 +18,9 @@ export type CardVariant = (typeof CARD_VARIANTS)[number];
 export const BADGE_VARIANTS = ['primary', 'secondary', 'muted', 'accent'] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
 
+export const BADGE_SHAPES = ['square', 'pill'] as const;
+export type BadgeShape = (typeof BADGE_SHAPES)[number];
+
 // `inline` — a text link inside prose. `nav` — a compact sidebar/menu item
 // (active-state aware).
 export const LINK_VARIANTS = ['inline', 'nav'] as const;
@@ -31,6 +34,14 @@ export type InputShape = (typeof INPUT_SHAPES)[number];
 
 export const FIELD_SHAPES = ['square', 'pill'] as const;
 export type FieldShape = (typeof FIELD_SHAPES)[number];
+
+// Checkbox/Toggle share the square|pill vocabulary of the other controls; on
+// these two, `pill` reads as fully round (a circular box / a pill track).
+export const CHECKBOX_SHAPES = ['square', 'pill'] as const;
+export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
+
+export const TOGGLE_SHAPES = ['square', 'pill'] as const;
+export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
 
 export const ALERT_VARIANTS = ['info', 'success', 'warning', 'error'] as const;
 export type AlertVariant = (typeof ALERT_VARIANTS)[number];

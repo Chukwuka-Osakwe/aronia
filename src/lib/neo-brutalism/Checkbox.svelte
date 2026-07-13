@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
-	import type { InputSize } from './options.js';
+	import type { InputSize, CheckboxShape } from './options.js';
 	import '../styles/neo-brutalism.css';
 	import './css/checkbox.css';
 
@@ -13,6 +13,7 @@
 		checked?: boolean;
 		disabled?: boolean;
 		size?: InputSize;
+		shape?: CheckboxShape;
 		/** Optional visible label rendered after the box. */
 		label?: string;
 		// omit native `size` (a number on <input>) — we reuse the name for our scale
@@ -22,6 +23,7 @@
 		checked = $bindable(false),
 		disabled = false,
 		size = 'md',
+		shape = 'square',
 		label,
 		'data-state': dataState,
 		...rest
@@ -31,6 +33,7 @@
 <label
 	class="nb-checkbox"
 	data-size={size}
+	data-shape={shape}
 	data-checked={checked}
 	data-disabled={disabled}
 	data-state={dataState}

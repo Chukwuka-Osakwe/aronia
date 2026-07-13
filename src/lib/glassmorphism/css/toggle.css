@@ -90,3 +90,9 @@
 .glass-toggle[data-checked='true'] .glass-toggle__thumb {
 	transform: translateX(calc(var(--_track-w) - var(--_track-h)));
 }
+
+/* shape — glass toggles default to a pill track (its base look); `square` opts
+   the track into the base radius. The thumb stays circular in both shapes. */
+.glass-toggle[data-shape='square'] .glass-toggle__track {
+	border-radius: var(--glass-radius);
+}

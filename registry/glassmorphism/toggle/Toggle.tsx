@@ -8,12 +8,14 @@ import './tokens.css';
 import './toggle.css';
 
 export type InputSize = 'sm' | 'md' | 'lg';
+export type ToggleShape = 'square' | 'pill';
 
 type Props = {
 	checked?: boolean;
 	defaultChecked?: boolean;
 	disabled?: boolean;
 	size?: InputSize;
+	shape?: ToggleShape;
 	/** Optional visible label rendered after the switch. */
 	label?: string;
 	onCheckedChange?: (checked: boolean) => void;
@@ -24,6 +26,7 @@ export function Toggle({
 	defaultChecked = false,
 	disabled = false,
 	size = 'md',
+	shape = 'pill',
 	label,
 	onCheckedChange,
 	...rest
@@ -45,6 +48,7 @@ export function Toggle({
 			role="switch"
 			className="glass-toggle"
 			data-size={size}
+			data-shape={shape}
 			aria-checked={value}
 			data-checked={value}
 			disabled={disabled}

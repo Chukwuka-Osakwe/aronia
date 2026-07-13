@@ -45,3 +45,8 @@
 	color: var(--swiss-accent-ink);
 	border-color: var(--swiss-accent);
 }
+
+/* shape — square (default) or a fully rounded pill. */
+.swiss-badge[data-shape='pill'] {
+	border-radius: var(--swiss-radius-pill);
+}

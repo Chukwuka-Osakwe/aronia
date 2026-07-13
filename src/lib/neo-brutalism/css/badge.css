@@ -34,3 +34,8 @@
 .nb-badge[data-variant='accent'] {
 	background: var(--nb-accent);
 }
+
+/* shape — square (default) or a fully rounded pill. */
+.nb-badge[data-shape='pill'] {
+	border-radius: var(--nb-radius-pill);
+}

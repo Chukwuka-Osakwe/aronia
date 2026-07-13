@@ -3,9 +3,10 @@
   Include ./tokens.css + ./toggle.css once. A <button role="switch">; wire the click
   in your framework to flip both aria-checked and data-checked:
     data-size    : sm | md | lg
+    data-shape   : square | pill    (pill = a rounded track + round thumb)
     data-checked : "true" when on   (keep aria-checked in sync)
 -->
-<button type="button" role="switch" class="nb-toggle" data-size="md" aria-checked="true" data-checked="true">
+<button type="button" role="switch" class="nb-toggle" data-size="md" data-shape="square" aria-checked="true" data-checked="true">
   <span class="nb-toggle__track"><span class="nb-toggle__thumb"></span></span>
   <span class="nb-toggle__label">Notifications</span>
 </button>

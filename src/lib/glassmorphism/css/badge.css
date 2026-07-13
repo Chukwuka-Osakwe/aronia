@@ -39,3 +39,9 @@
 	background: var(--glass-surface-strong);
 	color: var(--glass-ink);
 }
+
+/* shape — glass badges default to a soft pill (their base look); `square` opts
+   into the base radius for a harder chip. */
+.glass-badge[data-shape='square'] {
+	border-radius: var(--glass-radius);
+}

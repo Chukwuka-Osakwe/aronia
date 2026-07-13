@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import type { InputSize } from './options.js';
+	import type { InputSize, ToggleShape } from './options.js';
 	import '../styles/glassmorphism.css';
 	import './css/toggle.css';
 
@@ -11,6 +11,7 @@
 		checked?: boolean;
 		disabled?: boolean;
 		size?: InputSize;
+		shape?: ToggleShape;
 		/** Optional visible label rendered after the switch. */
 		label?: string;
 	} & Omit<HTMLButtonAttributes, 'type'>;
@@ -19,6 +20,7 @@
 		checked = $bindable(false),
 		disabled = false,
 		size = 'md',
+		shape = 'pill',
 		label,
 		...rest
 	}: Props = $props();
@@ -30,6 +32,7 @@
 	role="switch"
 	class="glass-toggle"
 	data-size={size}
+	data-shape={shape}
 	aria-checked={checked}
 	data-checked={checked}
 	{disabled}

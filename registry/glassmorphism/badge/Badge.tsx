@@ -5,12 +5,13 @@ import './tokens.css';
 import './badge.css';
 
 export type BadgeVariant = 'primary' | 'secondary' | 'muted' | 'accent';
+export type BadgeShape = 'square' | 'pill';
 
-type Props = { variant?: BadgeVariant; children?: ReactNode } & HTMLAttributes<HTMLSpanElement>;
+type Props = { variant?: BadgeVariant; shape?: BadgeShape; children?: ReactNode } & HTMLAttributes<HTMLSpanElement>;
 
-export function Badge({ variant = 'primary', children, ...rest }: Props) {
+export function Badge({ variant = 'primary', shape = 'pill', children, ...rest }: Props) {
 	return (
-		<span className="glass-badge" data-variant={variant} {...rest}>
+		<span className="glass-badge" data-variant={variant} data-shape={shape} {...rest}>
 			{children}
 		</span>
 	);

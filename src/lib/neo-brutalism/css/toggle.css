@@ -89,3 +89,9 @@
 .nb-toggle[data-checked='true'] .nb-toggle__thumb {
 	transform: translateX(calc(var(--_track-w) - var(--_track-h)));
 }
+
+/* shape — square (default) or a pill track with a round thumb. */
+.nb-toggle[data-shape='pill'] .nb-toggle__track,
+.nb-toggle[data-shape='pill'] .nb-toggle__thumb {
+	border-radius: var(--nb-radius-pill);
+}

@@ -12,9 +12,12 @@ import {
 	SKELETON_SHAPES,
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
+	BADGE_SHAPES,
 	INPUT_SIZES,
 	INPUT_SHAPES,
 	FIELD_SHAPES,
+	CHECKBOX_SHAPES,
+	TOGGLE_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS
 } from './options.js';
@@ -204,7 +207,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Badge',
 			import: 'glassmorphism.Badge',
 			styleClass: 'glass-badge',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/badge.css',
 				skins: {
@@ -221,6 +224,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: BADGE_VARIANTS,
 					default: 'primary'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style — a soft pill (the glass default), or a harder square chip.',
+					type: 'enum',
+					values: BADGE_SHAPES,
+					default: 'pill'
 				}
 			],
 			snippets: [{ name: 'children', description: 'The text shown on the badge.' }]
@@ -375,7 +385,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Toggle',
 			import: 'glassmorphism.Toggle',
 			styleClass: 'glass-toggle',
-			dataAttrs: ['size', 'checked'],
+			dataAttrs: ['size', 'checked', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/toggle.css',
 				skins: {
@@ -393,6 +403,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Track style — a pill (the glass default), or a softer square track.',
+					type: 'enum',
+					values: TOGGLE_SHAPES,
+					default: 'pill'
 				},
 				{
 					name: 'checked',
@@ -421,7 +438,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Checkbox',
 			import: 'glassmorphism.Checkbox',
 			styleClass: 'glass-checkbox',
-			dataAttrs: ['size', 'checked', 'disabled'],
+			dataAttrs: ['size', 'checked', 'disabled', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/checkbox.css',
 				skins: {
@@ -439,6 +456,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style of the box — square, or fully round (a circle).',
+					type: 'enum',
+					values: CHECKBOX_SHAPES,
+					default: 'square'
 				},
 				{
 					name: 'checked',

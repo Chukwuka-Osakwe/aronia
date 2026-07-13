@@ -28,6 +28,14 @@ export type InputShape = (typeof INPUT_SHAPES)[number];
 export const FIELD_SHAPES = ['square', 'pill'] as const;
 export type FieldShape = (typeof FIELD_SHAPES)[number];
 
+// Checkbox/Toggle share the square|pill vocabulary of the other controls; on
+// these two, `pill` reads as fully round (a circular box / a pill track).
+export const CHECKBOX_SHAPES = ['square', 'pill'] as const;
+export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
+
+export const TOGGLE_SHAPES = ['square', 'pill'] as const;
+export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
+
 // Card: `paper` (default white) / `muted` (subtle grey section) / `ink` (a bold
 // inverted editorial panel). Swiss-natural set — variants diverge per family.
 export const CARD_VARIANTS = ['paper', 'muted', 'ink'] as const;
@@ -37,6 +45,9 @@ export type CardVariant = (typeof CARD_VARIANTS)[number];
 // `accent` (the one orange). Uppercase tracked labels.
 export const BADGE_VARIANTS = ['neutral', 'solid', 'muted', 'accent'] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
+
+export const BADGE_SHAPES = ['square', 'pill'] as const;
+export type BadgeShape = (typeof BADGE_SHAPES)[number];
 
 // Alert severity — picks both the status colour and the aria role.
 export const ALERT_VARIANTS = ['info', 'success', 'warning', 'error'] as const;

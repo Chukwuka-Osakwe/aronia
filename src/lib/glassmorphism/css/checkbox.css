@@ -85,3 +85,8 @@
 .glass-checkbox[data-checked='true'] .glass-checkbox__check {
 	opacity: 1;
 }
+
+/* shape — square (default) or fully round (a circular box). */
+.glass-checkbox[data-shape='pill'] .glass-checkbox__box {
+	border-radius: var(--glass-radius-pill);
+}

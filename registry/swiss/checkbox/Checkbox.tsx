@@ -9,12 +9,14 @@ import './tokens.css';
 import './checkbox.css';
 
 export type InputSize = 'sm' | 'md' | 'lg';
+export type CheckboxShape = 'square' | 'pill';
 
 type Props = {
 	checked?: boolean;
 	defaultChecked?: boolean;
 	disabled?: boolean;
 	size?: InputSize;
+	shape?: CheckboxShape;
 	/** Optional visible label rendered after the box. */
 	label?: string;
 	onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -28,6 +30,7 @@ export function Checkbox({
 	defaultChecked = false,
 	disabled = false,
 	size = 'md',
+	shape = 'square',
 	label,
 	onChange,
 	...rest
@@ -45,6 +48,7 @@ export function Checkbox({
 		<label
 			className="swiss-checkbox"
 			data-size={size}
+			data-shape={shape}
 			data-checked={value}
 			data-disabled={disabled}
 		>

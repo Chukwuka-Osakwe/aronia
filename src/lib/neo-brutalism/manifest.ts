@@ -21,9 +21,12 @@ import {
 	LINK_VARIANTS,
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
+	BADGE_SHAPES,
 	INPUT_SIZES,
 	INPUT_SHAPES,
 	FIELD_SHAPES,
+	CHECKBOX_SHAPES,
+	TOGGLE_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS,
 	SKELETON_SHAPES
@@ -219,11 +222,18 @@ export const neoBrutalism: StyleSpec = {
 					type: 'enum',
 					values: BADGE_VARIANTS,
 					default: 'primary'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style — square, or a fully rounded pill.',
+					type: 'enum',
+					values: BADGE_SHAPES,
+					default: 'square'
 				}
 			],
 			snippets: [{ name: 'children', description: 'The text shown on the badge.' }],
 			styleClass: 'nb-badge',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/badge.css',
 				skins: {
@@ -342,7 +352,7 @@ export const neoBrutalism: StyleSpec = {
 			name: 'Toggle',
 			import: 'neoBrutalism.Toggle',
 			description:
-				'An accessible on/off switch (button role="switch") with a bindable checked state and a sliding square thumb.',
+				'An accessible on/off switch (button role="switch") with a bindable checked state and a sliding thumb.',
 			props: [
 				{
 					name: 'size',
@@ -350,6 +360,13 @@ export const neoBrutalism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Track/thumb style — square, or a pill track with a round thumb.',
+					type: 'enum',
+					values: TOGGLE_SHAPES,
+					default: 'square'
 				},
 				{
 					name: 'checked',
@@ -373,7 +390,7 @@ export const neoBrutalism: StyleSpec = {
 			],
 			states: ['focus'],
 			styleClass: 'nb-toggle',
-			dataAttrs: ['size', 'checked'],
+			dataAttrs: ['size', 'checked', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/toggle.css',
 				skins: {
@@ -398,6 +415,13 @@ export const neoBrutalism: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the box — square, or fully round (a circle).',
+					type: 'enum',
+					values: CHECKBOX_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'checked',
 					description: 'Whether the box is ticked (two-way bindable).',
 					type: 'boolean',
@@ -419,7 +443,7 @@ export const neoBrutalism: StyleSpec = {
 			],
 			states: ['focus'],
 			styleClass: 'nb-checkbox',
-			dataAttrs: ['size', 'checked', 'disabled'],
+			dataAttrs: ['size', 'checked', 'disabled', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/checkbox.css',
 				skins: {

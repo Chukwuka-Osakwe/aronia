@@ -95,3 +95,9 @@
 .swiss-toggle[data-checked='true'] .swiss-toggle__thumb {
 	transform: translateX(calc(var(--_track-w) - var(--_track-h)));
 }
+
+/* shape — square (default) or a pill track with a round thumb. */
+.swiss-toggle[data-shape='pill'] .swiss-toggle__track,
+.swiss-toggle[data-shape='pill'] .swiss-toggle__thumb {
+	border-radius: var(--swiss-radius-pill);
+}

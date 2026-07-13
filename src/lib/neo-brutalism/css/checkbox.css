@@ -83,3 +83,8 @@
 .nb-checkbox[data-checked='true'] .nb-checkbox__check {
 	opacity: 1;
 }
+
+/* shape — square (default) or fully round (a circular box). */
+.nb-checkbox[data-shape='pill'] .nb-checkbox__box {
+	border-radius: var(--nb-radius-pill);
+}

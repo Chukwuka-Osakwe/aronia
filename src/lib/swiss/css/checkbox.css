@@ -90,3 +90,8 @@
 .swiss-checkbox[data-checked='true'] .swiss-checkbox__check {
 	opacity: 1;
 }
+
+/* shape — square (default) or fully round (a circular box). */
+.swiss-checkbox[data-shape='pill'] .swiss-checkbox__box {
+	border-radius: var(--swiss-radius-pill);
+}
