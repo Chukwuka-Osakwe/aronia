@@ -16,6 +16,9 @@ node_modules
 # Design-research reading notes (personal, never committed)
 /research
 
+# Living session-to-session open-threads log (personal, never committed)
+/OPEN_THREADS.md
+
 # OS
 .DS_Store
 Thumbs.db
