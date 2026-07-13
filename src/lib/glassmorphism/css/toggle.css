@@ -92,7 +92,9 @@
 }
 
 /* shape — glass toggles default to a pill track (its base look); `square` opts
-   the track into the base radius. The thumb stays circular in both shapes. */
+   the track into a softer square. A small literal (matching the checkbox box's
+   7px), NOT the 16px base radius: the track is short enough that 16px clamps back
+   to a full pill. The thumb stays circular in both shapes. */
 .glass-toggle[data-shape='square'] .glass-toggle__track {
-	border-radius: var(--glass-radius);
+	border-radius: 7px;
 }

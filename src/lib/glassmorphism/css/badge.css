@@ -41,7 +41,8 @@
 }
 
 /* shape — glass badges default to a soft pill (their base look); `square` opts
-   into the base radius for a harder chip. */
+   into a harder chip. A small literal (matching the checkbox box's 7px), NOT the
+   16px base radius: a badge is short enough that 16px clamps back to a full pill. */
 .glass-badge[data-shape='square'] {
-	border-radius: var(--glass-radius);
+	border-radius: 7px;
 }
