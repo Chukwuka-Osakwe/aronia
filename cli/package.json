@@ -1,6 +1,6 @@
 {
 	"name": "aronia",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Copy an agent-friendly design language into your repo. `npx aronia add <component> --style <style>`.",
 	"repository": {
 		"type": "git",
