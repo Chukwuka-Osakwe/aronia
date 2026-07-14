@@ -224,6 +224,23 @@
 		border: 2px solid var(--doc-ink);
 		box-shadow: 3px 3px 0 0 var(--doc-ink);
 	}
+	/* The sidebar nav is chrome, so drive its states from doc tokens and let all
+	   three libraries behave identically, regardless of each style's own Link
+	   colours (e.g. neo's nav otherwise leaps to link-blue on hover). Rest = muted,
+	   hover = full ink, selected = the aronia brand accent + the component's own
+	   underline. :global, as these are child-component links; the shared
+	   data-variant='nav' / aria-current hooks are style-agnostic. Source order
+	   matters: the selected rule comes last so it wins over rest at equal
+	   specificity, and hover excludes the selected item so it stays branded. */
+	.group--active :global(a[data-variant='nav']) {
+		color: var(--doc-muted);
+	}
+	.group--active :global(a[data-variant='nav']:not([aria-current='page']):hover) {
+		color: var(--doc-ink);
+	}
+	.group--active :global(a[aria-current='page']) {
+		color: var(--doc-accent);
+	}
 
 	.divider {
 		border: none;
