@@ -13,6 +13,10 @@ node_modules
 /static/r
 /cli/r
 
+# Onboarding docs copied into the CLI at prepack (source of truth is repo root)
+/cli/START.md
+/cli/AGENTS.md
+
 # Design-research reading notes (personal, never committed)
 /research
 

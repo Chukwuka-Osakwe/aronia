@@ -10,30 +10,44 @@ worked example and builds the rest of your UI in the same style, unsupervised.
 
 ## Quick start
 
+Bring the language in first — this commits to no style yet:
+
 ```sh
-npx aronia add button --style neo-brutalism
+npx aronia init
 ```
 
-That writes the tokens, the component's styles, and a thin skin in your framework
-into `aronia/`, and records the component in a manifest:
+That writes the onboarding and the full family menu into `aronia/`, with no
+component code and no style adopted:
 
 ```
 aronia/
-  neo-brutalism/
-    tokens.css     # design tokens (written once per style)
-    button.css     # the component's styles — the actual "language"
-    Button.tsx     # a thin skin in your framework
-  aronia.manifest.json
+  START.md               # optional: an agent-run conversation to choose a direction
+  AGENTS.md              # how an agent should build with aronia
+  aronia.manifest.json   # the family menu — no components, no style adopted yet
 ```
 
 Then **point your agent at it**:
 
-> Use aronia for all UI — read `aronia/aronia.manifest.json` and match the
-> components in `aronia/`.
+> Start at `aronia/START.md`. If I already know what I'm building and the style I
+> want, skip it and build; otherwise help me choose. Then build with aronia and
+> match `aronia/`.
 
-`aronia/aronia.manifest.json` records every component you've added — its style
-class, `data-*` attributes, files, and full prop spec — so the agent works from
-the exact contract, not a guess.
+`START.md` is optional — a short conversation for when you're not a designer and
+want help settling the scope and picking one of the three families before any UI
+gets written. Know what you want already? Tell the agent to skip it.
+
+Once a style is chosen, pull components — the first `add` adopts that style (and
+your framework), so later ones need no flag:
+
+```sh
+npx aronia add button --style swiss   # adopts swiss
+npx aronia add card badge             # same language, no --style needed
+```
+
+Each `add` writes the tokens (once per style), the component's styles, and a thin
+skin in your framework into `aronia/<style>/`, and records the component in
+`aronia/aronia.manifest.json` — its style class, `data-*` attributes, files, and
+full prop spec — so the agent works from the exact contract, not a guess.
 
 ## Styles
 
@@ -57,19 +71,21 @@ Progress, Skeleton, and Toast.
 ## CLI
 
 ```sh
-aronia add <component> --style <style> [options]
+aronia init                            # bring the language + onboarding in, no style yet
+aronia add <component...> [options]    # add components; the first add adopts a style
 ```
 
 | Option | Description | Default |
 | --- | --- | --- |
-| `--style <id>` | Design-language family (`neo-brutalism`, `glassmorphism`). **Required.** | — |
-| `--framework <fw>` | `react`, `svelte`, or `html`. | `react` |
+| `--style <id>` | `neo-brutalism`, `glassmorphism`, or `swiss`. Required for the first `add`; remembered after. | adopted |
+| `--framework <fw>` | `react`, `svelte`, or `html`. | detected, else `react` |
 | `--cwd <dir>` | Where to write the `aronia/` folder. | current dir |
 | `--registry <src>` | Registry URL or local directory. | bundled |
 
-Components pull in their dependencies automatically (e.g. `toast` also adds
-`alert`). Run `aronia add` again with a different `--component`/`--style` to grow
-your set; the manifest is merged, not overwritten.
+The first `add` adopts its `--style` (and your framework) into the manifest, so
+later commands are just `aronia add <component>`. Components pull in their
+dependencies automatically (e.g. `toast` also adds `alert`); run `add` again to
+grow your set — the manifest is merged, not overwritten.
 
 ## For AI agents
 

@@ -6,7 +6,9 @@
 // YOUR framework — into `aronia/<style>/`, where your coding agent can read it
 // as a worked example and generate the rest of your UI in the same language.
 //
-//   npx aronia add button --style neo-brutalism [--framework react|html|svelte]
+// Two commands:
+//   aronia init                     bring the language + onboarding in, pick no style yet
+//   aronia add button --style neo-brutalism   add components (adopts a style on first use)
 //
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -16,8 +18,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 
 // --- registry resolution -------------------------------------------------
 // A registry is either an http(s) base URL or a local directory of `<style>/
-// <component>.json` items. Default: the copy bundled with the CLI, else the
-// repo's build output when running inside the workspace (dev).
+// <component>.json` items (plus an `index.json`). Default: the copy bundled
+// with the CLI, else the repo's build output when running inside the workspace.
 function defaultRegistry() {
 	if (process.env.ARONIA_REGISTRY) return process.env.ARONIA_REGISTRY;
 	const bundled = join(HERE, 'r');
@@ -34,6 +36,82 @@ async function loadItem(registry, style, component) {
 	const path = join(registry, style, `${component}.json`);
 	if (!existsSync(path)) throw new Error(`no registry item at ${path}`);
 	return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+async function loadIndex(registry) {
+	if (/^https?:\/\//.test(registry)) {
+		const res = await fetch(`${registry.replace(/\/$/, '')}/index.json`);
+		if (!res.ok) throw new Error(`registry ${res.status} for index.json`);
+		return res.json();
+	}
+	const path = join(registry, 'index.json');
+	if (!existsSync(path)) throw new Error(`no registry index at ${path}`);
+	return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+// The per-style entry recorded in the consumer manifest: how to compose in this
+// design language (principles + anti-patterns) plus its page-level composition
+// guidance. Same shape whether written by `init` (whole menu) or `add` (as each
+// component lands), so the two never disagree.
+function styleEntry(item) {
+	const guidance = item.styleGuidance ?? {};
+	return item.composition ? { ...guidance, composition: item.composition } : { ...guidance };
+}
+
+// Build the full family menu — every style's identity/guidance, no components —
+// by reading one item per style from the registry. This is what lets an agent
+// describe all three families during the START.md conversation before any style
+// is committed.
+async function buildStyleMenu(registry) {
+	const index = await loadIndex(registry);
+	const styles = {};
+	const seen = new Set();
+	for (const it of index.items) {
+		if (seen.has(it.style)) continue;
+		seen.add(it.style);
+		styles[it.style] = styleEntry(await loadItem(registry, it.style, it.component));
+	}
+	return styles;
+}
+
+// --- bundled docs --------------------------------------------------------
+// START.md (the onboarding gate) and AGENTS.md (the build rules) ship with the
+// published CLI; in the workspace they live at the repo root.
+function docPath(name) {
+	const bundled = join(HERE, name);
+	return existsSync(bundled) ? bundled : join(HERE, '..', name);
+}
+
+// --- consumer manifest ---------------------------------------------------
+function manifestPath(cwd) {
+	return join(cwd, 'aronia', 'aronia.manifest.json');
+}
+function readManifest(cwd) {
+	const path = manifestPath(cwd);
+	return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null;
+}
+function writeManifest(cwd, manifest) {
+	writeFileSync(manifestPath(cwd), JSON.stringify(manifest, null, '\t') + '\n');
+}
+function emptyManifest() {
+	return { name: 'aronia', adopted: null, framework: null, styles: {}, components: [] };
+}
+
+// Best-effort framework detection from the consumer's package.json, so `init`
+// can pre-fill it. Ambiguous or unknown → null (the conversation / first add
+// settles it; `add` falls back to react).
+function detectFramework(cwd) {
+	const pkgPath = join(cwd, 'package.json');
+	if (!existsSync(pkgPath)) return null;
+	try {
+		const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+		const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+		if (deps.svelte || deps['@sveltejs/kit']) return 'svelte';
+		if (deps.react) return 'react';
+	} catch {
+		// unreadable package.json — just skip detection
+	}
+	return null;
 }
 
 // --- install -------------------------------------------------------------
@@ -59,15 +137,13 @@ function installItem(item, framework, cwd) {
 	for (const f of skinFiles) put(f.file, f.content); // one or more skin files
 
 	// Merge the agent-facing contract into aronia/aronia.manifest.json.
-	const manifestPath = join(cwd, 'aronia', 'aronia.manifest.json');
-	const manifest = existsSync(manifestPath)
-		? JSON.parse(readFileSync(manifestPath, 'utf8'))
-		: { name: 'aronia', styles: {}, components: [] };
+	const manifest = readManifest(cwd) ?? emptyManifest();
 	// Record the style's identity + composition guidance once per style, so the
 	// consumer's agent can read HOW to compose tastefully in this design language
-	// (principles + anti-patterns), not just reuse the components.
+	// (principles + anti-patterns + page composition), not just reuse components.
 	manifest.styles ??= {};
-	if (item.styleGuidance) manifest.styles[item.style] = item.styleGuidance;
+	if (item.styleGuidance || item.composition) manifest.styles[item.style] = styleEntry(item);
+	manifest.components ??= [];
 	manifest.components = manifest.components.filter(
 		(c) => !(c.style === item.style && c.component === item.component && c.framework === framework)
 	);
@@ -81,7 +157,7 @@ function installItem(item, framework, cwd) {
 		files: [...skinFiles.map((f) => f.file), item.css.file, item.tokens.file],
 		spec: item.spec
 	});
-	writeFileSync(manifestPath, JSON.stringify(manifest, null, '\t') + '\n');
+	writeManifest(cwd, manifest);
 
 	return written;
 }
@@ -115,40 +191,101 @@ function parseArgs(argv) {
 const HELP = `aronia — copy a design language into your repo
 
 Usage:
-  aronia add <component> --style <style> [options]
+  aronia init [options]                bring the language + onboarding in, no style yet
+  aronia add <component...> [options]  add one or more components (adopts a style on first use)
 
 Options:
-  --style <id>        design-language family (e.g. neo-brutalism)   [required]
-  --framework <fw>    react | html | svelte                         [default: react]
-  --cwd <dir>         where to write the aronia/ folder             [default: .]
-  --registry <src>    registry URL or local dir                    [default: bundled]
+  --style <id>        neo-brutalism | glassmorphism | swiss
+                      required for the first add unless \`init\` + conversation chose one
+  --framework <fw>    react | html | svelte              [default: detected, else react]
+  --cwd <dir>         where to write the aronia/ folder   [default: .]
+  --registry <src>    registry URL or local dir           [default: bundled]
+
+Typical flow:
+  npx aronia init            # brings aronia in; point your agent at aronia/START.md
+  npx aronia add button      # once a style is chosen, pull components — no --style needed
 `;
 
-// --- the `add` command ---------------------------------------------------
-async function add(component, flags) {
-	const style = flags.style;
-	if (!component || !style) {
-		console.error('error: `aronia add <component> --style <style>` requires both.\n');
-		process.stdout.write(HELP);
-		process.exit(1);
-	}
-	const framework = flags.framework || 'react';
+// --- the `init` command --------------------------------------------------
+// Bootstrap without committing to a style: copy in the onboarding gate + build
+// rules, and write a manifest holding the whole family menu but zero components
+// and no adopted style. The agent then runs START.md, and the first `add`
+// commits the chosen style.
+async function init(flags) {
 	const cwd = flags.cwd || process.cwd();
 	const registry = flags.registry || defaultRegistry();
 
-	const written = [];
-	await installTree(registry, style, component, framework, cwd, new Set(), written);
+	const destDir = join(cwd, 'aronia');
+	mkdirSync(destDir, { recursive: true });
+	for (const doc of ['START.md', 'AGENTS.md']) {
+		writeFileSync(join(destDir, doc), readFileSync(docPath(doc), 'utf8'));
+	}
 
-	const primary = written[written.length - 1];
-	const deps = written.slice(0, -1);
-	console.log(`\n✓ added ${primary.name} (${style}, ${framework})`);
-	if (deps.length) console.log(`  + dependencies: ${deps.map((d) => d.name).join(', ')}`);
-	console.log('');
-	for (const w of written) for (const f of w.files) console.log(`  ${f}`);
-	console.log(`  aronia/aronia.manifest.json`);
+	const manifest = readManifest(cwd) ?? emptyManifest();
+	manifest.styles = await buildStyleMenu(registry); // refresh the full menu
+	manifest.adopted ??= null;
+	manifest.framework = flags.framework ?? manifest.framework ?? detectFramework(cwd) ?? null;
+	manifest.components ??= [];
+	writeManifest(cwd, manifest);
+
+	const styleCount = Object.keys(manifest.styles).length;
+	console.log(`\n✓ aronia initialised — the design language and its onboarding are in aronia/.\n`);
+	console.log(`  aronia/START.md`);
+	console.log(`  aronia/AGENTS.md`);
+	console.log(`  aronia/aronia.manifest.json  (${styleCount} styles, no components yet)`);
 	console.log(
-		`\nNext: tell your agent —\n  "Use aronia for all UI — read aronia/aronia.manifest.json and match the components in aronia/."\n`
+		`\nNext: tell your agent —\n  "Start at aronia/START.md and follow it before writing any UI."\n`
 	);
+}
+
+// --- the `add` command ---------------------------------------------------
+async function add(components, flags) {
+	const cwd = flags.cwd || process.cwd();
+	const registry = flags.registry || defaultRegistry();
+	const manifest = readManifest(cwd);
+	const adopted = manifest?.adopted ?? null;
+
+	const style = flags.style || adopted;
+	if (!components.length || !style) {
+		if (components.length && !style) {
+			console.error(
+				`error: no style adopted yet.\n       Run \`aronia init\` and follow aronia/START.md, or pass \`--style <style>\`.\n`
+			);
+		} else {
+			console.error('error: `aronia add <component> --style <style>` requires both.\n');
+		}
+		process.stdout.write(HELP);
+		process.exit(1);
+	}
+	if (flags.style && adopted && flags.style !== adopted) {
+		console.log(`note: this project adopted "${adopted}"; adding "${flags.style}" mixes two families.`);
+	}
+	const framework = flags.framework || manifest?.framework || 'react';
+
+	const written = [];
+	const seen = new Set();
+	for (const component of components) {
+		await installTree(registry, style, component, framework, cwd, seen, written);
+	}
+
+	// Adopt-on-first-add: remember the style + framework so later `add`s need no
+	// flags — `aronia add card` then reads as "a component of my language".
+	const after = readManifest(cwd);
+	const justAdopted = !adopted;
+	after.adopted ??= style;
+	after.framework ??= framework;
+	writeManifest(cwd, after);
+
+	console.log(`\n✓ added ${written.map((w) => w.name).join(', ')} (${style}, ${framework})`);
+	console.log('');
+	const files = [];
+	for (const w of written) for (const f of w.files) if (!files.includes(f)) files.push(f); // tokens.css is shared
+	for (const f of files) console.log(`  ${f}`);
+	console.log(`  aronia/aronia.manifest.json`);
+	if (justAdopted) {
+		console.log(`\nAdopted ${style}. Further components need no --style:  aronia add <component>`);
+	}
+	console.log('');
 }
 
 // --- entry ---------------------------------------------------------------
@@ -159,8 +296,12 @@ async function main() {
 		process.stdout.write(HELP);
 		return;
 	}
+	if (cmd === 'init') {
+		await init(flags);
+		return;
+	}
 	if (cmd === 'add') {
-		await add(positional[1], flags);
+		await add(positional.slice(1), flags);
 		return;
 	}
 	console.error(`unknown command: ${cmd}\n`);

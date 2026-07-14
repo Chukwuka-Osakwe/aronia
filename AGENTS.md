@@ -4,6 +4,15 @@ Guidance for AI agents working in a project that **uses aronia**.
 
 > Contributing to aronia itself? This file isn't for that — see [DESIGN.md](./DESIGN.md).
 
+> **First, check the gate in [START.md](./START.md).** Before you write, add, or
+> edit any UI, see whether the scope and design direction are settled — what's
+> being built, a style chosen, the brand set, someone driving who knows what they
+> want. If they are, you've cleared the gate — continue below. If they aren't,
+> **offer** the short conversation in START.md (it's optional and the human's
+> call): ask once whether they'd like to talk the direction through — style,
+> scope, how widely aronia applies — or just get building, and honour the answer.
+> Don't impose it; don't silently skip it either.
+
 aronia is a design language copied into the repo via `npx aronia add`. When you
 build or edit UI:
 
