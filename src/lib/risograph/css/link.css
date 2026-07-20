@@ -1,0 +1,63 @@
+/* Risograph — Link (Layer 2: the style)
+ *
+ * State rides on COLOUR, never font-weight (weight changes reflow the nav list).
+ * Inline = the fluoro magenta accent text with a persistent underline; nav =
+ * muted warm-grey at rest → full ink on hover → accent + underline when active.
+ */
+
+.riso-link {
+	font-family: var(--riso-font);
+	color: var(--riso-ink);
+	cursor: pointer;
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+	transition:
+		text-decoration-color 120ms ease,
+		color 120ms ease;
+}
+.riso-link:focus-visible,
+.riso-link[data-state='focus'] {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+/* inline — the accent as text (darkened magenta, AA on paper), underlined. */
+.riso-link[data-variant='inline'] {
+	color: var(--riso-accent-text);
+	font-weight: var(--riso-font-weight-medium);
+	text-decoration-color: currentColor;
+}
+.riso-link[data-variant='inline']:hover,
+.riso-link[data-variant='inline'][data-state='hover'] {
+	color: color-mix(in srgb, var(--riso-accent-text) 80%, #000);
+}
+
+/* nav — colour-only state, constant weight → zero reflow. */
+.riso-link[data-variant='nav'] {
+	display: inline-block;
+	padding: 0.3rem 0.5rem;
+	font-size: var(--riso-size-sm-text);
+	font-weight: var(--riso-font-weight-medium);
+	color: var(--riso-ink-soft);
+}
+.riso-link[data-variant='nav']:hover,
+.riso-link[data-variant='nav'][data-state='hover'] {
+	color: var(--riso-ink);
+}
+.riso-link[data-variant='nav'][data-active='true'] {
+	color: var(--riso-accent-text);
+	text-decoration-color: currentColor;
+}
+
+.riso-link__ext {
+	margin-left: 0.15em;
+	font-size: 0.85em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.riso-link {
+		transition: none;
+	}
+}

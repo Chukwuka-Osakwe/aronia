@@ -3,6 +3,7 @@
 export * as neoBrutalism from './neo-brutalism/index.js';
 export * as glassmorphism from './glassmorphism/index.js';
 export * as swiss from './swiss/index.js';
+export * as risograph from './risograph/index.js';
 
 // Machine-readable catalogue of styles/components/props — the "agentic" artifact.
 export { manifest } from './manifest/index.js';

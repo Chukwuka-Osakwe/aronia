@@ -1,5 +1,5 @@
 import type { Component } from 'svelte';
-import { neoBrutalism, glassmorphism, swiss } from '$lib/index.js';
+import { neoBrutalism, glassmorphism, swiss, risograph } from '$lib/index.js';
 import type { AlertVariant } from '$lib/neo-brutalism/options.js';
 
 // Maps manifest ids → the actual Svelte components. Kept OUT of the manifest so
@@ -79,6 +79,13 @@ export const registry: Record<string, Record<string, Component<any>>> = {
 		// Toaster host stands in for `toast` (imperative — Preview skips the inline
 		// instance and fires the action instead; the app root mounts it).
 		toast: swiss.Toaster
+	},
+	// Risograph — PREVIEW slice (Button/Link/Card/Badge; no Toaster yet).
+	risograph: {
+		button: risograph.Button,
+		link: risograph.Link,
+		card: risograph.Card,
+		badge: risograph.Badge
 	}
 };
 

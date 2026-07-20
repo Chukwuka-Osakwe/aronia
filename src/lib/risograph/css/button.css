@@ -1,0 +1,142 @@
+/* Risograph — Button (Layer 2: the style)
+ *
+ * A PRINTED colour field, not a brutalist block. No offset, no drop shadow, no
+ * black outline on fills — filled variants are flat spot-ink fields with a faint
+ * grain tooth. Depth/energy comes from OVERPRINT: hover deepens the ink toward
+ * its complementary spot colour (the way two Riso passes physically mix), never
+ * an elevation or a "shove". Only outline/ghost keep a thin ink hairline.
+ */
+
+.riso-btn {
+	position: relative;
+	isolation: isolate;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	line-height: 1;
+	text-decoration: none;
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	cursor: pointer;
+	transition: var(--riso-transition);
+	white-space: nowrap;
+	user-select: none;
+	overflow: hidden;
+}
+
+/* Grain tooth over every fill — the paper texture that reads as print, not pixels. */
+.riso-btn::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: multiply;
+	opacity: 0.18;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.riso-btn:focus-visible,
+.riso-btn[data-state='focus'] {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+/* variants — filled fields are BORDERLESS; hover overprints toward the
+   complementary ink instead of lightening. */
+.riso-btn[data-variant='primary'] {
+	background: var(--riso-accent);
+	color: var(--riso-accent-ink);
+	border-color: transparent;
+}
+.riso-btn[data-variant='primary']:hover,
+.riso-btn[data-variant='primary'][data-state='hover'] {
+	/* fluoro pink overprinted with blue → a deeper magenta-violet */
+	background: color-mix(in srgb, var(--riso-accent) calc(100% - var(--riso-overprint)), var(--riso-blue));
+}
+
+.riso-btn[data-variant='secondary'] {
+	background: var(--riso-blue);
+	color: var(--riso-on-ink);
+	border-color: transparent;
+}
+.riso-btn[data-variant='secondary']:hover,
+.riso-btn[data-variant='secondary'][data-state='hover'] {
+	/* blue overprinted with red → toward ink-violet */
+	background: color-mix(in srgb, var(--riso-blue) calc(100% - var(--riso-overprint)), var(--riso-red));
+}
+
+.riso-btn[data-variant='muted'] {
+	background: var(--riso-muted);
+	border-color: transparent;
+}
+.riso-btn[data-variant='muted']:hover,
+.riso-btn[data-variant='muted'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
+}
+
+/* ghost — transparent field, keeps the thin ink hairline (an outline button). */
+.riso-btn[data-variant='ghost'] {
+	background: transparent;
+}
+.riso-btn[data-variant='ghost']:hover,
+.riso-btn[data-variant='ghost'][data-state='hover'] {
+	background: var(--riso-muted);
+}
+
+/* quiet — bare text button: no border, no fill. */
+.riso-btn[data-variant='quiet'] {
+	background: transparent;
+	border-color: transparent;
+}
+.riso-btn[data-variant='quiet']:hover,
+.riso-btn[data-variant='quiet'][data-state='hover'] {
+	background: var(--riso-muted);
+}
+
+/* sizes */
+.riso-btn[data-size='xs'] {
+	font-size: var(--riso-size-xs-text);
+	padding: var(--riso-size-xs-pad);
+}
+.riso-btn[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+}
+.riso-btn[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+}
+.riso-btn[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+}
+
+/* shape */
+.riso-btn[data-shape='pill'] {
+	border-radius: var(--riso-radius-pill);
+}
+
+/* disabled — inert, flat, textureless. */
+.riso-btn:disabled,
+.riso-btn[aria-disabled='true'] {
+	background: var(--riso-muted);
+	color: var(--riso-ink-soft);
+	border-color: var(--riso-line);
+	cursor: not-allowed;
+}
+.riso-btn:disabled::after,
+.riso-btn[aria-disabled='true']::after {
+	opacity: 0;
+}
+
+.riso-btn__icon {
+	display: inline-flex;
+	align-items: center;
+}

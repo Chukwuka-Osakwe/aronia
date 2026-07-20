@@ -175,6 +175,26 @@
 		--doc-card-shadow: none;
 		--doc-card-radius: 2px;
 	}
+	/* Riso: the whole pane is warm paper with a multiply-blended grain tooth, and
+	   the details card wears the family's blocky ink chrome + coloured offset — so
+	   the specimens sit on print stock, not the default white. */
+	.workbench__main[data-style='risograph'] {
+		--doc-card-bg: var(--riso-paper);
+		--doc-card-ink: var(--riso-ink);
+		--doc-card-muted: var(--riso-ink-soft);
+		--doc-card-border: 1.5px solid var(--riso-ink);
+		--doc-card-shadow: none;
+		--doc-card-radius: 0;
+		--doc-card-hover: var(--riso-muted);
+		background:
+			var(--riso-grain),
+			var(--riso-paper);
+		background-size: 120px 120px, auto;
+		background-blend-mode: multiply, normal;
+	}
+	.workbench__main[data-style='risograph'] .desc {
+		color: var(--riso-ink-soft);
+	}
 	.workbench__side {
 		border-left: 1px solid var(--doc-ink);
 		/* Background comes from the global `.scroll-shadows` utility (panel + the
@@ -219,6 +239,9 @@
 	}
 	header[data-style='swiss'] h1 {
 		font-family: var(--swiss-font);
+	}
+	header[data-style='risograph'] h1 {
+		font-family: var(--riso-font);
 	}
 	.desc {
 		font-size: 1rem; /* 16px */

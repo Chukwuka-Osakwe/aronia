@@ -6,10 +6,11 @@ import type { Manifest } from './schema.js';
 import { neoBrutalism } from '../neo-brutalism/manifest.js';
 import { glassmorphism } from '../glassmorphism/manifest.js';
 import { swiss } from '../swiss/manifest.js';
+import { risograph } from '../risograph/manifest.js';
 
 export * from './schema.js';
 
 export const manifest: Manifest = {
 	version: '0.4.0',
-	styles: [neoBrutalism, glassmorphism, swiss]
+	styles: [neoBrutalism, glassmorphism, swiss, risograph]
 };

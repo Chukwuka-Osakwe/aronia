@@ -1,0 +1,95 @@
+/* Risograph — design tokens (Layer 1)
+ *
+ * The signature: warm handcrafted PRINT energy. Layered semi-transparent spot
+ * inks that overprint (mix-blend multiply) into secondary hues, visible grain,
+ * a deliberate misregistration OFFSET (a coloured second "ink pass", never a
+ * neutral drop shadow), matte ink on a warm PAPER ground — never pure white.
+ *
+ * All tokens prefixed `--riso-` so families coexist on :root. Type is the free
+ * Space Grotesk / Space Mono pairing (display + the uppercase print label voice).
+ *
+ * NOTE: this is a PREVIEW slice. Palette / corners / motion are still open
+ * decisions (see research/riso.md) — here to see the paper ground + spot inks.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  /* palette — warm paper ground + ink, two classic spot inks, one fluoro pop */
+  --riso-paper: #f5f0e8; /* the warm uncoated-paper surface — NEVER pure white */
+  --riso-ink: #241f31; /* deep plum-indigo — the Riso "black" (NEVER true black).
+                          Echoes the pink+blue overprint; kills the last neo tell. */
+  --riso-muted: #ece5d8; /* subtle fills (muted button, disabled) — a deeper paper */
+  --riso-line: #d9cfbe; /* hairline dividers on paper */
+  --riso-skeleton: #ddd3c2; /* loading placeholder */
+  --riso-ink-soft: #595466; /* secondary text — desaturated indigo-grey, AA on paper */
+  --riso-on-ink: #f5f0e8; /* paper-tone text on an ink fill (not stark white) */
+
+  /* the two signature spot inks — vivid, semi-transparent in spirit. Their
+     overprint (multiply) gives a purple secondary "for free". */
+  --riso-red: #f15060;
+  --riso-blue: #0078bf;
+
+  /* the fluoro accent — the unmistakable riso pop. Bright FILL takes ink text;
+     as TEXT on paper it's too light, so a darkened tone is used for links. */
+  --riso-accent: #ff48b0; /* fluoro pink */
+  --riso-accent-ink: #1a1a1a; /* ink on the fluoro fill */
+  --riso-accent-text: #c31877; /* darkened magenta for accent TEXT on paper */
+
+  /* semantic status — kept in the riso key; darkened -ink tones clear AA as text. */
+  --riso-info: #0078bf;
+  --riso-info-ink: #0060a0;
+  --riso-success: #1a7f37;
+  --riso-success-ink: #157f3c;
+  --riso-warning: #f2a005;
+  --riso-warning-ink: #8a5a00;
+  --riso-danger: #f15060;
+  --riso-danger-ink: #c22030;
+
+  /* overlay backdrop dim — derived from ink so re-tinting carries it. */
+  --riso-backdrop: color-mix(in srgb, var(--riso-ink) 45%, transparent);
+
+  /* structure — NO offset, NO drop shadow, NO heavy black outline. Depth comes
+     from OVERPRINT (multiply ink mixing) and grain, never elevation — that's the
+     deliberate break from neo. Filled controls are borderless printed colour
+     fields; only outline/ghost keep a thin ink hairline. */
+  --riso-border-width: 1.5px;
+  --riso-border: var(--riso-border-width) solid var(--riso-ink);
+  --riso-radius: 0px;
+  --riso-radius-pill: 999px;
+  --riso-shadow: none;
+
+  /* overprint — hover deepens a spot ink toward its complementary ink (the way
+     two Riso passes physically mix), instead of a lightness shift. */
+  --riso-overprint: 22%; /* how far a fill leans toward the complementary ink on hover */
+
+  /* grain — SVG feTurbulence, FINE and FAINT (paper tooth, not TV static).
+     Multiply-blended over surfaces; the element sets its own low opacity. */
+  --riso-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+
+  /* control size scale — pairs padding (v h) with text size. */
+  --riso-size-xs-pad: 0.375rem 0.625rem;
+  --riso-size-sm-pad: 0.5rem 0.75rem;
+  --riso-size-md-pad: 0.625rem 0.875rem;
+  --riso-size-lg-pad: 0.75rem 1rem;
+
+  --riso-size-xs-text: 0.75rem;
+  --riso-size-sm-text: 0.875rem;
+  --riso-size-md-text: 1rem;
+  --riso-size-lg-text: 1.125rem;
+  --riso-size-title: 1.375rem;
+
+  /* type — Space Grotesk display + Space Mono for the uppercase print labels. */
+  --riso-font: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --riso-font-mono: 'Space Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --riso-font-weight-regular: 400;
+  --riso-font-weight-medium: 500;
+  --riso-font-weight-semibold: 600;
+  --riso-font-weight-bold: 700;
+  --riso-font-weight: var(--riso-font-weight-bold);
+
+  /* motion — the offset "settles" on press (registration nudge), not a neo shove. */
+  --riso-transition:
+    background-color 120ms ease, color 120ms ease, border-color 120ms ease,
+    box-shadow 120ms ease, transform 120ms ease;
+}

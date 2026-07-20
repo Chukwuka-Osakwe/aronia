@@ -1,0 +1,75 @@
+/* Risograph — Card (Layer 2: the style)
+ *
+ * A printed panel: warm paper ground with a FAINT multiply-blended grain tooth,
+ * a thin ink hairline, blocky corners — and NO offset, NO drop shadow (that was
+ * the neo tell). The header is a printed spot-ink band; grain is the load-bearing
+ * identity that separates this from a flat neo/swiss panel.
+ */
+
+.riso-card {
+	--_divider: var(--riso-ink);
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	display: flex;
+	flex-direction: column;
+	background: var(--riso-paper);
+	color: var(--riso-ink);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	font-family: var(--riso-font);
+	overflow: hidden;
+}
+
+/* The paper tooth — SVG grain, multiply-blended, faint, non-interactive. */
+.riso-card::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: multiply;
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.riso-card[data-variant='muted'] {
+	background: var(--riso-muted);
+}
+/* Inverted ink panel — paper-tone text; grain drops to a lighter blend. */
+.riso-card[data-variant='ink'] {
+	--_divider: rgba(245, 240, 232, 0.24);
+	background: var(--riso-ink);
+	color: var(--riso-on-ink);
+	border-color: var(--riso-ink);
+}
+.riso-card[data-variant='ink']::after {
+	mix-blend-mode: screen;
+	opacity: 0.12;
+}
+
+.riso-card__header,
+.riso-card__footer {
+	position: relative;
+	z-index: 1; /* above the grain layer */
+	padding: 0.75rem 1.25rem;
+	font-family: var(--riso-font-mono);
+	font-weight: var(--riso-font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-size: var(--riso-size-sm-text);
+}
+/* The header is a printed spot-ink masthead band (paper-tone text on blue) — a
+   printed label bar, not a ruled strip. */
+.riso-card__header {
+	background: var(--riso-blue);
+	color: var(--riso-on-ink);
+}
+.riso-card__footer {
+	border-top: var(--riso-border-width) solid var(--_divider);
+}
+.riso-card__body {
+	padding: 1.25rem;
+	font-weight: var(--riso-font-weight-regular);
+	line-height: 1.55;
+}

@@ -177,6 +177,9 @@
 	.group__title[data-style='glassmorphism'] {
 		font-family: var(--glass-font);
 	}
+	.group__title[data-style='risograph'] {
+		font-family: var(--riso-font);
+	}
 	/* Collapsed libraries: the title is a bare switch-link — no list follows, so it
 	   loses the gap and gains a hover cue. */
 	.group:not(.group--active) {
