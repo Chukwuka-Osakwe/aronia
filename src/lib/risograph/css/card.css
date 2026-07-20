@@ -62,7 +62,7 @@
 /* The header is a printed spot-ink masthead band (paper-tone text on blue) — a
    printed label bar, not a ruled strip. */
 .riso-card__header {
-	background: var(--riso-blue);
+	background: var(--riso-blue-fill);
 	color: var(--riso-on-ink);
 }
 .riso-card__footer {

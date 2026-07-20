@@ -57,19 +57,20 @@
 }
 .riso-btn[data-variant='primary']:hover,
 .riso-btn[data-variant='primary'][data-state='hover'] {
-	/* fluoro pink overprinted with blue → a deeper magenta-violet */
-	background: color-mix(in srgb, var(--riso-accent) calc(100% - var(--riso-overprint)), var(--riso-blue));
+	/* fluoro pink overprinted with blue → a deeper magenta-violet. Uses the gentler
+	   accent overprint so the dark label still clears AA on the darker hover fill. */
+	background: color-mix(in srgb, var(--riso-accent) calc(100% - var(--riso-overprint-accent)), var(--riso-blue));
 }
 
 .riso-btn[data-variant='secondary'] {
-	background: var(--riso-blue);
+	background: var(--riso-blue-fill);
 	color: var(--riso-on-ink);
 	border-color: transparent;
 }
 .riso-btn[data-variant='secondary']:hover,
 .riso-btn[data-variant='secondary'][data-state='hover'] {
 	/* blue overprinted with red → toward ink-violet */
-	background: color-mix(in srgb, var(--riso-blue) calc(100% - var(--riso-overprint)), var(--riso-red));
+	background: color-mix(in srgb, var(--riso-blue-fill) calc(100% - var(--riso-overprint)), var(--riso-red));
 }
 
 .riso-btn[data-variant='muted'] {

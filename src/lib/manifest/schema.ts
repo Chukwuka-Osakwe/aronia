@@ -93,6 +93,12 @@ export interface StyleSpec {
 	/** Layer-1 token stylesheet (repo-relative) — the CSS custom properties every
 	 *  component in this family depends on. The aronia CLI ships it once per style. */
 	tokens?: string;
+	/** Self-hosted font files (repo-relative woff2 + the OFL licence) this family's
+	 *  tokens.css `@font-face`s from `./fonts/`. Unlike the CDN-`@import` families,
+	 *  Risograph ships its typefaces so a consumer renders fully offline. The CLI
+	 *  copies these into the consumer's `aronia/<style>/fonts/` alongside tokens.css.
+	 *  Omitted by families that use a font CDN or a system stack. */
+	fonts?: readonly string[];
 	/** Page-level composition vocabulary — the values an agent needs to build a
 	 *  whole PAGE (hero, sections, media), which live outside any component and so
 	 *  aren't covered by tokens/props. Guidance, not CSS: an agent reads and applies

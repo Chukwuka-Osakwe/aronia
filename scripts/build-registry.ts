@@ -9,7 +9,7 @@
 // same artifacts are both bundled-with-the-CLI and hostable as a live registry.
 //
 // Run: `npm run registry` (via tsx).
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync } from 'node:fs';
 import { join, basename, dirname } from 'node:path';
 import { manifest } from '../src/lib/manifest/index.js';
 import type { ComponentSpec, CompositionSpec } from '../src/lib/manifest/schema.js';
@@ -45,6 +45,11 @@ interface RegistryItem {
 	registryDeps?: readonly string[];
 	/** Layer 1 — written to the consumer as `tokens.css`. */
 	tokens: FilePayload;
+	/** Self-hosted fonts this style's tokens.css `@font-face`s from `./fonts/`.
+	 *  Consumer-relative paths (e.g. `fonts/space-grotesk-variable.woff2`); the
+	 *  binaries ride alongside the JSON as sidecar files under `<style>/`, and the
+	 *  CLI copies them into `aronia/<style>/`. Absent for CDN/system-font styles. */
+	fonts?: readonly string[];
 	/** Layer 2 — the design language for this component. */
 	css: FilePayload;
 	/** Layer 3 — thin prop→data-attr skins by framework; each is one or more files. */
@@ -111,6 +116,17 @@ for (const style of manifest.styles) {
 	if (!style.tokens) continue; // style not yet ported to the registry
 	const tokensContent = adaptTokensForConsumers(read(style.tokens));
 
+	// Copy any self-hosted fonts alongside the JSON items (`<style>/fonts/…`) and
+	// record their consumer-relative paths on every item, so the CLI knows what to
+	// pull. tokens.css `@font-face`s these by the same `./fonts/…` relative path.
+	const fontPaths = (style.fonts ?? []).map((src) => {
+		const rel = join('fonts', basename(src));
+		const dest = join(OUT, style.id, rel);
+		mkdirSync(dirname(dest), { recursive: true });
+		copyFileSync(join(ROOT, src), dest);
+		return rel;
+	});
+
 	for (const component of style.components) {
 		if (!component.files) continue; // component not yet ported
 
@@ -150,6 +166,7 @@ for (const style of manifest.styles) {
 			},
 			composition: style.composition,
 			tokens: { file: 'tokens.css', content: tokensContent },
+			fonts: fontPaths.length ? fontPaths : undefined,
 			css: { file: basename(files.style), content: read(files.style) },
 			skins
 		};

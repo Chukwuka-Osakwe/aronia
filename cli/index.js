@@ -38,6 +38,21 @@ async function loadItem(registry, style, component) {
 	return JSON.parse(readFileSync(path, 'utf8'));
 }
 
+// Load a binary registry asset (a self-hosted font) as a Buffer. Fonts are the
+// one non-JSON payload: too big to base64 into every component item, they ride
+// alongside the JSON as sidecar files (`<style>/fonts/…`) — over http for a
+// hosted registry, off disk for the CLI's bundled copy or the dev workspace.
+async function loadBinary(registry, style, relPath) {
+	if (/^https?:\/\//.test(registry)) {
+		const res = await fetch(`${registry.replace(/\/$/, '')}/${style}/${relPath}`);
+		if (!res.ok) throw new Error(`registry ${res.status} for ${style}/${relPath}`);
+		return Buffer.from(await res.arrayBuffer());
+	}
+	const path = join(registry, style, relPath);
+	if (!existsSync(path)) throw new Error(`no registry file at ${path}`);
+	return readFileSync(path); // no encoding → Buffer
+}
+
 async function loadIndex(registry) {
 	if (/^https?:\/\//.test(registry)) {
 		const res = await fetch(`${registry.replace(/\/$/, '')}/index.json`);
@@ -154,11 +169,28 @@ function installItem(item, framework, cwd) {
 		name: item.name,
 		styleClass: item.styleClass,
 		dataAttrs: item.dataAttrs,
-		files: [...skinFiles.map((f) => f.file), item.css.file, item.tokens.file],
+		files: [...skinFiles.map((f) => f.file), item.css.file, item.tokens.file, ...(item.fonts ?? [])],
 		spec: item.spec
 	});
 	writeManifest(cwd, manifest);
 
+	return written;
+}
+
+// Copy a style's self-hosted fonts (if any) into `aronia/<style>/fonts/`, once
+// per style. Idempotent; the tokens.css `@font-face`s reference them by the same
+// relative path here and in the docs source, so a consumer renders offline.
+async function installFonts(registry, item, cwd, seen) {
+	const fontsKey = `fonts:${item.style}`;
+	if (!item.fonts?.length || seen.has(fontsKey)) return [];
+	seen.add(fontsKey);
+	const written = [];
+	for (const rel of item.fonts) {
+		const dest = join(cwd, 'aronia', item.style, rel);
+		mkdirSync(dirname(dest), { recursive: true });
+		writeFileSync(dest, await loadBinary(registry, item.style, rel));
+		written.push(join('aronia', item.style, rel));
+	}
 	return written;
 }
 
@@ -173,7 +205,9 @@ async function installTree(registry, style, component, framework, cwd, seen, wri
 	for (const dep of item.registryDeps ?? []) {
 		await installTree(registry, style, dep, framework, cwd, seen, written);
 	}
-	written.push({ name: item.name, files: installItem(item, framework, cwd) });
+	const files = installItem(item, framework, cwd);
+	files.push(...(await installFonts(registry, item, cwd, seen)));
+	written.push({ name: item.name, files });
 }
 
 // --- arg parsing ---------------------------------------------------------

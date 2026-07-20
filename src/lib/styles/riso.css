@@ -1,18 +1,43 @@
 /* Risograph — design tokens (Layer 1)
  *
- * The signature: warm handcrafted PRINT energy. Layered semi-transparent spot
- * inks that overprint (mix-blend multiply) into secondary hues, visible grain,
- * a deliberate misregistration OFFSET (a coloured second "ink pass", never a
- * neutral drop shadow), matte ink on a warm PAPER ground — never pure white.
+ * The signature: warm handcrafted PRINT energy. Layered spot inks that overprint
+ * (mix-blend multiply) into secondary hues on hover, visible paper grain, matte
+ * ink on a warm PAPER ground — never pure white. Depth comes from ink MIXING,
+ * never elevation: no offset, no drop shadow, zero transforms. Corners are hard
+ * (0px). The one deliberate break from neo lives entirely in ink/paper/texture.
  *
  * All tokens prefixed `--riso-` so families coexist on :root. Type is the free
  * Space Grotesk / Space Mono pairing (display + the uppercase print label voice).
  *
- * NOTE: this is a PREVIEW slice. Palette / corners / motion are still open
- * decisions (see research/riso.md) — here to see the paper ground + spot inks.
+ * Unlike the other families, Risograph does NOT reach for a font CDN or a system
+ * stack: the two typefaces ship as woff2 in `./fonts/` next to this file (OFL,
+ * see fonts/OFL.txt) so a consumer's copy renders fully offline with no external
+ * request. Space Grotesk is a variable file covering the 400–700 range.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('./fonts/space-grotesk-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/space-mono-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/space-mono-700.woff2') format('woff2');
+}
 
 :root {
   /* palette — warm paper ground + ink, two classic spot inks, one fluoro pop */
@@ -29,6 +54,10 @@
      overprint (multiply) gives a purple secondary "for free". */
   --riso-red: #f15060;
   --riso-blue: #0078bf;
+  /* darker blue for SOLID surfaces that carry paper-tone text (secondary button,
+     card masthead): the raw spot blue is too light to clear AA behind text. Marks,
+     hairline borders and overprint mixing still use the brighter --riso-blue. */
+  --riso-blue-fill: #0069a8;
 
   /* the fluoro accent — the unmistakable riso pop. Bright FILL takes ink text;
      as TEXT on paper it's too light, so a darkened tone is used for links. */
@@ -40,7 +69,7 @@
   --riso-info: #0078bf;
   --riso-info-ink: #0060a0;
   --riso-success: #1a7f37;
-  --riso-success-ink: #157f3c;
+  --riso-success-ink: #127635;
   --riso-warning: #f2a005;
   --riso-warning-ink: #8a5a00;
   --riso-danger: #f15060;
@@ -62,6 +91,9 @@
   /* overprint — hover deepens a spot ink toward its complementary ink (the way
      two Riso passes physically mix), instead of a lightness shift. */
   --riso-overprint: 22%; /* how far a fill leans toward the complementary ink on hover */
+  --riso-overprint-accent: 16%; /* gentler mix for the fluoro primary — its dark
+                                   label has the tightest contrast budget, so a
+                                   full 22% overprint would push the hover below AA. */
 
   /* grain — SVG feTurbulence, FINE and FAINT (paper tooth, not TV static).
      Multiply-blended over surfaces; the element sets its own low opacity. */
@@ -88,8 +120,9 @@
   --riso-font-weight-bold: 700;
   --riso-font-weight: var(--riso-font-weight-bold);
 
-  /* motion — the offset "settles" on press (registration nudge), not a neo shove. */
+  /* motion — COLOUR only. State settles by ink overprinting/mixing, never by a
+     transform or shadow (no neo "shove", reduced-motion-safe by default). */
   --riso-transition:
     background-color 120ms ease, color 120ms ease, border-color 120ms ease,
-    box-shadow 120ms ease, transform 120ms ease;
+    outline-color 120ms ease;
 }

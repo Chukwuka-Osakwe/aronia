@@ -55,7 +55,27 @@ const CASES = [
 	{ label: 'swiss: danger-ink on paper (field required/error/alert)', fg: '#cf222e', bg: '#ffffff' },
 	{ label: 'swiss: info-ink on paper (alert bar/icon)', fg: '#175cd3', bg: '#ffffff' },
 	{ label: 'swiss: success-ink on paper (alert bar/icon)', fg: '#157f3c', bg: '#ffffff' },
-	{ label: 'swiss: warning-ink on paper (alert bar/icon)', fg: '#8a5a00', bg: '#ffffff' }
+	{ label: 'swiss: warning-ink on paper (alert bar/icon)', fg: '#8a5a00', bg: '#ffffff' },
+
+	// --- Risograph: warm paper ground, plum-indigo ink, spot inks, one fluoro accent ---
+	// Surfaces sit on the warm paper #f5f0e8 (NOT white) — the honest, slightly-worse
+	// case for dark-on-light. Bright spot inks back light text only where dark enough
+	// (--riso-blue-fill, not the raw spot blue #0078bf); the fluoro pink takes dark ink.
+	{ label: 'riso: ink on paper', fg: '#241f31', bg: '#f5f0e8' },
+	{ label: 'riso: ink-soft on paper (secondary text)', fg: '#595466', bg: '#f5f0e8' },
+	{ label: 'riso: on-ink on ink fill (solid badge/card)', fg: '#f5f0e8', bg: '#241f31' },
+	{ label: 'riso: ink on muted fill (muted button)', fg: '#241f31', bg: '#ece5d8' },
+	{ label: 'riso: accent-ink on fluoro fill (primary button/accent badge)', fg: '#1a1a1a', bg: '#ff48b0' },
+	// The overprint hover DARKENS the fluoro fill, eating the dark label's margin —
+	// so the primary uses the gentler --riso-overprint-accent (16%). This pins that:
+	// #d650b2 = color-mix(srgb, #ff48b0 84%, #0078bf). At the full 22% it drops below AA.
+	{ label: 'riso: accent-ink on primary hover (16% overprint→blue)', fg: '#1a1a1a', bg: '#d650b2' },
+	{ label: 'riso: on-ink on blue-fill (secondary button/card masthead)', fg: '#f5f0e8', bg: '#0069a8' },
+	{ label: 'riso: accent-text on paper (link/emphasis)', fg: '#c31877', bg: '#f5f0e8' },
+	{ label: 'riso: danger-ink on paper (field error/alert)', fg: '#c22030', bg: '#f5f0e8' },
+	{ label: 'riso: info-ink on paper (alert/link)', fg: '#0060a0', bg: '#f5f0e8' },
+	{ label: 'riso: success-ink on paper (alert)', fg: '#127635', bg: '#f5f0e8' },
+	{ label: 'riso: warning-ink on paper (alert)', fg: '#8a5a00', bg: '#f5f0e8' }
 ];
 
 let failures = 0;
