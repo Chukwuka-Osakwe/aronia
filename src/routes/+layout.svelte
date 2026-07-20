@@ -1,8 +1,10 @@
 <script lang="ts">
 	import './docs.css';
 	import { page } from '$app/stores';
+	import { dev } from '$app/environment';
 	import { manifest } from '$lib/index.js';
 	import { registry } from './registry.js';
+	import { labStyles } from './labs.js';
 
 	let { children } = $props();
 
@@ -21,6 +23,8 @@
 	const activeLib = $derived(
 		activeStyle ? manifest.styles.find((s) => s.id === activeStyle) : undefined
 	);
+	// Show the lab link only in dev, and only when this style actually has a local lab.
+	const hasLab = $derived(dev && !!activeStyle && labStyles.has(activeStyle));
 
 	// Toast host: mount the ACTIVE style's Toaster at the app root so fired toasts
 	// overlay the page. Each style owns its own store + host; only one style is in
@@ -88,6 +92,9 @@
 			{/if}
 			<a class="meta-link" href="/guide" class:active={$page.url.pathname === '/guide'}>how to use</a>
 			<a class="meta-link" href="/manifest.json">manifest.json ↗</a>
+			{#if hasLab}
+				<a class="meta-link" href="/lab/{activeStyle}">lab ↗</a>
+			{/if}
 		</div>
 	</aside>
 

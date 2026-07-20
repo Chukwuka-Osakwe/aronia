@@ -17,6 +17,10 @@ node_modules
 /cli/START.md
 /cli/AGENTS.md
 
+# Local-only per-style tuning labs (off-component look exploration). Never ship
+# with real code; the playground footer links to them only when present in dev.
+/src/routes/lab
+
 # Design-research reading notes (personal, never committed)
 /research
 
