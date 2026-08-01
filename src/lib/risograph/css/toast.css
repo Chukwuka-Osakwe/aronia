@@ -1,0 +1,93 @@
+/* Risograph — Toast/Toaster (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-*` selectors — the framework-agnostic
+ * design language for the toast system. Depends only on the Layer-1 tokens
+ * (styles/riso.css). Shared by the Svelte skin (which imports it) and the aronia
+ * registry. Each toast reuses the Riso <Alert> skin (the printed spot-ink wash),
+ * which already reads as a self-contained printed chip — so a toast carries NO
+ * shadow (zero elevation, even in the top layer) and PRINTS into place with an
+ * opacity-only entry: ink settling on paper, not a slide (transforms are banned).
+ */
+
+.riso-toaster {
+	position: fixed;
+	top: 1.25rem;
+	right: 1.25rem;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	width: min(24rem, calc(100vw - 2.5rem));
+	/* Let clicks fall through the empty gaps; the toasts themselves opt back in. */
+	pointer-events: none;
+}
+.riso-toast {
+	position: relative;
+	pointer-events: auto;
+	border-radius: var(--riso-radius);
+	box-shadow: none; /* deliberate — the wash + status hairline do the separating */
+	animation: riso-toast-in 180ms ease;
+}
+/* The toast reuses <Alert>, but a toast is one line, not a paragraph. Alert
+   centres its icon on the first line's box; here we centre the whole row and
+   reserve room on the right so the message never runs under the ×. */
+.riso-toast .riso-alert {
+	align-items: center;
+	padding-right: 2.5rem;
+}
+/* Opacity-only entry — the toast "prints" into place, no translate. */
+@keyframes riso-toast-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+/* Vertically centred on the toast, in the reserved right padding — aligned with
+   the (now centred) icon and message. */
+.riso-toast__close {
+	position: absolute;
+	top: 50%;
+	right: 0.5rem;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: var(--riso-radius);
+	color: var(--riso-ink);
+	cursor: pointer;
+	transition: var(--riso-transition);
+}
+/* Extend the click target to 40×40 without enlarging the visible button. */
+.riso-toast__close::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+.riso-toast__close svg {
+	width: 14px;
+	height: 14px;
+}
+.riso-toast__close:hover {
+	background: var(--riso-muted);
+}
+.riso-toast__close:focus-visible {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.riso-toast {
+		animation: none;
+	}
+}

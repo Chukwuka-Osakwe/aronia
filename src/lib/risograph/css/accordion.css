@@ -1,0 +1,114 @@
+/* Risograph — Accordion (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-accordion` + `[data-*]` attributes —
+ * the framework-agnostic design language for Accordion. Depends only on the
+ * Layer-1 tokens (styles/riso.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * Stacked disclosure on native <details>/<summary>: a printed paper stack with
+ * a faint grain tooth (the card treatment), ink hairlines that collapse into
+ * one line between items, a muted-paper summary hover (colour only), and an
+ * inset fluoro focus ring. The chevron flip + panel ease are state mechanics,
+ * not hover motion.
+ */
+
+.riso-accordion {
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	width: 28rem;
+	max-width: 100%;
+	font-family: var(--riso-font);
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	/* lets ::details-content below animate block-size to/from `auto` */
+	interpolate-size: allow-keywords;
+}
+/* The paper tooth — SVG grain, multiply-blended, faint, non-interactive. */
+.riso-accordion::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: multiply;
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
+.riso-accordion__item {
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+}
+/* Collapse the shared border between stacked items into one line, and drop the
+   inner radii so the stack reads as one crisp block. */
+.riso-accordion__item + .riso-accordion__item {
+	border-top: none;
+}
+.riso-accordion__item:not(:first-child) {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+.riso-accordion__item:not(:last-child) {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.riso-accordion__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	cursor: pointer;
+	font-weight: var(--riso-font-weight-semibold);
+	user-select: none;
+	list-style: none; /* drop the default disclosure triangle */
+	transition: var(--riso-transition);
+}
+.riso-accordion__summary::-webkit-details-marker {
+	display: none;
+}
+.riso-accordion__summary:hover {
+	background: var(--riso-muted);
+}
+.riso-accordion__summary:focus-visible {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: -2px;
+}
+.riso-accordion__chevron {
+	flex: none;
+	width: 1.1em;
+	height: 1.1em;
+	transition: transform 260ms ease;
+}
+.riso-accordion__item[open] .riso-accordion__chevron {
+	transform: rotate(180deg);
+}
+
+/* Animate the native open/close. ::details-content is the collapsible box;
+   interpolate-size (above) lets its block-size ease to/from auto, and
+   allow-discrete keeps the content rendered through the collapse. Progressive
+   enhancement — browsers without ::details-content simply snap as before. */
+.riso-accordion__item::details-content {
+	block-size: 0;
+	overflow: clip;
+	transition-property: block-size, content-visibility;
+	transition-duration: 260ms;
+	transition-timing-function: ease;
+	transition-behavior: allow-discrete;
+}
+.riso-accordion__item[open]::details-content {
+	block-size: auto;
+}
+
+.riso-accordion__panel {
+	padding: 1rem;
+	border-top: var(--riso-border);
+	font-weight: var(--riso-font-weight-regular);
+	line-height: 1.5;
+}
+@media (prefers-reduced-motion: reduce) {
+	.riso-accordion__chevron,
+	.riso-accordion__item::details-content {
+		transition: none;
+	}
+}

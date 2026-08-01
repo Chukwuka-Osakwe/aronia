@@ -1,0 +1,45 @@
+<!--
+  Risograph — Button (plain-HTML snippet, the universal fallback)
+
+  The design language is just a class + data-attributes, so an agent can
+  translate this into ANY framework (Vue, Solid, Angular, Svelte, htmx, vanilla)
+  by mapping props onto these attributes. Include the two stylesheets once:
+
+    <link rel="stylesheet" href="./tokens.css" />   <!-- Layer 1: tokens -->
+    <link rel="stylesheet" href="./button.css" />   <!-- Layer 2: the style -->
+
+  Filled variants are borderless spot-ink fields with a faint grain tooth; hover
+  OVERPRINTS toward the complementary ink (no shadow, no lift, no transform).
+
+  Attribute contract:
+    data-variant : primary | secondary | muted | ghost | quiet   (default primary)
+    data-size    : xs | sm | md | lg                              (default md)
+    data-shape   : square | pill                                  (default square)
+    disabled     : present → inert; render as <button>. For a link, use <a href>.
+-->
+
+<!-- Default: primary (the fluoro-pink accent field) -->
+<button class="riso-btn" data-variant="primary" data-size="md" data-shape="square">
+  <span class="riso-btn__label">Click me</span>
+</button>
+
+<!-- Secondary: the spot-blue ink field -->
+<button class="riso-btn" data-variant="secondary" data-size="md" data-shape="square">
+  <span class="riso-btn__icon"><!-- svg / icon here --></span>
+  <span class="riso-btn__label">Save</span>
+</button>
+
+<!-- Ghost: an outline button (transparent, thin ink hairline) -->
+<button class="riso-btn" data-variant="ghost" data-size="md" data-shape="square">
+  <span class="riso-btn__label">Cancel</span>
+</button>
+
+<!-- Link variant: an <a> with href renders as a button-styled link -->
+<a class="riso-btn" data-variant="primary" data-size="md" data-shape="square" href="/somewhere">
+  <span class="riso-btn__label">Go</span>
+</a>
+
+<!-- Disabled -->
+<button class="riso-btn" data-variant="primary" data-size="md" data-shape="square" disabled>
+  <span class="riso-btn__label">Unavailable</span>
+</button>

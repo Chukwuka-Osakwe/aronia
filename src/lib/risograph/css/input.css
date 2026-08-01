@@ -1,0 +1,61 @@
+/* Risograph — Input (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-input` + `[data-*]` attributes — the
+ * framework-agnostic design language for Input. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * The Riso field: warm paper ground, a single plum-indigo ink hairline, hard
+ * 0px corners, no shadow. The entry surface stays CLEAN — no grain behind the
+ * text (a screen there reads as noise). State rides COLOUR: focus deepens the
+ * border toward the spot blue (an ink nudge) under the shared fluoro accent ring.
+ */
+
+.riso-input {
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	transition: var(--riso-transition);
+}
+.riso-input::placeholder {
+	color: var(--riso-ink-soft);
+}
+
+/* Focus: the family's fluoro accent ring (offset, matching Button/Link), plus a
+   colour-only nudge of the ink border toward the spot blue — never a shove. */
+.riso-input:focus,
+.riso-input[data-state='focus'] {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+	border-color: var(--riso-blue);
+}
+
+/* Disabled — inert field: flat deeper-paper fill, muted text, hairline line
+   border. Matches the Button disabled treatment so the family reads consistently. */
+.riso-input:disabled {
+	background: var(--riso-muted);
+	color: var(--riso-ink-soft);
+	border-color: var(--riso-line);
+	cursor: not-allowed;
+}
+
+.riso-input[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+}
+.riso-input[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+}
+.riso-input[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+}
+
+/* shape — square (default) or a fully rounded pill. */
+.riso-input[data-shape='pill'] {
+	border-radius: var(--riso-radius-pill);
+}

@@ -1,0 +1,114 @@
+/* Risograph — Alert (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-alert` + `[data-*]` attributes — the
+ * framework-agnostic design language for Alert. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A printed spot-ink WASH: the status colour tints the paper (the tinted-wash
+ * ground from the texture-expression range, worn by a component), under a faint
+ * grain tooth — severity reads as a light pass of ink, not a full colour flood.
+ * A thin status-ink hairline frames the panel; the icon + title print in the
+ * status ink, the body stays plum ink. One `--_c` (the vivid wash ink) and
+ * `--_ink` (the darkened AA-safe text tone) per variant drive everything.
+ */
+
+.riso-alert {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	align-items: flex-start;
+	border: var(--riso-border-width) solid var(--_ink);
+	border-radius: var(--riso-radius);
+	/* the wash: a light pass of the vivid status ink over the paper */
+	background: color-mix(in srgb, var(--_c) 8%, var(--riso-paper));
+	font-family: var(--riso-font);
+	color: var(--riso-ink);
+	/* base font-size (per size) drives the icon + title via em */
+	font-size: var(--riso-size-md-text);
+	overflow: hidden;
+}
+/* Grain tooth over the wash — the paper texture that reads as print. */
+.riso-alert::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: multiply;
+	opacity: 0.14;
+	pointer-events: none;
+	z-index: -1;
+}
+
+/* two variables per severity — the VIVID spot ink washes the ground; the
+   darkened -ink tone carries the hairline, icon and title (AA on the wash). */
+.riso-alert[data-variant='info'] {
+	--_c: var(--riso-info);
+	--_ink: var(--riso-info-ink);
+}
+.riso-alert[data-variant='success'] {
+	--_c: var(--riso-success);
+	--_ink: var(--riso-success-ink);
+}
+.riso-alert[data-variant='warning'] {
+	--_c: var(--riso-warning);
+	--_ink: var(--riso-warning-ink);
+}
+.riso-alert[data-variant='error'] {
+	--_c: var(--riso-danger);
+	--_ink: var(--riso-danger-ink);
+}
+
+/* size scale — one font-size + padding/gap per step; icon & title follow via em */
+.riso-alert[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	gap: 0.625rem;
+	padding: 0.75rem 1rem;
+}
+.riso-alert[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	gap: 0.75rem;
+	padding: 1rem 1.25rem;
+}
+.riso-alert[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	gap: 0.875rem;
+	padding: 1.25rem 1.5rem;
+}
+
+/* The icon box is exactly as tall as the FIRST LINE's box (1.45em — see the
+   title/message line-heights below) with the mark centred inside, so the icon
+   optically registers with line one whether that line is the title or the body.
+   No magic margin nudge. */
+.riso-alert__icon {
+	flex: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4em;
+	height: 1.45em;
+	color: var(--_ink);
+}
+.riso-alert__icon svg {
+	width: 1.4em;
+	height: 1.4em;
+}
+
+.riso-alert__title {
+	margin: 0 0 0.2rem;
+	font-size: 1.05em;
+	/* 1.05em × (1.45/1.05) = a 1.45em line box — identical to the body's first
+	   line, so the icon centres on line one in both the titled and title-less
+	   shapes. */
+	line-height: calc(1.45 / 1.05);
+	font-weight: var(--riso-font-weight-bold);
+	color: var(--_ink);
+}
+/* Semibold, not regular — on the tinted wash the body reads a step stronger than
+   plain paper text (user-eyeballed; 500 was still too light there). */
+.riso-alert__message {
+	font-weight: var(--riso-font-weight-semibold);
+	font-size: 1em;
+	line-height: 1.45;
+}

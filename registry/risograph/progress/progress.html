@@ -1,0 +1,13 @@
+<!--
+  Risograph — Progress (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./progress.css once. Attribute contract:
+    data-size : sm | md | lg                 (default md)
+    data-show : "true" to show the % after the bar
+  Set the fill width and aria-valuenow to your value (0–100).
+-->
+<div class="riso-progress" data-size="md" data-show="true">
+  <div class="riso-progress__track" role="progressbar" aria-label="Progress" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+    <div class="riso-progress__fill" style="width: 60%"></div>
+  </div>
+  <span class="riso-progress__value" aria-hidden="true">60%</span>
+</div>

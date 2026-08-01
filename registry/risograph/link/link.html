@@ -1,0 +1,17 @@
+<!--
+  Risograph — Link (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./link.css once. Attribute contract:
+    data-variant : inline | nav            (default inline)
+    data-active  : "true" on the current nav item (also set aria-current="page")
+    external     : add target="_blank" rel="noopener noreferrer" + the ↗ mark
+-->
+<!-- Inline text link (darkened-magenta, underlined) -->
+<a class="riso-link" data-variant="inline" href="/docs">read the docs</a>
+
+<!-- Active nav item -->
+<a class="riso-link" data-variant="nav" data-active="true" aria-current="page" href="/home">Home</a>
+
+<!-- External -->
+<a class="riso-link" data-variant="inline" href="https://example.com" target="_blank" rel="noopener noreferrer">
+  example<span class="riso-link__ext" aria-hidden="true">↗</span>
+</a>

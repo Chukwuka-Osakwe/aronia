@@ -1,0 +1,121 @@
+/* Risograph — Modal (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-modal` + `[data-*]` attributes — the
+ * framework-agnostic design language for Modal. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * The zero-elevation overlay: NO shadow, even here — the identity's hard line.
+ * Separation from the page comes from INK instead: the flat 45%-plum backdrop
+ * dim, the ink hairline, and a printed spot-blue MASTHEAD header (the Card's
+ * band, at title size). A paper panel with the faint grain tooth; footer ruled
+ * by an ink hairline.
+ */
+
+.riso-modal {
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	padding: 0;
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	box-shadow: none; /* deliberate — depth is the backdrop's job, not elevation */
+	background: var(--riso-paper);
+	color: var(--riso-ink);
+	width: 100%;
+	max-width: min(92vw, 32rem);
+	font-family: var(--riso-font);
+	overflow: hidden;
+}
+/* Flat plum-ink dim wash, no blur — the page visibly drops back a pass. */
+.riso-modal::backdrop {
+	background: var(--riso-backdrop);
+}
+/* The paper tooth — SVG grain, multiply-blended, faint, non-interactive. */
+.riso-modal::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: multiply;
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.riso-modal__close {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	z-index: 2; /* above the masthead band (which sits at 1, above the grain) */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	background: transparent;
+	border: none;
+	border-radius: var(--riso-radius);
+	color: var(--riso-ink);
+	cursor: pointer;
+	transition: var(--riso-transition);
+}
+/* Extend the click target to 40×40 without enlarging the visible button. */
+.riso-modal__close::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	transform: translate(-50%, -50%);
+}
+.riso-modal__close svg {
+	width: 18px;
+	height: 18px;
+}
+.riso-modal__close:hover {
+	background: var(--riso-muted);
+}
+/* Over the masthead the close prints paper-tone, and hovers with the secondary
+   button's red overprint (blue leaning toward ink-violet) — colour, not lift. */
+.riso-modal[data-has-header='true'] .riso-modal__close {
+	color: var(--riso-on-ink);
+}
+.riso-modal[data-has-header='true'] .riso-modal__close:hover {
+	background: color-mix(in srgb, var(--riso-blue-fill) calc(100% - var(--riso-overprint)), var(--riso-red));
+}
+.riso-modal__close:focus-visible {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+/* The masthead: the Card's printed spot-blue band carrying the title — the
+   modal's separation statement in place of a shadow. */
+.riso-modal__header {
+	position: relative;
+	z-index: 1; /* above the grain layer */
+	padding: 1.1rem 3rem 1.1rem 1.5rem; /* right room for the close button */
+	background: var(--riso-blue-fill);
+	color: var(--riso-on-ink);
+	font-size: var(--riso-size-title);
+	font-weight: var(--riso-font-weight-semibold);
+}
+.riso-modal__body {
+	padding: 1.5rem;
+	font-weight: var(--riso-font-weight-regular);
+	line-height: 1.5;
+}
+/* With no header, the close button floats over the body's top-right — give the
+   body top clearance so its first line drops below the button. */
+.riso-modal[data-has-header='false'] .riso-modal__body {
+	padding-top: 3rem;
+}
+.riso-modal__footer {
+	padding: 1.25rem 1.5rem;
+	border-top: var(--riso-border);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+}
