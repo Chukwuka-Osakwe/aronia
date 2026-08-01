@@ -72,10 +72,21 @@ const CASES = [
 	{ label: 'riso: accent-ink on primary hover (16% overprint→blue)', fg: '#1a1a1a', bg: '#d650b2' },
 	{ label: 'riso: on-ink on blue-fill (secondary button/card masthead)', fg: '#f5f0e8', bg: '#0069a8' },
 	{ label: 'riso: accent-text on paper (link/emphasis)', fg: '#c31877', bg: '#f5f0e8' },
-	{ label: 'riso: danger-ink on paper (field error/alert)', fg: '#c22030', bg: '#f5f0e8' },
-	{ label: 'riso: info-ink on paper (alert/link)', fg: '#0060a0', bg: '#f5f0e8' },
-	{ label: 'riso: success-ink on paper (alert)', fg: '#127635', bg: '#f5f0e8' },
-	{ label: 'riso: warning-ink on paper (alert)', fg: '#8a5a00', bg: '#f5f0e8' }
+	{ label: 'riso: danger-ink on paper (field error/alert)', fg: '#af1d2b', bg: '#f5f0e8' },
+	{ label: 'riso: info-ink on paper (alert/link)', fg: '#005c9a', bg: '#f5f0e8' },
+	{ label: 'riso: success-ink on paper (alert)', fg: '#10672e', bg: '#f5f0e8' },
+	{ label: 'riso: warning-ink on paper (alert)', fg: '#805400', bg: '#f5f0e8' },
+	// The Alert washes the paper with 8% of the VIVID status ink (alert.css
+	// `color-mix(in srgb, var(--_c) 8%, paper)`) and prints the darkened -ink tone
+	// on that wash (title + icon + hairline). The -ink tones are tuned to ~5.5:1
+	// HERE (the wash is the honest worse case; user-eyeballed darker than the bare
+	// AA pass). Wash grounds pinned so a future tint bump can't silently break AA:
+	//   #e1e6e5 = 8% #0078bf, #e3e7da = 8% #1a7f37,
+	//   #f5ead6 = 8% #f2a005, #f5e3dd = 8% #f15060 — all over #f5f0e8.
+	{ label: 'riso: info-ink on info wash (alert title/icon)', fg: '#005c9a', bg: '#e1e6e5' },
+	{ label: 'riso: success-ink on success wash (alert title/icon)', fg: '#10672e', bg: '#e3e7da' },
+	{ label: 'riso: warning-ink on warning wash (alert title/icon)', fg: '#805400', bg: '#f5ead6' },
+	{ label: 'riso: danger-ink on danger wash (alert title/icon)', fg: '#af1d2b', bg: '#f5e3dd' }
 ];
 
 let failures = 0;

@@ -65,15 +65,17 @@
   --riso-accent-ink: #1a1a1a; /* ink on the fluoro fill */
   --riso-accent-text: #c31877; /* darkened magenta for accent TEXT on paper */
 
-  /* semantic status — kept in the riso key; darkened -ink tones clear AA as text. */
+  /* semantic status — kept in the riso key; darkened -ink tones clear AA as text
+     with margin even on the Alert's 8% spot-ink wash grounds (~5.5:1 there, ~6:1
+     on plain paper — tuned to the wash, the honest worse case). */
   --riso-info: #0078bf;
-  --riso-info-ink: #0060a0;
+  --riso-info-ink: #005c9a;
   --riso-success: #1a7f37;
-  --riso-success-ink: #127635;
+  --riso-success-ink: #10672e;
   --riso-warning: #f2a005;
-  --riso-warning-ink: #8a5a00;
+  --riso-warning-ink: #805400;
   --riso-danger: #f15060;
-  --riso-danger-ink: #c22030;
+  --riso-danger-ink: #af1d2b;
 
   /* overlay backdrop dim — derived from ink so re-tinting carries it. */
   --riso-backdrop: color-mix(in srgb, var(--riso-ink) 45%, transparent);
