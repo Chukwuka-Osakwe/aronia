@@ -46,6 +46,16 @@
 		warning: "Careful — this action can't be undone.",
 		error: 'Something went wrong. Please try again.'
 	};
+	// Short variant-appropriate headings for Alert. A playground affordance only —
+	// the manifest keeps `title` optional (no default), so the documented API stays
+	// honest; this just makes the titled layout (and its icon/title registration)
+	// visible by default, since a title-less alert can't show it.
+	const STATUS_TITLES: Record<string, string> = {
+		info: 'Heads up',
+		success: 'Success',
+		warning: 'Careful',
+		error: 'Something went wrong'
+	};
 
 	function defaultChildren(s: ComponentSpec): string {
 		if (s.id === 'card') return 'Card body content.';
@@ -77,6 +87,13 @@
 	$effect(() => {
 		if (spec.id !== 'alert' && spec.id !== 'toast') return;
 		slots.children = STATUS_MESSAGES[values.variant] ?? STATUS_MESSAGES.info;
+		// Alert only — Toast is fired imperatively and has no title prop. Re-seed the
+		// title alongside the message on variant change. The guard reads `spec` (not
+		// `values.title`) on purpose: reading `values.title` here would subscribe this
+		// effect to the field, so every keystroke — including clearing it — would
+		// retrigger and clobber the edit. Keyed off the variant only, the field stays
+		// freely editable between variant switches, just like the message.
+		if (spec.id === 'alert') values.title = STATUS_TITLES[values.variant] ?? STATUS_TITLES.info;
 	});
 </script>
 
