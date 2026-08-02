@@ -34,3 +34,12 @@
 .glass-field[data-shape='pill'] .glass-input {
 	border-radius: var(--glass-radius-pill);
 }
+/* Pill rounding insets the control's visual text start, so the label above and
+   help/error below — which otherwise align to the square box edge — read as
+   shifted left of the text. Indent them into the text band by the control's
+   horizontal padding. Field is size-agnostic (the wrapped control defaults to
+   `md`), so this matches --glass-size-md-pad's inline value. */
+.glass-field[data-shape='pill'] .glass-field__label,
+.glass-field[data-shape='pill'] .glass-field__msg {
+	padding-inline: 1.1rem;
+}

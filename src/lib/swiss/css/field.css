@@ -39,3 +39,12 @@
 .swiss-field[data-shape='pill'] .swiss-input {
 	border-radius: var(--swiss-radius-pill);
 }
+/* Pill rounding insets the control's visual text start, so the label above and
+   help/error below — which otherwise align to the square box edge — read as
+   shifted left of the text. Indent them into the text band by the control's
+   horizontal padding. Field is size-agnostic (the wrapped control defaults to
+   `md`), so this matches --swiss-size-md-pad's inline value. */
+.swiss-field[data-shape='pill'] .swiss-field__label,
+.swiss-field[data-shape='pill'] .swiss-field__msg {
+	padding-inline: 0.875rem;
+}
