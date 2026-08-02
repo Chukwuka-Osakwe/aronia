@@ -28,6 +28,25 @@
 	type SnippetSpec = NonNullable<ComponentSpec['snippets']>[number];
 	const childrenSnip = $derived((spec.snippets ?? []).find((s) => s.name === 'children'));
 	const extraSnips = $derived((spec.snippets ?? []).filter((s) => s.name !== 'children'));
+
+	// These are control-panel inputs, not a form — they must never autofill (Chrome
+	// happily fills the string control whose value is e.g. "Email", corrupting the
+	// live prop). `autocomplete="off"` is not enough: Chrome ignores it for profile
+	// data. The reliable defence is to keep the field readonly until first focus —
+	// Chrome skips readonly fields at fill time. Done imperatively so a re-render
+	// (value/placeholder update) can't re-assert readonly and lock the field.
+	function noAutofill(el: HTMLInputElement) {
+		el.readOnly = true;
+		const unlock = () => (el.readOnly = false);
+		el.addEventListener('pointerdown', unlock);
+		el.addEventListener('focus', unlock);
+		return {
+			destroy() {
+				el.removeEventListener('pointerdown', unlock);
+				el.removeEventListener('focus', unlock);
+			}
+		};
+	}
 </script>
 
 {#snippet snippetControl(snip: SnippetSpec)}
@@ -36,7 +55,7 @@
 		<p class="control__desc">{snip.description}</p>
 		<div class="control__artifact">
 			{#if snip.name === 'children'}
-				<input type="text" bind:value={slots[snip.name]} />
+				<input type="text" autocomplete="off" use:noAutofill bind:value={slots[snip.name]} />
 			{:else}
 				<Switch checked={!!slots[snip.name]} onChange={(v) => (slots[snip.name] = v)} />
 			{/if}
@@ -99,6 +118,8 @@
 					     flows to the shared `values` proxy; coerce to a real number. -->
 					<input
 						type="number"
+						autocomplete="off"
+						use:noAutofill
 						placeholder={prop.placeholder ?? String(prop.default ?? '')}
 						value={values[prop.name] ?? ''}
 						oninput={(e) => {
@@ -111,6 +132,8 @@
 					     trailing comma keeps typing; consumers filter empties. -->
 					<input
 						type="text"
+						autocomplete="off"
+						use:noAutofill
 						placeholder={prop.placeholder ?? 'comma, separated, values'}
 						value={Array.isArray(values[prop.name]) ? values[prop.name].join(', ') : ''}
 						oninput={(e) =>
@@ -119,6 +142,8 @@
 				{:else}
 					<input
 						type="text"
+						autocomplete="off"
+						use:noAutofill
 						placeholder={prop.placeholder ?? String(prop.default ?? '')}
 						bind:value={values[prop.name]}
 					/>
