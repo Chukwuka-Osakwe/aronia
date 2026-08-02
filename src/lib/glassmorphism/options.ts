@@ -43,6 +43,11 @@ export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
 export const TOGGLE_SHAPES = ['square', 'pill'] as const;
 export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
 
+// The DropdownMenu trigger is button-like, so it shares the square|pill
+// vocabulary; `pill` rounds the trigger only (the menu panel keeps its radius).
+export const DROPDOWN_SHAPES = ['square', 'pill'] as const;
+export type DropdownShape = (typeof DROPDOWN_SHAPES)[number];
+
 export const ALERT_VARIANTS = ['info', 'success', 'warning', 'error'] as const;
 export type AlertVariant = (typeof ALERT_VARIANTS)[number];
 

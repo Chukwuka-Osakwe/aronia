@@ -16,6 +16,7 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS,
 	SKELETON_SHAPES
@@ -873,6 +874,13 @@ export const risograph: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'label',
 					description: 'The trigger button text.',
 					type: 'string',
@@ -886,7 +894,7 @@ export const risograph: StyleSpec = {
 				}
 			],
 			styleClass: 'riso-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/risograph/css/dropdown-menu.css',
 				skins: {

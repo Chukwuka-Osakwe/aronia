@@ -29,6 +29,10 @@
 	transition: var(--riso-transition);
 	/* font/padding set per size below */
 }
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.riso-dropdown[data-shape='pill'] .riso-dropdown__trigger {
+	border-radius: var(--riso-radius-pill);
+}
 .riso-dropdown[data-size='sm'] .riso-dropdown__trigger {
 	font-size: var(--riso-size-sm-text);
 	padding: var(--riso-size-sm-pad);

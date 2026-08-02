@@ -36,6 +36,11 @@ export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
 export const TOGGLE_SHAPES = ['square', 'pill'] as const;
 export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
 
+// The DropdownMenu trigger is button-like, so it shares the square|pill
+// vocabulary; `pill` rounds the trigger only (the menu panel keeps its radius).
+export const DROPDOWN_SHAPES = ['square', 'pill'] as const;
+export type DropdownShape = (typeof DROPDOWN_SHAPES)[number];
+
 // Card: `paper` (default white) / `muted` (subtle grey section) / `ink` (a bold
 // inverted editorial panel). Swiss-natural set — variants diverge per family.
 export const CARD_VARIANTS = ['paper', 'muted', 'ink'] as const;

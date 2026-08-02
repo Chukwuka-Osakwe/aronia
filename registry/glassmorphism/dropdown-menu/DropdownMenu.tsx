@@ -11,14 +11,16 @@ import './tokens.css';
 import './dropdown-menu.css';
 
 export type InputSize = 'sm' | 'md' | 'lg';
+export type DropdownShape = 'square' | 'pill';
 
 type Props = {
 	size?: InputSize;
+	shape?: DropdownShape;
 	label?: string;
 	items?: string[];
 };
 
-export function DropdownMenu({ size = 'md', label = 'Menu', items = [] }: Props) {
+export function DropdownMenu({ size = 'md', shape = 'square', label = 'Menu', items = [] }: Props) {
 	// useId contains characters invalid in a CSS ident; strip to a CSS/id-safe token.
 	const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
 	const menuId = `glass-menu-${uid}`;
@@ -78,7 +80,7 @@ export function DropdownMenu({ size = 'md', label = 'Menu', items = [] }: Props)
 	}
 
 	return (
-		<div className="glass-dropdown" data-size={size}>
+		<div className="glass-dropdown" data-size={size} data-shape={shape}>
 			<button
 				ref={triggerRef}
 				type="button"

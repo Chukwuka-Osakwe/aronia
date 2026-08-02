@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-	import type { InputSize } from './options.js';
+	import type { InputSize, DropdownShape } from './options.js';
 	import '../styles/swiss.css';
 	import './css/dropdown-menu.css';
 
@@ -16,10 +16,11 @@
 	// We add the menu semantics (role=menu/menuitem) + arrow-key roving on top.
 	type Props = {
 		size?: InputSize;
+		shape?: DropdownShape;
 		label?: string;
 		items?: string[];
 	};
-	let { size = 'md', label = 'Menu', items = [] }: Props = $props();
+	let { size = 'md', shape = 'square', label = 'Menu', items = [] }: Props = $props();
 
 	const menuId = `swiss-menu-${uid++}`;
 	const anchorName = `--${menuId}`;
@@ -62,7 +63,7 @@
 	}
 </script>
 
-<div class="swiss-dropdown" data-size={size}>
+<div class="swiss-dropdown" data-size={size} data-shape={shape}>
 	<button
 		type="button"
 		class="swiss-dropdown__trigger"

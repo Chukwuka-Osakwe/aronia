@@ -28,6 +28,10 @@
 		box-shadow 160ms ease,
 		background-color 160ms ease;
 }
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.glass-dropdown[data-shape='pill'] .glass-dropdown__trigger {
+	border-radius: var(--glass-radius-pill);
+}
 .glass-dropdown[data-size='sm'] .glass-dropdown__trigger {
 	font-size: var(--glass-size-sm-text);
 	padding: var(--glass-size-sm-pad);

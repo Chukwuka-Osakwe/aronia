@@ -39,6 +39,10 @@
 	font-size: var(--swiss-size-lg-text);
 	padding: var(--swiss-size-lg-pad);
 }
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.swiss-dropdown[data-shape='pill'] .swiss-dropdown__trigger {
+	border-radius: var(--swiss-radius-pill);
+}
 .swiss-dropdown__trigger:hover {
 	background: var(--swiss-muted);
 }

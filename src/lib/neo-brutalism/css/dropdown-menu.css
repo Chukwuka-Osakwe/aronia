@@ -22,6 +22,10 @@
 	transition: var(--nb-transition);
 	/* font/padding set per size below */
 }
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.nb-dropdown[data-shape='pill'] .nb-dropdown__trigger {
+	border-radius: var(--nb-radius-pill);
+}
 .nb-dropdown[data-size='sm'] .nb-dropdown__trigger {
 	font-size: var(--nb-size-sm-text);
 	padding: var(--nb-size-sm-pad);

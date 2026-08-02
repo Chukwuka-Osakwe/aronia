@@ -13,6 +13,7 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	CARD_VARIANTS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
@@ -697,6 +698,13 @@ export const swiss: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'label',
 					description: 'The trigger button text.',
 					type: 'string',
@@ -710,7 +718,7 @@ export const swiss: StyleSpec = {
 				}
 			],
 			styleClass: 'swiss-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/swiss/css/dropdown-menu.css',
 				skins: {

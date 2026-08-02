@@ -18,6 +18,7 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS
 } from './options.js';
@@ -882,7 +883,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Dropdown Menu',
 			import: 'glassmorphism.DropdownMenu',
 			styleClass: 'glass-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/dropdown-menu.css',
 				skins: {
@@ -900,6 +901,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
 				},
 				{
 					name: 'label',
