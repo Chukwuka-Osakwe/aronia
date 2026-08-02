@@ -17,7 +17,8 @@
 	position: relative;
 	isolation: isolate;
 	display: flex;
-	align-items: flex-start;
+	/* the icon is centred vertically in the whole box, not tied to a text line */
+	align-items: center;
 	border: var(--riso-border-width) solid var(--_ink);
 	border-radius: var(--riso-radius);
 	/* the wash: a light pass of the vivid status ink over the paper */
@@ -77,17 +78,13 @@
 	padding: 1.25rem 1.5rem;
 }
 
-/* The icon box is exactly as tall as the FIRST LINE's box (1.45em — see the
-   title/message line-heights below) with the mark centred inside, so the icon
-   optically registers with line one whether that line is the title or the body.
-   No magic margin nudge. */
+/* The container centres the icon vertically (align-items: center), so the box is
+   just the mark itself — no line-height matching needed. */
 .riso-alert__icon {
 	flex: none;
 	display: flex;
-	align-items: center;
-	justify-content: center;
 	width: 1.4em;
-	height: 1.45em;
+	height: 1.4em;
 	color: var(--_ink);
 }
 .riso-alert__icon svg {
@@ -98,10 +95,6 @@
 .riso-alert__title {
 	margin: 0 0 0.2rem;
 	font-size: 1.05em;
-	/* 1.05em × (1.45/1.05) = a 1.45em line box — identical to the body's first
-	   line, so the icon centres on line one in both the titled and title-less
-	   shapes. */
-	line-height: calc(1.45 / 1.05);
 	font-weight: var(--riso-font-weight-bold);
 	color: var(--_ink);
 }

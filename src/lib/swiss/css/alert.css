@@ -14,7 +14,8 @@
 
 .swiss-alert {
 	display: flex;
-	align-items: flex-start;
+	/* the icon is centred vertically in the whole box, not tied to a text line */
+	align-items: center;
 	border: 2px solid var(--_c);
 	border-radius: var(--swiss-radius);
 	background: color-mix(in srgb, var(--_c) 7%, var(--swiss-paper));
@@ -55,17 +56,18 @@
 	padding: 1.25rem 1.5rem;
 }
 
+/* The container centres the icon vertically (align-items: center), so the box is
+   just the mark itself — no line-height matching needed. */
 .swiss-alert__icon {
 	flex: none;
+	display: flex;
 	width: 1.4em;
 	height: 1.4em;
 	color: var(--_c);
-	/* nudge to align with the first line of text */
-	margin-top: 0.1em;
 }
 .swiss-alert__icon svg {
-	width: 100%;
-	height: 100%;
+	width: 1.4em;
+	height: 1.4em;
 }
 
 .swiss-alert__title {

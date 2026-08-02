@@ -7,7 +7,8 @@
 
 .nb-alert {
 	display: flex;
-	align-items: flex-start;
+	/* the icon is centred vertically in the whole box, not tied to a text line */
+	align-items: center;
 	border: var(--nb-border);
 	border-radius: var(--nb-radius);
 	font-family: var(--nb-font);
@@ -44,16 +45,17 @@
 	background: var(--nb-danger);
 }
 
+/* The container centres the icon vertically (align-items: center), so the box is
+   just the mark itself — no line-height matching needed. */
 .nb-alert__icon {
 	flex: none;
+	display: flex;
 	width: 1.5em;
 	height: 1.5em;
-	/* nudge to align with the first line of text */
-	margin-top: 0.1em;
 }
 .nb-alert__icon svg {
-	width: 100%;
-	height: 100%;
+	width: 1.5em;
+	height: 1.5em;
 }
 
 .nb-alert__title {
