@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { InputSize, InputShape } from './options.js';
+	import { getFieldContext } from './field-context.js';
 	import '../styles/riso.css';
 	// Layer 2 (the style) is a global stylesheet shared with the aronia registry —
 	// plain-CSS imports are unscoped in Svelte, so the same file drives both.
@@ -14,7 +15,20 @@
 		shape?: InputShape;
 	} & Omit<HTMLInputAttributes, 'size'>;
 
-	let { value = $bindable(''), size = 'md', shape = 'square', ...rest }: Props = $props();
+	let { value = $bindable(''), size, shape = 'square', ...rest }: Props = $props();
+
+	// Inside a Field: inherit its size (unless one is set here) and wire the error
+	// a11y it can't reach us to set — aria-invalid drives the danger border (CSS),
+	// aria-describedby links the message. Standalone → own default, no aria.
+	const field = getFieldContext();
 </script>
 
-<input class="riso-input" data-size={size} data-shape={shape} bind:value {...rest} />
+<input
+	class="riso-input"
+	data-size={size ?? field?.size ?? 'md'}
+	data-shape={shape}
+	aria-invalid={field?.invalid || undefined}
+	aria-describedby={field?.describedById}
+	bind:value
+	{...rest}
+/>

@@ -34,6 +34,12 @@
 	outline-offset: 2px;
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it off disabled. */
+.swiss-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--swiss-danger-ink);
+}
+
 /* Disabled — inert greyed field (matches Input). */
 .swiss-textarea:disabled {
 	background: var(--swiss-muted);

@@ -1,8 +1,9 @@
 <!--
   Risograph — Textarea (plain-HTML snippet, universal fallback).
   Include ./tokens.css + ./textarea.css once. Attribute contract:
-    data-size : sm | md | lg   (default md)
-    rows      : visible height in text rows
+    data-size    : sm | md | lg   (default md)
+    rows         : visible height in text rows
+    aria-invalid : "true" flags an error — draws the danger border (also set by Field)
   Plain <textarea> — all native attributes apply.
 -->
 <textarea class="riso-textarea" data-size="md" rows="4" placeholder="Write something…"></textarea>

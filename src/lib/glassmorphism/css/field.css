@@ -39,7 +39,18 @@
    shifted left of the text. Indent them into the text band by the control's
    horizontal padding. Field is size-agnostic (the wrapped control defaults to
    `md`), so this matches --glass-size-md-pad's inline value. */
+/* Field pushes its `size` down to the control (context), so the pill label/help
+   inset tracks `data-size` and lines up with the control's text at every size —
+   matching the inline value of --glass-size-{sm,md,lg}-pad. */
 .glass-field[data-shape='pill'] .glass-field__label,
 .glass-field[data-shape='pill'] .glass-field__msg {
-	padding-inline: 1.1rem;
+	padding-inline: 1.1rem; /* md (default) */
+}
+.glass-field[data-shape='pill'][data-size='sm'] .glass-field__label,
+.glass-field[data-shape='pill'][data-size='sm'] .glass-field__msg {
+	padding-inline: 0.9rem;
+}
+.glass-field[data-shape='pill'][data-size='lg'] .glass-field__label,
+.glass-field[data-shape='pill'][data-size='lg'] .glass-field__msg {
+	padding-inline: 1.35rem;
 }

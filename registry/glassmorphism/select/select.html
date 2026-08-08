@@ -4,6 +4,7 @@
   <select> (styled, native arrow stripped) plus an overlaid chevron. Contract:
     data-size     : sm | md | lg on .glass-select__field   (default md)
     data-disabled : "true" on the wrapper when disabled
+    aria-invalid  : "true" on .glass-select__field flags an error (danger border; also set by Field)
 -->
 <div class="glass-select" data-disabled="false">
   <select class="glass-select__field" data-size="md">

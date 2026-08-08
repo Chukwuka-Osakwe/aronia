@@ -290,8 +290,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/input.css',
 				skins: {
-					react: 'registry/neo-brutalism/input/Input.tsx',
-					svelte: 'src/lib/neo-brutalism/Input.svelte',
+					react: [
+						'registry/neo-brutalism/input/Input.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Input.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/input/input.html'
 				}
 			}
@@ -342,8 +348,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/textarea.css',
 				skins: {
-					react: 'registry/neo-brutalism/textarea/Textarea.tsx',
-					svelte: 'src/lib/neo-brutalism/Textarea.svelte',
+					react: [
+						'registry/neo-brutalism/textarea/Textarea.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Textarea.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/textarea/textarea.html'
 				}
 			}
@@ -545,8 +557,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/select.css',
 				skins: {
-					react: 'registry/neo-brutalism/select/Select.tsx',
-					svelte: 'src/lib/neo-brutalism/Select.svelte',
+					react: [
+						'registry/neo-brutalism/select/Select.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Select.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/select/select.html'
 				}
 			}
@@ -584,6 +602,13 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				},
 				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
+				},
+				{
 					name: 'shape',
 					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
 					type: 'enum',
@@ -599,12 +624,18 @@ export const neoBrutalism: StyleSpec = {
 				}
 			],
 			styleClass: 'nb-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/field.css',
 				skins: {
-					react: 'registry/neo-brutalism/field/Field.tsx',
-					svelte: 'src/lib/neo-brutalism/Field.svelte',
+					react: [
+						'registry/neo-brutalism/field/Field.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Field.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/field/field.html'
 				}
 			}

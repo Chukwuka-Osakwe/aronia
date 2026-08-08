@@ -2,19 +2,23 @@
   Neo-Brutalism — Field (plain-HTML snippet, universal fallback).
   A <label> wrapping a single control (Input/Textarea/Select). Include
   ./tokens.css + ./field.css once. Attribute contract:
-    data-error : "true" when in the error state (swaps help → error treatment)
     data-shape : square | pill  (pill rounds the wrapped control; default square)
+    data-size  : sm | md | lg   (sizes the pill label/help inset; default md)
+  Plain HTML has no context, so wire the control by hand:
+    - help state:  aria-describedby on the control → the __msg `id`
+    - error state: aria-invalid="true" on the control (drives the danger border),
+      aria-describedby → the error __msg `id`, and role="alert" on that message.
   Structure: optional __label (with __req mark) → the control → __msg (help/error).
 -->
-<label class="nb-field" data-shape="pill" data-error="false">
+<label class="nb-field" data-shape="pill" data-size="md">
   <span class="nb-field__label">Email<span class="nb-field__req"> *</span></span>
-  <input class="nb-input" placeholder="you@example.com" />
-  <span class="nb-field__msg">We'll never share it.</span>
+  <input class="nb-input" data-size="md" data-shape="pill" placeholder="you@example.com" aria-describedby="email-help" />
+  <span class="nb-field__msg" id="email-help">We'll never share it.</span>
 </label>
 
-<!-- Error state -->
-<label class="nb-field" data-error="true">
+<!-- Error state — aria-invalid flags the control, role="alert" announces the message -->
+<label class="nb-field" data-shape="square" data-size="md">
   <span class="nb-field__label">Email</span>
-  <!-- control -->
-  <span class="nb-field__msg nb-field__msg--error">Enter a valid email.</span>
+  <input class="nb-input" data-size="md" value="not-an-email" aria-invalid="true" aria-describedby="email-error" />
+  <span class="nb-field__msg nb-field__msg--error" id="email-error" role="alert">Enter a valid email.</span>
 </label>

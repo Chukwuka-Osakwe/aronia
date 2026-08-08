@@ -31,6 +31,13 @@
 	outline-offset: 2px;
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — key the danger
+   border off that SEMANTIC hook so it also works standalone (any control marked
+   aria-invalid) and in plain HTML. `:not(:disabled)` keeps it off a disabled field. */
+.swiss-input[aria-invalid='true']:not(:disabled) {
+	border-color: var(--swiss-danger-ink);
+}
+
 /* Disabled — inert field: flat grey, muted text, hairline line border. Matches
    the Button disabled treatment so the family reads consistently. */
 .swiss-input:disabled {

@@ -220,8 +220,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/input.css',
 				skins: {
-					react: 'registry/swiss/input/Input.tsx',
-					svelte: 'src/lib/swiss/Input.svelte',
+					react: ['registry/swiss/input/Input.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Input.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/input/input.html'
 				}
 			}
@@ -272,8 +272,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/textarea.css',
 				skins: {
-					react: 'registry/swiss/textarea/Textarea.tsx',
-					svelte: 'src/lib/swiss/Textarea.svelte',
+					react: ['registry/swiss/textarea/Textarea.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Textarea.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/textarea/textarea.html'
 				}
 			}
@@ -311,6 +311,13 @@ export const swiss: StyleSpec = {
 					default: false
 				},
 				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
+				},
+				{
 					name: 'shape',
 					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
 					type: 'enum',
@@ -326,12 +333,12 @@ export const swiss: StyleSpec = {
 				}
 			],
 			styleClass: 'swiss-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/swiss/css/field.css',
 				skins: {
-					react: 'registry/swiss/field/Field.tsx',
-					svelte: 'src/lib/swiss/Field.svelte',
+					react: ['registry/swiss/field/Field.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Field.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/field/field.html'
 				}
 			}
@@ -480,8 +487,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/select.css',
 				skins: {
-					react: 'registry/swiss/select/Select.tsx',
-					svelte: 'src/lib/swiss/Select.svelte',
+					react: ['registry/swiss/select/Select.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Select.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/select/select.html'
 				}
 			}

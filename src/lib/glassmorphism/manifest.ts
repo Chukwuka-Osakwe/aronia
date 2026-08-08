@@ -245,8 +245,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/input.css',
 				skins: {
-					react: 'registry/glassmorphism/input/Input.tsx',
-					svelte: 'src/lib/glassmorphism/Input.svelte',
+					react: [
+						'registry/glassmorphism/input/Input.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Input.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/input/input.html'
 				}
 			},
@@ -338,8 +344,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/textarea.css',
 				skins: {
-					react: 'registry/glassmorphism/textarea/Textarea.tsx',
-					svelte: 'src/lib/glassmorphism/Textarea.svelte',
+					react: [
+						'registry/glassmorphism/textarea/Textarea.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Textarea.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/textarea/textarea.html'
 				}
 			},
@@ -496,8 +508,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/select.css',
 				skins: {
-					react: 'registry/glassmorphism/select/Select.tsx',
-					svelte: 'src/lib/glassmorphism/Select.svelte',
+					react: [
+						'registry/glassmorphism/select/Select.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Select.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/select/select.html'
 				}
 			},
@@ -544,12 +562,18 @@ export const glassmorphism: StyleSpec = {
 			name: 'Field',
 			import: 'glassmorphism.Field',
 			styleClass: 'glass-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/glassmorphism/css/field.css',
 				skins: {
-					react: 'registry/glassmorphism/field/Field.tsx',
-					svelte: 'src/lib/glassmorphism/Field.svelte',
+					react: [
+						'registry/glassmorphism/field/Field.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Field.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/field/field.html'
 				}
 			},
@@ -580,6 +604,13 @@ export const glassmorphism: StyleSpec = {
 					description: 'Shows a required mark after the label.',
 					type: 'boolean',
 					default: false
+				},
+				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
 				},
 				{
 					name: 'shape',

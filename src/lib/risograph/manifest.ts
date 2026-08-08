@@ -264,8 +264,14 @@ export const risograph: StyleSpec = {
 			files: {
 				style: 'src/lib/risograph/css/input.css',
 				skins: {
-					react: 'registry/risograph/input/Input.tsx',
-					svelte: 'src/lib/risograph/Input.svelte',
+					react: [
+						'registry/risograph/input/Input.tsx',
+						'registry/risograph/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/risograph/Input.svelte',
+						'src/lib/risograph/field-context.ts'
+					],
 					html: 'registry/risograph/input/input.html'
 				}
 			}
@@ -316,8 +322,14 @@ export const risograph: StyleSpec = {
 			files: {
 				style: 'src/lib/risograph/css/textarea.css',
 				skins: {
-					react: 'registry/risograph/textarea/Textarea.tsx',
-					svelte: 'src/lib/risograph/Textarea.svelte',
+					react: [
+						'registry/risograph/textarea/Textarea.tsx',
+						'registry/risograph/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/risograph/Textarea.svelte',
+						'src/lib/risograph/field-context.ts'
+					],
 					html: 'registry/risograph/textarea/textarea.html'
 				}
 			}
@@ -355,6 +367,13 @@ export const risograph: StyleSpec = {
 					default: false
 				},
 				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
+				},
+				{
 					name: 'shape',
 					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
 					type: 'enum',
@@ -370,12 +389,18 @@ export const risograph: StyleSpec = {
 				}
 			],
 			styleClass: 'riso-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/risograph/css/field.css',
 				skins: {
-					react: 'registry/risograph/field/Field.tsx',
-					svelte: 'src/lib/risograph/Field.svelte',
+					react: [
+						'registry/risograph/field/Field.tsx',
+						'registry/risograph/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/risograph/Field.svelte',
+						'src/lib/risograph/field-context.ts'
+					],
 					html: 'registry/risograph/field/field.html'
 				}
 			}
@@ -524,8 +549,14 @@ export const risograph: StyleSpec = {
 			files: {
 				style: 'src/lib/risograph/css/select.css',
 				skins: {
-					react: 'registry/risograph/select/Select.tsx',
-					svelte: 'src/lib/risograph/Select.svelte',
+					react: [
+						'registry/risograph/select/Select.tsx',
+						'registry/risograph/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/risograph/Select.svelte',
+						'src/lib/risograph/field-context.ts'
+					],
 					html: 'registry/risograph/select/select.html'
 				}
 			}

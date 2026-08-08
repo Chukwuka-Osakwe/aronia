@@ -33,6 +33,14 @@
 	border-color: var(--riso-blue);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — key the danger
+   border off that SEMANTIC hook so it also works standalone (any control marked
+   aria-invalid) and in plain HTML. `:not(:disabled)` keeps it above the focus
+   rule at equal specificity and off a disabled field. */
+.riso-input[aria-invalid='true']:not(:disabled) {
+	border-color: var(--riso-danger-ink);
+}
+
 /* Disabled — inert field: flat deeper-paper fill, muted text, hairline line
    border. Matches the Button disabled treatment so the family reads consistently. */
 .riso-input:disabled {

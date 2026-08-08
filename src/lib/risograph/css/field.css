@@ -46,9 +46,18 @@
 /* Pill rounding insets the control's visual text start, so the label above and
    help/error below — which otherwise align to the square box edge — read as
    shifted left of the text. Indent them into the text band by the control's
-   horizontal padding. Field is size-agnostic (the wrapped control defaults to
-   `md`), so this matches --riso-size-md-pad's inline value. */
+   horizontal padding. Field pushes its `size` down to the control (context), so
+   the inset tracks `data-size` and lines up exactly at every size — matching the
+   inline value of --riso-size-{sm,md,lg}-pad. */
 .riso-field[data-shape='pill'] .riso-field__label,
 .riso-field[data-shape='pill'] .riso-field__msg {
-	padding-inline: 0.875rem;
+	padding-inline: 0.875rem; /* md (default) */
+}
+.riso-field[data-shape='pill'][data-size='sm'] .riso-field__label,
+.riso-field[data-shape='pill'][data-size='sm'] .riso-field__msg {
+	padding-inline: 0.75rem;
+}
+.riso-field[data-shape='pill'][data-size='lg'] .riso-field__label,
+.riso-field[data-shape='pill'][data-size='lg'] .riso-field__msg {
+	padding-inline: 1rem;
 }

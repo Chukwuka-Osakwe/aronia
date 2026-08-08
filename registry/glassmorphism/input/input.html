@@ -1,11 +1,13 @@
 <!--
   Glassmorphism — Input (plain-HTML snippet, universal fallback).
   Include ./tokens.css + ./input.css once. Attribute contract:
-    data-size  : sm | md | lg    (default md)
-    data-shape : square | pill   (default square)
+    data-size    : sm | md | lg    (default md)
+    data-shape   : square | pill   (default square)
+    aria-invalid : "true" flags an error — draws the danger border (also set by Field)
   It's a plain <input> — all native attributes (value, placeholder, disabled, …) apply.
 -->
 <input class="glass-input" data-size="md" placeholder="you@example.com" />
 <input class="glass-input" data-size="lg" value="Larger field" />
 <input class="glass-input" data-shape="pill" placeholder="Rounded pill" />
+<input class="glass-input" data-size="md" value="not-an-email" aria-invalid="true" />
 <input class="glass-input" data-size="md" value="Disabled" disabled />

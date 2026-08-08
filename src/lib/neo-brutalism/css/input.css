@@ -28,6 +28,13 @@
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — key the danger
+   border off that SEMANTIC hook so it also works standalone (any control marked
+   aria-invalid) and in plain HTML. `:not(:disabled)` keeps it off a disabled field. */
+.nb-input[aria-invalid='true']:not(:disabled) {
+	border-color: var(--nb-danger-ink);
+}
+
 /* Disabled — intentional inert field: greyed background (Input has no colour
    variants to collapse), keeps the border + shadow, not interactive. */
 .nb-input:disabled {

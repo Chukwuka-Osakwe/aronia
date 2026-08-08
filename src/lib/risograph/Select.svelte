@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 	import type { InputSize } from './options.js';
+	import { getFieldContext } from './field-context.js';
 	import '../styles/riso.css';
 	import './css/select.css';
 
@@ -22,12 +23,17 @@
 	let {
 		value = $bindable(''),
 		options = [],
-		size = 'md',
+		size,
 		placeholder,
 		disabled = false,
 		'data-state': dataState,
 		...rest
 	}: Props = $props();
+
+	// Inside a Field: inherit its size (unless one is set here) and wire the error
+	// a11y onto the native <select> — same context contract as Input. Standalone →
+	// own default, no aria.
+	const field = getFieldContext();
 
 	// Stable derived list so the <option>s aren't rebuilt on every render (a fresh
 	// array each pass makes the select re-sync its value, which can feel laggy).
@@ -35,7 +41,15 @@
 </script>
 
 <div class="riso-select" data-state={dataState} data-disabled={disabled}>
-	<select class="riso-select__field" data-size={size} bind:value {disabled} {...rest}>
+	<select
+		class="riso-select__field"
+		data-size={size ?? field?.size ?? 'md'}
+		aria-invalid={field?.invalid || undefined}
+		aria-describedby={field?.describedById}
+		bind:value
+		{disabled}
+		{...rest}
+	>
 		{#if placeholder}
 			<option value="" disabled>{placeholder}</option>
 		{/if}

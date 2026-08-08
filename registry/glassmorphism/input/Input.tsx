@@ -4,6 +4,7 @@
 import type { InputHTMLAttributes } from 'react';
 import './tokens.css';
 import './input.css';
+import { useFieldContext } from './field-context';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputShape = 'square' | 'pill';
@@ -14,8 +15,21 @@ type Props = { size?: InputSize; shape?: InputShape } & Omit<
 	'size'
 >;
 
-export function Input({ size = 'md', shape = 'square', ...rest }: Props) {
-	return <input className="glass-input" data-size={size} data-shape={shape} {...rest} />;
+export function Input({ size, shape = 'square', ...rest }: Props) {
+	// Inside a Field: inherit its size (unless one is set here) and wire the error
+	// a11y — aria-invalid drives the danger border (CSS), aria-describedby links the
+	// message. `{...rest}` last so an explicit prop wins. Standalone → own default.
+	const field = useFieldContext();
+	return (
+		<input
+			className="glass-input"
+			data-size={size ?? field?.size ?? 'md'}
+			data-shape={shape}
+			aria-invalid={field?.invalid || undefined}
+			aria-describedby={field?.describedById}
+			{...rest}
+		/>
+	);
 }
 
 export default Input;

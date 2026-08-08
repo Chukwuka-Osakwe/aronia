@@ -48,6 +48,13 @@
 		0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto the native select —
+   danger border off that semantic hook (matches Input); higher specificity than
+   :focus so it holds while focused. `:not(:disabled)` keeps it off a disabled field. */
+.glass-select__field[aria-invalid='true']:not(:disabled) {
+	border-color: var(--glass-danger-ink);
+}
+
 .glass-select__field[data-size='sm'] {
 	font-size: var(--glass-size-sm-text);
 	padding: var(--glass-size-sm-pad);

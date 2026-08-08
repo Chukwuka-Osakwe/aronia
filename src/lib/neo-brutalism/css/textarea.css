@@ -33,6 +33,12 @@
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it off disabled. */
+.nb-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--nb-danger-ink);
+}
+
 /* Disabled — inert greyed field (matches Input). */
 .nb-textarea:disabled {
 	background: var(--nb-muted);

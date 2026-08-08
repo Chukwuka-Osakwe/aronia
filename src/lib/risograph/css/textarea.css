@@ -37,6 +37,12 @@
 	border-color: var(--riso-blue);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it above focus. */
+.riso-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--riso-danger-ink);
+}
+
 /* Disabled — inert deeper-paper field (matches Input). */
 .riso-textarea:disabled {
 	background: var(--riso-muted);

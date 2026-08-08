@@ -4,6 +4,7 @@
 import type { SelectHTMLAttributes } from 'react';
 import './tokens.css';
 import './select.css';
+import { useFieldContext } from './field-context';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 
@@ -14,11 +15,21 @@ type Props = {
 	disabled?: boolean;
 } & Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'>;
 
-export function Select({ options = [], size = 'md', placeholder, disabled = false, ...rest }: Props) {
+export function Select({ options = [], size, placeholder, disabled = false, ...rest }: Props) {
+	// Inside a Field: inherit its size + wire the error a11y onto the native select
+	// (same contract as Input).
+	const field = useFieldContext();
 	const visible = options.filter(Boolean);
 	return (
 		<div className="riso-select" data-disabled={disabled}>
-			<select className="riso-select__field" data-size={size} disabled={disabled} {...rest}>
+			<select
+				className="riso-select__field"
+				data-size={size ?? field?.size ?? 'md'}
+				aria-invalid={field?.invalid || undefined}
+				aria-describedby={field?.describedById}
+				disabled={disabled}
+				{...rest}
+			>
 				{placeholder ? (
 					<option value="" disabled>
 						{placeholder}
