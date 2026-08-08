@@ -54,6 +54,17 @@ export const neoBrutalism: StyleSpec = {
 		'Thin, subtle borders — keep them thick and black.'
 	],
 	tokens: 'src/lib/styles/neo-brutalism.css',
+	// How to swap the face while keeping neo's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A grotesque built to go HEAVY and hold its confidence at large sizes — even body sets at 500 and headings hit 800. It wants a genuinely bold top end (800/900), chunky-but-legible letterforms and tight, industrial spacing. Archivo (shipped) is the reference.',
+		breaksOn:
+			'Anything delicate, thin, high-contrast or elegant — a refined/light face, a soft rounded voice, or a face that tops out at 700. The family’s whole force is weight and heft, so a face that can’t get heavy collapses it.',
+		examples:
+			'Space Grotesk, Neue Machina, Chivo, Anton (display only), Archivo Expanded — and other confident, heavy-capable grotesques in this vein.',
+		watch:
+			'Neo loads its face from Fontsource (@import "@fontsource-variable/archivo") — to swap, change that import (or add your own @font-face) AND the --nb-font family name. The --nb-font-weight-* ladder runs HEAVY (500/600/700/800): pick a face that actually ships those weights (ideally a variable font reaching 800+), or the hierarchy flattens.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {

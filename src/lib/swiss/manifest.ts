@@ -47,6 +47,17 @@ export const swiss: StyleSpec = {
 		'Centred body text or justified columns.'
 	],
 	tokens: 'src/lib/styles/swiss.css',
+	// How to swap the face while keeping Swiss's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A neutral grotesque sans: low stroke contrast, even uniform strokes, a generous x-height and NO personality quirks — the objectivity is the whole point. Hierarchy rides weight, not colour, so it needs a distinct, usable medium (500), semibold (600) and bold (700). The shipped Helvetica system stack embodies this.',
+		breaksOn:
+			'Anything with character or warmth — humanist quirks, a geometric voice, condensed or display faces, high stroke contrast — or a face without a true medium/bold, which flattens the weight-driven hierarchy the whole family leans on.',
+		examples:
+			'Inter, Helvetica Now, Neue Haas Grotesk, Söhne, Univers, Basel Grotesk — and plenty of other neutral grotesques in this vein.',
+		watch:
+			'Swiss ships as a SYSTEM stack with no font loader — swapping to a custom face means ADDING an @font-face/webfont loader you don’t currently have (keep a real system fallback so layout doesn’t jump on load). Confirm the face gives distinct 500/600/700; the --swiss-font-weight-* ladder assumes all three read apart.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {

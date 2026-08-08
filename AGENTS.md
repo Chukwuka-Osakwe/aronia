@@ -20,9 +20,10 @@ build or edit UI:
    for every component that's been added — its style class, `data-*` attributes,
    files, and full prop spec. Match it exactly; do not invent props, values, or
    class names. It also carries each style's `principles` (how to compose in the
-   design language), `avoid` (anti-patterns), and `composition` (page-level type
-   scale, spacing ramp, breakpoints, container, and media treatment) under
-   `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
+   design language), `avoid` (anti-patterns), `composition` (page-level type
+   scale, spacing ramp, breakpoints, container, and media treatment), and
+   `fontGuidance` (how to swap the family's typeface without dissolving its
+   character) under `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
    as the style, not just as a pile of its components.
 2. **Read the real source in `aronia/<style>/`** as a worked example, and build
    new UI in the same design language — the same tokens, the same `data-*`

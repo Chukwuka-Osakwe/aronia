@@ -65,12 +65,15 @@ async function loadIndex(registry) {
 }
 
 // The per-style entry recorded in the consumer manifest: how to compose in this
-// design language (principles + anti-patterns) plus its page-level composition
-// guidance. Same shape whether written by `init` (whole menu) or `add` (as each
-// component lands), so the two never disagree.
+// design language (principles + anti-patterns), its page-level composition
+// guidance, and how to swap the typeface without dissolving the family. Same
+// shape whether written by `init` (whole menu) or `add` (as each component
+// lands), so the two never disagree.
 function styleEntry(item) {
-	const guidance = item.styleGuidance ?? {};
-	return item.composition ? { ...guidance, composition: item.composition } : { ...guidance };
+	const entry = { ...(item.styleGuidance ?? {}) };
+	if (item.composition) entry.composition = item.composition;
+	if (item.fontGuidance) entry.fontGuidance = item.fontGuidance;
+	return entry;
 }
 
 // Build the full family menu — every style's identity/guidance, no components —

@@ -46,6 +46,17 @@ export const glassmorphism: StyleSpec = {
 	requires:
 		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
 	tokens: 'src/lib/styles/glassmorphism.css',
+	// How to swap the face while keeping glass's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A clean, modern humanist sans that stays crisp and legible over translucent, busy backdrops — open aperture, generous x-height and a fine low end (body sets at 450) so text feels light on frosted surfaces without turning brittle. Inter (shipped) is the reference.',
+		breaksOn:
+			'Anything brittle on a busy ground — ultra-geometric or high-contrast faces that shimmer over blur, a heavy or condensed voice that fights the airy feel, or a quirky display face that pulls focus off the material.',
+		examples:
+			'Geist, Manrope, IBM Plex Sans, Public Sans, Söhne, or the system-ui / SF Pro stack — and other clean humanist sans in this vein.',
+		watch:
+			'Glass loads its face from Fontsource (@import "@fontsource-variable/inter") — to swap, change that import (or add your own @font-face) AND the --glass-font family name. The --glass-font-weight-* ladder starts fine (450 body): prefer a VARIABLE face so the delicate low weights exist; a face shipping only 400/700 reads heavier than intended on the frosted surfaces.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {

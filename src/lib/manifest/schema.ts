@@ -99,6 +99,13 @@ export interface StyleSpec {
 	 *  copies these into the consumer's `aronia/<style>/fonts/` alongside tokens.css.
 	 *  Omitted by families that use a font CDN or a system stack. */
 	fonts?: readonly string[];
+	/** How to SWAP this family's typeface without dissolving its character. The face
+	 *  is one of the highest-signal ways a design reads as "custom" vs. AI-default,
+	 *  so this is an INVITATION to change it, carrying the guardrails that keep the
+	 *  family intact — not a chooser or a menu. Distinct from composition.typeScale
+	 *  .character (how to compose WITH the shipped face); this is how to REPLACE it.
+	 *  Denormalized onto every registry item by build-registry.ts, like styleGuidance. */
+	fontGuidance?: FontGuidance;
 	/** Page-level composition vocabulary — the values an agent needs to build a
 	 *  whole PAGE (hero, sections, media), which live outside any component and so
 	 *  aren't covered by tokens/props. Guidance, not CSS: an agent reads and applies
@@ -131,6 +138,25 @@ export interface MediaSpec {
 	edge: string;
 	/** `box-shadow`, referencing a family shadow token, or "none". */
 	shadow: string;
+}
+
+/** Guidance for replacing a family's typeface while keeping its character. The
+ *  point is a LENS, not a shortlist: name the properties the look leans on so a
+ *  consumer can pick anything that holds them, rather than a menu that re-crowds
+ *  the look. `examples` are calibration only — explicitly non-exhaustive. */
+export interface FontGuidance {
+	/** The load-bearing typographic properties the family's look depends on — swap
+	 *  to anything that holds these. Reference point: the face it currently ships. */
+	dependsOn: string;
+	/** The anti-pattern that dissolves the family — what a wrong swap looks like. */
+	breaksOn: string;
+	/** A few faces in this vein as calibration — NOT a shortlist to pick from; always
+	 *  framed as non-exhaustive ("…and plenty of others in this vein"). */
+	examples: string;
+	/** The two mechanical watch-outs a swap must clear: the `--<style>-font-weight-*`
+	 *  ladder (tuned to the current face) and THIS family's loading mechanism
+	 *  (system stack / fontsource `@import` / self-hosted woff2). */
+	watch: string;
 }
 
 export interface CompositionSpec {

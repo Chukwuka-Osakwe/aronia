@@ -54,6 +54,18 @@ export const risograph: StyleSpec = {
 		'src/lib/styles/fonts/space-mono-700.woff2',
 		'src/lib/styles/fonts/OFL.txt'
 	],
+	// How to swap the faces while keeping riso's character — a lens, not a shortlist.
+	// Riso is the one family that runs on a PAIR, so both roles are load-bearing.
+	fontGuidance: {
+		dependsOn:
+			'A PAIR of faces. The display face is a geometric-but-warm grotesque — chunky without neo’s extremes, a little character, comfortable at tight-ish display tracking (Space Grotesk, shipped). The second is a MONOSPACE doing the print-label voice: set uppercase with positive tracking for eyebrows, labels and captions (Space Mono, shipped). Both roles carry the identity.',
+		breaksOn:
+			'Dropping the mono role — set the captions in the display face and the printed spot-ink caption identity (Badge, Field label) collapses. Also a cold/corporate neutral grotesque (loses the handcrafted warmth) or an ultra-condensed display crush.',
+		examples:
+			'Display: Cabinet Grotesk, General Sans, Uncut Sans, Hanken Grotesk. Mono: JetBrains Mono, IBM Plex Mono, Martian Mono, DM Mono. — and other warm-grotesque + mono pairings in this vein.',
+		watch:
+			'Riso SELF-HOSTS its faces as woff2 (@font-face url("./fonts/…")) — to swap, drop the new woff2 into aronia/risograph/fonts/, update the two @font-face blocks AND both tokens (--riso-font and --riso-font-mono). Keep BOTH: a swap that changes only --riso-font loses the print-label voice. The --riso-font-weight-* ladder is 400–700 and the mono needs 400 + 700 — confirm your faces ship those.'
+	},
 	composition: {
 		typeScale: {
 			display: { size: 'clamp(2.75rem, 7vw, 5rem)', weight: '--riso-font-weight-bold' },

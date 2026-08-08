@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync } from 'node:fs';
 import { join, basename, dirname } from 'node:path';
 import { manifest } from '../src/lib/manifest/index.js';
-import type { ComponentSpec, CompositionSpec } from '../src/lib/manifest/schema.js';
+import type { ComponentSpec, CompositionSpec, FontGuidance } from '../src/lib/manifest/schema.js';
 
 const ROOT = process.cwd();
 const OUT = join(ROOT, 'static', 'r');
@@ -41,6 +41,10 @@ interface RegistryItem {
 	 *  `aronia add` records how to compose a whole PAGE in the style, not just how
 	 *  to reuse the component. Absent for styles without a composition block. */
 	composition?: CompositionSpec;
+	/** How to swap this family's typeface without dissolving its character —
+	 *  denormalized like styleGuidance so `aronia add` records it in the consumer
+	 *  manifest. Absent for styles without font guidance. */
+	fontGuidance?: FontGuidance;
 	/** Other component ids (same family) the CLI must install first. */
 	registryDeps?: readonly string[];
 	/** Layer 1 — written to the consumer as `tokens.css`. */
@@ -165,6 +169,7 @@ for (const style of manifest.styles) {
 				avoid: style.avoid
 			},
 			composition: style.composition,
+			fontGuidance: style.fontGuidance,
 			tokens: { file: 'tokens.css', content: tokensContent },
 			fonts: fontPaths.length ? fontPaths : undefined,
 			css: { file: basename(files.style), content: read(files.style) },

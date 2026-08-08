@@ -6,7 +6,7 @@ Three design-language families, 20 components each: `neo-brutalism` (bold, high-
 
 ## Registry
 
-- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document — each style also carries `principles` (how to compose tastefully in that design language), `avoid` (anti-patterns), and `composition` (page-level type scale, spacing ramp, breakpoints, container, and media treatment)
+- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document — each style also carries `principles` (how to compose tastefully in that design language), `avoid` (anti-patterns), `composition` (page-level type scale, spacing ramp, breakpoints, container, and media treatment), and `fontGuidance` (how to swap the family's typeface without dissolving its character)
 - [Neo-Brutalism manifest](/neo-brutalism/manifest.json): the neo-brutalism family only
 - [Glassmorphism manifest](/glassmorphism/manifest.json): the glassmorphism family only
 - [Swiss manifest](/swiss/manifest.json): the swiss family only
