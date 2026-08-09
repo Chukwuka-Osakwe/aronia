@@ -43,6 +43,9 @@
 /* Inverted ink panel — paper-tone text; grain drops to a lighter blend. */
 .riso-card[data-variant='ink'] {
 	--_divider: rgba(245, 240, 232, 0.24);
+	/* On this dark plum ground a ghost button's tuned hover would vanish; swap it
+	   for a faint on-ink tint (cascades to the footer's ghost actions). */
+	--riso-ghost-hover-bg: color-mix(in srgb, var(--riso-on-ink) 14%, transparent);
 	background: var(--riso-ink);
 	color: var(--riso-on-ink);
 	border-color: var(--riso-ink);

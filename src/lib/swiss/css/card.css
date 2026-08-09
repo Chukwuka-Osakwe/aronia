@@ -33,6 +33,9 @@
    translucent white so they read on the dark ground. */
 .swiss-card[data-variant='ink'] {
 	--_divider: rgba(255, 255, 255, 0.22);
+	/* On this dark ground a ghost button's tuned light-grey hover would vanish;
+	   swap it for a faint on-ink tint (cascades to the footer's ghost actions). */
+	--swiss-ghost-hover-bg: color-mix(in srgb, var(--swiss-on-ink) 14%, transparent);
 	background: var(--swiss-ink);
 	color: var(--swiss-on-ink);
 	border-color: var(--swiss-ink);

@@ -26,13 +26,17 @@
 .glass-card[data-variant='strong'] {
 	background: var(--glass-surface-strong);
 }
+/* Vivid fills carry white text, so a ghost button's soft light hover would wash
+   out; swap it for a faint white tint (cascades to the footer's ghost actions). */
 .glass-card[data-variant='primary'] {
 	background: var(--glass-primary);
 	color: var(--glass-primary-ink);
+	--glass-ghost-hover-bg: color-mix(in srgb, #fff 16%, transparent);
 }
 .glass-card[data-variant='secondary'] {
 	background: var(--glass-secondary);
 	color: #fff;
+	--glass-ghost-hover-bg: color-mix(in srgb, #fff 16%, transparent);
 }
 
 /* Regions share the Modal's roomier rhythm — the two are sibling panels. */

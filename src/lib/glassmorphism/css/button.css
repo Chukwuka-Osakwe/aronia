@@ -73,10 +73,15 @@
 	backdrop-filter: none;
 	box-shadow: none;
 	border-color: transparent;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on a
+	   vivid primary/secondary card (white text) — not just on a frosted surface. */
+	color: inherit;
 }
 .glass-btn[data-variant='ghost']:hover,
 .glass-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--glass-surface);
+	/* Soft surface fill on light grounds; a vivid/dark surface overrides the var
+	   with an on-fill tint (see card.css [data-variant='primary'|'secondary']). */
+	background: var(--glass-ghost-hover-bg, var(--glass-surface));
 	transform: none;
 	box-shadow: none;
 }

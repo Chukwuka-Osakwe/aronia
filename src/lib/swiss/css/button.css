@@ -69,10 +69,15 @@
 .swiss-btn[data-variant='ghost'] {
 	background: transparent;
 	border-color: transparent;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on an
+	   inverted (ink) card/modal — not just on paper. */
+	color: inherit;
 }
 .swiss-btn[data-variant='ghost']:hover,
 .swiss-btn[data-variant='ghost'][data-state='hover'] {
-	background: color-mix(in srgb, var(--swiss-muted) 92%, #000);
+	/* Tuned muted fill on light grounds; an inverted surface overrides the var with
+	   an on-ink tint (see card.css [data-variant='ink']). */
+	background: var(--swiss-ghost-hover-bg, color-mix(in srgb, var(--swiss-muted) 92%, #000));
 }
 
 /* sizes */

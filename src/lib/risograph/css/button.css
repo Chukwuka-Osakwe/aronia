@@ -89,10 +89,15 @@
 .riso-btn[data-variant='ghost'] {
 	background: transparent;
 	border-color: transparent;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on an
+	   inverted (ink) card/modal — not just on paper. */
+	color: inherit;
 }
 .riso-btn[data-variant='ghost']:hover,
 .riso-btn[data-variant='ghost'][data-state='hover'] {
-	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
+	/* Tuned red-overprint fill on light grounds; an inverted surface overrides the
+	   var with an on-ink tint (see card.css [data-variant='ink']). */
+	background: var(--riso-ghost-hover-bg, color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red)));
 }
 
 /* sizes */
