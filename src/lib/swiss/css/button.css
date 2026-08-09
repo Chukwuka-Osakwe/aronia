@@ -62,24 +62,17 @@
 	background: color-mix(in srgb, var(--swiss-muted) 92%, #000);
 }
 
-/* ghost — transparent, but keeps the hairline border: an outline button. */
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (the hairline stays present but transparent so its footprint
+   matches the others); a muted fill on hover. `muted` remains the bordered,
+   filled de-emphasis option above it. */
 .swiss-btn[data-variant='ghost'] {
-	background: transparent;
-}
-.swiss-btn[data-variant='ghost']:hover,
-.swiss-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--swiss-muted);
-}
-
-/* quiet — transparent AND borderless (a bare text button, e.g. nav items). The
-   border stays present but transparent so its footprint matches the others. */
-.swiss-btn[data-variant='quiet'] {
 	background: transparent;
 	border-color: transparent;
 }
-.swiss-btn[data-variant='quiet']:hover,
-.swiss-btn[data-variant='quiet'][data-state='hover'] {
-	background: var(--swiss-muted);
+.swiss-btn[data-variant='ghost']:hover,
+.swiss-btn[data-variant='ghost'][data-state='hover'] {
+	background: color-mix(in srgb, var(--swiss-muted) 92%, #000);
 }
 
 /* sizes */

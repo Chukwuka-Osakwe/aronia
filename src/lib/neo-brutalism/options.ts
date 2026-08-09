@@ -6,7 +6,7 @@
 // only ever be changed in one place. This makes enum drift between the
 // components and the manifest structurally impossible. See DESIGN.md, Entry 4.
 
-export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost', 'quiet'] as const;
+export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost'] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
 export const BUTTON_SIZES = ['xs', 'sm', 'md', 'lg'] as const;

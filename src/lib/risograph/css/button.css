@@ -4,7 +4,7 @@
  * black outline on fills — filled variants are flat spot-ink fields with a faint
  * grain tooth. Depth/energy comes from OVERPRINT: hover deepens the ink toward
  * its complementary spot colour (the way two Riso passes physically mix), never
- * an elevation or a "shove". Only outline/ghost keep a thin ink hairline.
+ * an elevation or a "shove". Filled variants carry the grain tooth.
  */
 
 .riso-btn {
@@ -82,23 +82,17 @@
 	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
 }
 
-/* ghost — transparent field, keeps the thin ink hairline (an outline button). */
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (the ink hairline stays present but transparent so its footprint
+   matches the others); a muted fill on hover. `muted` remains the filled
+   de-emphasis option above it. */
 .riso-btn[data-variant='ghost'] {
-	background: transparent;
-}
-.riso-btn[data-variant='ghost']:hover,
-.riso-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--riso-muted);
-}
-
-/* quiet — bare text button: no border, no fill. */
-.riso-btn[data-variant='quiet'] {
 	background: transparent;
 	border-color: transparent;
 }
-.riso-btn[data-variant='quiet']:hover,
-.riso-btn[data-variant='quiet'][data-state='hover'] {
-	background: var(--riso-muted);
+.riso-btn[data-variant='ghost']:hover,
+.riso-btn[data-variant='ghost'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
 }
 
 /* sizes */

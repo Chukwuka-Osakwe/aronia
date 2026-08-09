@@ -3,7 +3,7 @@
 // TS unions derive from them; components + manifest both import here so enum
 // drift is structurally impossible. Same pattern as the other families.
 
-export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost', 'quiet'] as const;
+export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost'] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
 export const BUTTON_SIZES = ['xs', 'sm', 'md', 'lg'] as const;

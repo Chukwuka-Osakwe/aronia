@@ -44,7 +44,7 @@ export const glassmorphism: StyleSpec = {
 		'Over-using the effect everywhere — it loses impact and hurts readability and performance.'
 	],
 	requires:
-		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
+		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost` treatments do not.',
 	tokens: 'src/lib/styles/glassmorphism.css',
 	// How to swap the face while keeping glass's character — a lens, not a shortlist.
 	fontGuidance: {
@@ -94,7 +94,7 @@ export const glassmorphism: StyleSpec = {
 			props: [
 				{
 					name: 'variant',
-					description: 'Visual emphasis. `primary`/`secondary` are vivid translucent fills; `ghost`/`quiet` are bare.',
+					description: 'Visual emphasis. `primary`/`secondary` are vivid translucent fills; `muted` is a quiet filled option; `ghost` is a bare text button.',
 					type: 'enum',
 					values: BUTTON_VARIANTS,
 					default: 'primary'

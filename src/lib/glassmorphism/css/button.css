@@ -64,6 +64,9 @@
 .glass-btn[data-variant='muted'] {
 	background: rgba(255, 255, 255, 0.3);
 }
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (no frost, no shadow); a soft surface fill on hover. `muted`
+   remains the filled de-emphasis option above it. */
 .glass-btn[data-variant='ghost'] {
 	background: transparent;
 	-webkit-backdrop-filter: none;
@@ -73,20 +76,6 @@
 }
 .glass-btn[data-variant='ghost']:hover,
 .glass-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--glass-surface);
-	transform: none;
-	box-shadow: none;
-}
-/* quiet — bare text button (nav items): no fill, border, or shadow. */
-.glass-btn[data-variant='quiet'] {
-	background: transparent;
-	-webkit-backdrop-filter: none;
-	backdrop-filter: none;
-	border: none;
-	box-shadow: none;
-}
-.glass-btn[data-variant='quiet']:hover,
-.glass-btn[data-variant='quiet'][data-state='hover'] {
 	background: var(--glass-surface);
 	transform: none;
 	box-shadow: none;

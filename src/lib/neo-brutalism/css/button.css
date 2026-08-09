@@ -56,8 +56,12 @@
 .nb-btn[data-variant='muted'] {
 	background: var(--nb-muted);
 }
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (no shadow, no shove); a muted fill on hover. `muted` remains the
+   bordered, filled de-emphasis option above it. */
 .nb-btn[data-variant='ghost'] {
 	background: transparent;
+	border: none;
 	box-shadow: none;
 }
 .nb-btn[data-variant='ghost']:hover,
@@ -68,24 +72,6 @@
 }
 .nb-btn[data-variant='ghost']:active,
 .nb-btn[data-variant='ghost'][data-state='active'] {
-	transform: none;
-}
-
-/* quiet — like ghost but ALSO borderless: a bare text button for low-emphasis
-   spots (e.g. nav items). Transparent, no shadow, no shove; a muted fill on hover. */
-.nb-btn[data-variant='quiet'] {
-	background: transparent;
-	border: none;
-	box-shadow: none;
-}
-.nb-btn[data-variant='quiet']:hover,
-.nb-btn[data-variant='quiet'][data-state='hover'] {
-	background: var(--nb-muted);
-	transform: none;
-	box-shadow: none;
-}
-.nb-btn[data-variant='quiet']:active,
-.nb-btn[data-variant='quiet'][data-state='active'] {
 	transform: none;
 }
 
