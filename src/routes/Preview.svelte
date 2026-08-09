@@ -45,6 +45,15 @@
 	const snippetNames = $derived(new Set(spec.snippets?.map((s) => s.name) ?? []));
 	const has = (name: string, on = true) => snippetNames.has(name) && (!on || slots[name]);
 
+	// Text controls fill their container (width:100%), but the showcase stage
+	// centers each demo as a shrink-to-fit flex item — so with nothing to fill,
+	// the control collapses to its ~20ch intrinsic width and long values clip.
+	// Give these demos a form-like width to fill; other components stay shrink-
+	// wrapped and centred as before. Select is excluded: it sizes to its content
+	// (with its own min-width floor), so it neither collapses nor needs filling.
+	const WIDTH_FILLING_CONTROLS = new Set(['field', 'input', 'textarea']);
+	const isFormControl = $derived(WIDTH_FILLING_CONTROLS.has(spec.id));
+
 	// How to add this component to a repo — the same install command as the home
 	// CTA; the framework is a --framework flag (react is the CLI default, implicit).
 	const addCmd = $derived(`npx aronia add ${spec.id} --style ${styleId}`);
@@ -113,7 +122,7 @@
      Triggered overlays (Modal) show an "Open" button; their (closed) instance
      still renders so showModal() has an element to promote to the top layer. -->
 <div class="stage" data-style={styleId}>
-	<div class="stage__main">
+	<div class="stage__main" class:stage__main--field={isFormControl}>
 		{#if spec.trigger}
 			{@const onTrigger = fireAction ? runAction : () => (overlayOpen = true)}
 			{#if StyleButton}
@@ -162,6 +171,12 @@
 		justify-content: center;
 		gap: 1rem;
 		flex-wrap: wrap;
+	}
+	/* Form-control demos need a definite width to fill — otherwise the control's
+	   ~20ch intrinsic width wins in this centering flex context and long values
+	   clip. A form-like max keeps them readable without spanning the whole pane. */
+	.stage__main--field {
+		width: min(100%, 20rem);
 	}
 
 	/* Trigger for overlay components (Modal, …) — a plain docs-chrome button. */

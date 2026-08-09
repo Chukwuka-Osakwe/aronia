@@ -13,7 +13,6 @@
 .riso-select {
 	position: relative;
 	display: inline-block;
-	min-width: 16rem;
 }
 .riso-select[data-disabled='true'] {
 	cursor: not-allowed;
@@ -60,14 +59,17 @@
 .riso-select__field[data-size='sm'] {
 	font-size: var(--riso-size-sm-text);
 	padding: var(--riso-size-sm-pad);
+	min-width: 8rem;
 }
 .riso-select__field[data-size='md'] {
 	font-size: var(--riso-size-md-text);
 	padding: var(--riso-size-md-pad);
+	min-width: 10rem;
 }
 .riso-select__field[data-size='lg'] {
 	font-size: var(--riso-size-lg-text);
 	padding: var(--riso-size-lg-pad);
+	min-width: 12rem;
 }
 .riso-select__field[data-size] {
 	padding-right: 2.75rem;

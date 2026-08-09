@@ -6,6 +6,11 @@
  */
 
 .nb-input {
+	/* Fill the field/container rather than the browser's ~20ch intrinsic width,
+	   so a long value scrolls instead of clipping; min-width:0 lets it shrink in
+	   flex layouts. Matches Textarea/Select, which already fill their width. */
+	width: 100%;
+	min-width: 0;
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight-medium);
 	color: var(--nb-ink);

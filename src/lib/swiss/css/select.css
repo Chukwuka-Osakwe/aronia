@@ -12,7 +12,6 @@
 .swiss-select {
 	position: relative;
 	display: inline-block;
-	min-width: 16rem;
 }
 .swiss-select[data-disabled='true'] {
 	cursor: not-allowed;
@@ -57,14 +56,17 @@
 .swiss-select__field[data-size='sm'] {
 	font-size: var(--swiss-size-sm-text);
 	padding: var(--swiss-size-sm-pad);
+	min-width: 8rem;
 }
 .swiss-select__field[data-size='md'] {
 	font-size: var(--swiss-size-md-text);
 	padding: var(--swiss-size-md-pad);
+	min-width: 10rem;
 }
 .swiss-select__field[data-size='lg'] {
 	font-size: var(--swiss-size-lg-text);
 	padding: var(--swiss-size-lg-pad);
+	min-width: 12rem;
 }
 .swiss-select__field[data-size] {
 	padding-right: 2.75rem;

@@ -8,7 +8,6 @@
 .nb-select {
 	position: relative;
 	display: inline-block;
-	min-width: 16rem;
 }
 .nb-select[data-disabled='true'] {
 	opacity: 0.6;
@@ -53,14 +52,17 @@
 .nb-select__field[data-size='sm'] {
 	font-size: var(--nb-size-sm-text);
 	padding: var(--nb-size-sm-pad);
+	min-width: 8rem;
 }
 .nb-select__field[data-size='md'] {
 	font-size: var(--nb-size-md-text);
 	padding: var(--nb-size-md-pad);
+	min-width: 10rem;
 }
 .nb-select__field[data-size='lg'] {
 	font-size: var(--nb-size-lg-text);
 	padding: var(--nb-size-lg-pad);
+	min-width: 12rem;
 }
 .nb-select__field[data-size] {
 	padding-right: 2.75rem;

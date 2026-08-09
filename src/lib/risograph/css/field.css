@@ -11,7 +11,11 @@
  */
 
 .riso-field {
-	display: inline-flex;
+	/* Fill the container (block-level) so the wrapped control stretches to the
+	   available width; a value longer than that scrolls like any single-line
+	   input, instead of hard-capping at the input's default ~20ch and clipping. */
+	display: flex;
+	width: 100%;
 	flex-direction: column;
 	gap: 0.375rem;
 	font-family: var(--riso-font);

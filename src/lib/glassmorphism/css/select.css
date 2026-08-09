@@ -8,7 +8,6 @@
 .glass-select {
 	position: relative;
 	display: inline-block;
-	min-width: 16rem;
 }
 .glass-select[data-disabled='true'] {
 	opacity: 0.5;
@@ -58,14 +57,17 @@
 .glass-select__field[data-size='sm'] {
 	font-size: var(--glass-size-sm-text);
 	padding: var(--glass-size-sm-pad);
+	min-width: 8rem;
 }
 .glass-select__field[data-size='md'] {
 	font-size: var(--glass-size-md-text);
 	padding: var(--glass-size-md-pad);
+	min-width: 10rem;
 }
 .glass-select__field[data-size='lg'] {
 	font-size: var(--glass-size-lg-text);
 	padding: var(--glass-size-lg-pad);
+	min-width: 12rem;
 }
 /* reserve room for the chevron */
 .glass-select__field[data-size] {
