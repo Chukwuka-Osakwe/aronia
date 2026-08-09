@@ -15,6 +15,10 @@ export type ButtonShape = (typeof BUTTON_SHAPES)[number];
 export const CARD_VARIANTS = ['surface', 'strong', 'primary', 'secondary'] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
 
+// Card footer arrangement — actions right-aligned (default), centered, left, or split.
+export const CARD_FOOTER_ALIGNS = ['end', 'center', 'start', 'between'] as const;
+export type CardFooterAlign = (typeof CARD_FOOTER_ALIGNS)[number];
+
 export const BADGE_VARIANTS = ['primary', 'secondary', 'muted', 'accent'] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
 

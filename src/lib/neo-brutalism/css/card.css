@@ -14,6 +14,10 @@
 	border-radius: var(--nb-radius);
 	font-family: var(--nb-font);
 	overflow: hidden;
+	/* Caps long-form content at a readable measure (matches Modal). Only an upper
+	   bound — the card still shrinks to fill narrower parents. Override per
+	   instance with style="--nb-card-max-width: 40rem", or set `none` to fill. */
+	max-width: var(--nb-card-max-width, 32rem);
 }
 
 .nb-card[data-variant='primary'] {
@@ -26,19 +30,36 @@
 	background: var(--nb-muted);
 }
 
+/* Regions share the Modal's roomier rhythm — the two are sibling panels. This
+   also gives the footer's buttons room to clear their own hard offset shadow off
+   the card's bottom/right borders. */
 .nb-card__header,
 .nb-card__footer {
-	padding: 0.875rem 1.25rem;
+	padding: 1.25rem 1.5rem;
 	font-weight: var(--nb-font-weight);
 }
 .nb-card__header {
 	border-bottom: var(--nb-border);
 }
+/* Footer is button-aware like the Modal's: actions gapped and right-aligned by
+   default; data-footer-align switches the arrangement. */
 .nb-card__footer {
 	border-top: var(--nb-border);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+}
+.nb-card__footer[data-footer-align='center'] {
+	justify-content: center;
+}
+.nb-card__footer[data-footer-align='start'] {
+	justify-content: flex-start;
+}
+.nb-card__footer[data-footer-align='between'] {
+	justify-content: space-between;
 }
 .nb-card__body {
-	padding: 1.25rem;
+	padding: 1.5rem;
 	font-weight: var(--nb-font-weight-regular);
 	line-height: 1.45;
 }

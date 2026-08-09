@@ -17,6 +17,10 @@
 	box-shadow: var(--glass-shadow), var(--glass-highlight);
 	font-family: var(--glass-font);
 	overflow: hidden;
+	/* Caps long-form content at a readable measure (matches Modal). Only an upper
+	   bound — the card still shrinks to fill narrower parents. Override per
+	   instance with style="--glass-card-max-width: 40rem", or set `none` to fill. */
+	max-width: var(--glass-card-max-width, 32rem);
 }
 
 .glass-card[data-variant='strong'] {
@@ -31,19 +35,34 @@
 	color: #fff;
 }
 
+/* Regions share the Modal's roomier rhythm — the two are sibling panels. */
 .glass-card__header,
 .glass-card__footer {
-	padding: 0.875rem 1.25rem;
+	padding: 1.25rem 1.5rem;
 	font-weight: var(--glass-font-weight);
 }
 .glass-card__header {
 	border-bottom: var(--glass-divider);
 }
+/* Footer is button-aware like the Modal's: actions gapped and right-aligned by
+   default; data-footer-align switches the arrangement. */
 .glass-card__footer {
 	border-top: var(--glass-divider);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+}
+.glass-card__footer[data-footer-align='center'] {
+	justify-content: center;
+}
+.glass-card__footer[data-footer-align='start'] {
+	justify-content: flex-start;
+}
+.glass-card__footer[data-footer-align='between'] {
+	justify-content: space-between;
 }
 .glass-card__body {
-	padding: 1.25rem;
+	padding: 1.5rem;
 	font-weight: var(--glass-font-weight-regular);
 	line-height: 1.5;
 }

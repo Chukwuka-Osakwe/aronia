@@ -20,6 +20,10 @@ export type LinkVariant = (typeof LINK_VARIANTS)[number];
 export const CARD_VARIANTS = ['paper', 'muted', 'ink'] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
 
+// Card footer arrangement — actions right-aligned (default), centered, left, or split.
+export const CARD_FOOTER_ALIGNS = ['end', 'center', 'start', 'between'] as const;
+export type CardFooterAlign = (typeof CARD_FOOTER_ALIGNS)[number];
+
 // Badge: `neutral` (outline) / `solid` (ink fill) / `muted` / `accent` (fluoro).
 export const BADGE_VARIANTS = ['neutral', 'solid', 'muted', 'accent'] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];

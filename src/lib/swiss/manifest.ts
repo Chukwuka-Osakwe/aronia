@@ -15,6 +15,7 @@ import {
 	TOGGLE_SHAPES,
 	DROPDOWN_SHAPES,
 	CARD_VARIANTS,
+	CARD_FOOTER_ALIGNS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
 	ALERT_VARIANTS,
@@ -571,6 +572,13 @@ export const swiss: StyleSpec = {
 					type: 'enum',
 					values: CARD_VARIANTS,
 					default: 'paper'
+				},
+				{
+					name: 'footerAlign',
+					description: 'How footer actions are arranged along the row.',
+					type: 'enum',
+					values: CARD_FOOTER_ALIGNS,
+					default: 'end'
 				}
 			],
 			snippets: [
@@ -579,7 +587,7 @@ export const swiss: StyleSpec = {
 				{ name: 'footer', description: 'Optional footer region, divided by a hairline rule.' }
 			],
 			styleClass: 'swiss-card',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'footer-align'],
 			files: {
 				style: 'src/lib/swiss/css/card.css',
 				skins: {

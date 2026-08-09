@@ -11,6 +11,7 @@ import {
 	LINK_VARIANTS,
 	SKELETON_SHAPES,
 	CARD_VARIANTS,
+	CARD_FOOTER_ALIGNS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
 	INPUT_SIZES,
@@ -188,7 +189,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Card',
 			import: 'glassmorphism.Card',
 			styleClass: 'glass-card',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'footer-align'],
 			files: {
 				style: 'src/lib/glassmorphism/css/card.css',
 				skins: {
@@ -206,6 +207,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: CARD_VARIANTS,
 					default: 'surface'
+				},
+				{
+					name: 'footerAlign',
+					description: 'How footer actions are arranged along the row.',
+					type: 'enum',
+					values: CARD_FOOTER_ALIGNS,
+					default: 'end'
 				}
 			],
 			snippets: [

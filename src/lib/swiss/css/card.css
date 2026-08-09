@@ -20,6 +20,10 @@
 	border-radius: var(--swiss-radius);
 	font-family: var(--swiss-font);
 	overflow: hidden;
+	/* Caps long-form content at a readable measure (matches Modal). Only an upper
+	   bound — the card still shrinks to fill narrower parents. Override per
+	   instance with style="--swiss-card-max-width: 40rem", or set `none` to fill. */
+	max-width: var(--swiss-card-max-width, 32rem);
 }
 
 .swiss-card[data-variant='muted'] {
@@ -34,19 +38,34 @@
 	border-color: var(--swiss-ink);
 }
 
+/* Regions share the Modal's roomier rhythm — the two are sibling panels. */
 .swiss-card__header,
 .swiss-card__footer {
-	padding: 0.75rem 1.25rem;
+	padding: 1.25rem 1.5rem;
 	font-weight: var(--swiss-font-weight-semibold);
 }
 .swiss-card__header {
 	border-bottom: var(--swiss-border-width) solid var(--_divider);
 }
+/* Footer is button-aware like the Modal's: actions gapped and right-aligned by
+   default; data-footer-align switches the arrangement. */
 .swiss-card__footer {
 	border-top: var(--swiss-border-width) solid var(--_divider);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
+}
+.swiss-card__footer[data-footer-align='center'] {
+	justify-content: center;
+}
+.swiss-card__footer[data-footer-align='start'] {
+	justify-content: flex-start;
+}
+.swiss-card__footer[data-footer-align='between'] {
+	justify-content: space-between;
 }
 .swiss-card__body {
-	padding: 1.25rem;
+	padding: 1.5rem;
 	font-weight: var(--swiss-font-weight-regular);
 	line-height: 1.5;
 }
