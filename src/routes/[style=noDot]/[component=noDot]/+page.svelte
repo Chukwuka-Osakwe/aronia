@@ -31,10 +31,18 @@
 	// prop values; `slots` holds snippet state (editable `children` text + boolean
 	// toggles for icon/header/footer). Both are re-seeded whenever the component
 	// changes (effect keeps `spec` inside a closure, which is what Svelte wants).
+	// A real, real-length paragraph for eyeballing text-bearing components — a short
+	// placeholder hides how they wrap, grow, and stack. Reused by the Card & Modal
+	// bodies and the Textarea value. Kept deliberately (see the Card width work).
+	const HONOURS_TEXT =
+		'Arsenal Football Club has won 13 league titles, a record 14 FA Cups, 2 League Cups, a record 17 FA Community Shields, the 1993–94 European Cup Winners’ Cup, and the 1969–70 Inter-Cities Fairs Cup.';
+
 	function initValues(s: ComponentSpec): Record<string, unknown> {
 		const v: Record<string, unknown> = {};
 		for (const p of s.props)
 			v[p.name] = p.default ?? (p.type === 'boolean' ? false : p.type === 'array' ? [] : '');
+		// Text-bearing controls want real content, not the empty placeholder state.
+		if (s.id === 'textarea') v.value = HONOURS_TEXT;
 		return v;
 	}
 	// Status components (Alert, Toast) track their variant with the sample copy — a
@@ -58,9 +66,9 @@
 	};
 
 	function defaultChildren(s: ComponentSpec): string {
-		if (s.id === 'card') return 'Card body content.';
+		if (s.id === 'card') return HONOURS_TEXT;
 		if (s.id === 'badge') return 'Badge';
-		if (s.id === 'modal') return 'This is a modal dialog. Press Esc, click the backdrop, or the × to close.';
+		if (s.id === 'modal') return HONOURS_TEXT;
 		if (s.id === 'alert' || s.id === 'toast') return STATUS_MESSAGES.info;
 		return s.name; // e.g. "Button"
 	}
