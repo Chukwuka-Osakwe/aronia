@@ -122,6 +122,26 @@
   --riso-font-weight-bold: 700;
   --riso-font-weight: var(--riso-font-weight-bold);
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Riso reads as ink on paper: a plum-ink thumb over a deeper-paper track, 0
+     corner; the hover OVERPRINTS toward spot blue (the family's ink-mixing
+     language), not a lightness shift. The track uses the hairline divider tone
+     so the channel always reads on the warm paper — the Radix signifier that
+     there's more to scroll. */
+  --riso-scrollbar-size: 11px;
+  --riso-scrollbar-thumb: var(--riso-ink);
+  --riso-scrollbar-thumb-hover: color-mix(in srgb, var(--riso-ink) 82%, var(--riso-blue));
+  --riso-scrollbar-track: var(--riso-line);
+  --riso-scrollbar-radius: 0;
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--riso-scrollbar-thumb) var(--riso-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion — COLOUR only. State settles by ink overprinting/mixing, never by a
      transform or shadow (no neo "shove", reduced-motion-safe by default). */
   --riso-transition:

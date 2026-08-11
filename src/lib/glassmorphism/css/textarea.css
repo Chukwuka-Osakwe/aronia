@@ -63,3 +63,34 @@
 	font-size: var(--glass-size-lg-text);
 	padding: var(--glass-size-lg-pad);
 }
+
+/* Themed scrollbar — persistent floating frosted pill (tokens in styles/glassmorphism.css).
+   A translucent ink thumb in an always-visible faint frosted channel, fully rounded;
+   the transparent inset border + padding-box clip lets the pill float within the groove. */
+.glass-textarea::-webkit-scrollbar {
+	width: var(--glass-scrollbar-size);
+	height: var(--glass-scrollbar-size);
+}
+.glass-textarea::-webkit-scrollbar-track {
+	background: var(--glass-scrollbar-track);
+}
+.glass-textarea::-webkit-scrollbar-thumb {
+	background: var(--glass-scrollbar-thumb);
+	border-radius: var(--glass-scrollbar-radius);
+	border: 3px solid transparent;
+	background-clip: padding-box;
+}
+.glass-textarea::-webkit-scrollbar-thumb:hover {
+	background: var(--glass-scrollbar-thumb-hover);
+}
+/* Firefox fallback: the standard properties (Firefox has no ::-webkit-scrollbar).
+   Gated with -moz-appearance, which Chrome/Safari DON'T support — so these never
+   reach Blink/WebKit, where a non-default scrollbar-width/color would disable the
+   persistent ::-webkit-scrollbar track above. (On macOS the OS still auto-hides
+   Firefox's overlay bar; this themes it where the platform keeps it visible.) */
+@supports (-moz-appearance: none) {
+	.glass-textarea {
+		scrollbar-width: thin;
+		scrollbar-color: var(--glass-scrollbar-thumb) var(--glass-scrollbar-track);
+	}
+}

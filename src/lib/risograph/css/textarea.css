@@ -63,3 +63,32 @@
 	font-size: var(--riso-size-lg-text);
 	padding: var(--riso-size-lg-pad);
 }
+
+/* Themed scrollbar — persistent ink-on-paper bar (tokens in styles/riso.css).
+   A plum-ink thumb over the deeper-paper track, 0 corner; hover overprints the
+   thumb toward spot blue (the ink-mixing language), never a lightness shift. */
+.riso-textarea::-webkit-scrollbar {
+	width: var(--riso-scrollbar-size);
+	height: var(--riso-scrollbar-size);
+}
+.riso-textarea::-webkit-scrollbar-track {
+	background: var(--riso-scrollbar-track);
+}
+.riso-textarea::-webkit-scrollbar-thumb {
+	background: var(--riso-scrollbar-thumb);
+	border-radius: var(--riso-scrollbar-radius);
+}
+.riso-textarea::-webkit-scrollbar-thumb:hover {
+	background: var(--riso-scrollbar-thumb-hover);
+}
+/* Firefox fallback: the standard properties (Firefox has no ::-webkit-scrollbar).
+   Gated with -moz-appearance, which Chrome/Safari DON'T support — so these never
+   reach Blink/WebKit, where a non-default scrollbar-width/color would disable the
+   persistent ::-webkit-scrollbar track above. (On macOS the OS still auto-hides
+   Firefox's overlay bar; this themes it where the platform keeps it visible.) */
+@supports (-moz-appearance: none) {
+	.riso-textarea {
+		scrollbar-width: thin;
+		scrollbar-color: var(--riso-scrollbar-thumb) var(--riso-scrollbar-track);
+	}
+}

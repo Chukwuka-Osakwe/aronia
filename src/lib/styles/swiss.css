@@ -76,6 +76,25 @@
   --swiss-font-weight-bold: 700; /* headings / display emphasis */
   --swiss-font-weight: var(--swiss-font-weight-bold); /* display weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Swiss reads as a hairline-grey bar: a neutral thumb, crisp 2px corner,
+     inset from a persistently visible groove. The track uses the divider tone
+     (not the near-white muted fill) so the channel always reads on paper — the
+     Radix signifier that there's more to scroll. */
+  --swiss-scrollbar-size: 10px;
+  --swiss-scrollbar-thumb: #c4c4c4;
+  --swiss-scrollbar-thumb-hover: #9a9a9a;
+  --swiss-scrollbar-track: var(--swiss-line);
+  --swiss-scrollbar-radius: var(--swiss-radius);
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--swiss-scrollbar-thumb) var(--swiss-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion — quick, understated; colour shifts only, never a transform. */
   --swiss-transition:
     background-color 120ms ease, color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;

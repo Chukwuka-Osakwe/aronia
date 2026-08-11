@@ -97,6 +97,25 @@
   --glass-font-weight-bold: 700;
   --glass-font-weight: var(--glass-font-weight-semibold); /* brand weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Glass reads as a floating frosted pill in a persistently visible channel:
+     a translucent ink thumb over a faint frosted track, fully rounded, inset so
+     it hovers within the groove. The track is always present (not transparent)
+     so it reads as the Radix signifier that there's more to scroll. */
+  --glass-scrollbar-size: 12px;
+  --glass-scrollbar-thumb: color-mix(in srgb, var(--glass-ink) 30%, transparent);
+  --glass-scrollbar-thumb-hover: color-mix(in srgb, var(--glass-ink) 45%, transparent);
+  --glass-scrollbar-track: color-mix(in srgb, var(--glass-ink) 8%, transparent);
+  --glass-scrollbar-radius: var(--glass-radius-pill);
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--glass-scrollbar-thumb) var(--glass-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion — glass floats/eases (it doesn't "shove" like NB) */
   --glass-transition:
     transform 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1),

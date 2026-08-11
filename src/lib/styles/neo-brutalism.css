@@ -101,6 +101,23 @@
   --nb-font-weight-bold: 800;
   --nb-font-weight: var(--nb-font-weight-bold); /* brand weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Neo reads as a hard-edged ink block: a solid ink thumb, 0 corner, boxed off
+     the muted gutter by a hairline ink rule. Chunkier than the other families. */
+  --nb-scrollbar-size: 12px;
+  --nb-scrollbar-thumb: var(--nb-ink);
+  --nb-scrollbar-thumb-hover: var(--nb-ink);
+  --nb-scrollbar-track: var(--nb-muted);
+  --nb-scrollbar-radius: 0;
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--nb-scrollbar-thumb) var(--nb-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion */
   --nb-transition: transform 80ms ease, box-shadow 80ms ease;
 }
