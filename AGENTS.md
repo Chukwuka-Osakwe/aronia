@@ -36,9 +36,10 @@ build or edit UI:
    — never by hand-editing a component's internals. The palette is meant to be
    overridden; the structural tokens change the style's identity.
 
-The full hosted reference (whole catalog and per-component items with tokens,
-CSS, and framework skins) is `/manifest.json` and `/r/<style>/<component>.json`;
-see [`static/llms.txt`](./static/llms.txt) for the machine-readable index.
+Everything you need is local — the manifest and the real source under `aronia/`
+are the authoritative reference, and no network access is required. (The registry
+can also be self-hosted over HTTP and pulled with `aronia add --registry <url>`,
+but there's no public host today.)
 
 ## Recommended companion skills
 
