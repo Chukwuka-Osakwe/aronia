@@ -34,7 +34,7 @@ async function loadItem(registry, style, component) {
 		return res.json();
 	}
 	const path = join(registry, style, `${component}.json`);
-	if (!existsSync(path)) throw new Error(`no registry item at ${path}`);
+	if (!existsSync(path)) throw new Error(`registry item not found: ${style}/${component}`);
 	return JSON.parse(readFileSync(path, 'utf8'));
 }
 
@@ -49,7 +49,7 @@ async function loadBinary(registry, style, relPath) {
 		return Buffer.from(await res.arrayBuffer());
 	}
 	const path = join(registry, style, relPath);
-	if (!existsSync(path)) throw new Error(`no registry file at ${path}`);
+	if (!existsSync(path)) throw new Error(`registry file not found: ${style}/${relPath}`);
 	return readFileSync(path); // no encoding → Buffer
 }
 
@@ -60,7 +60,7 @@ async function loadIndex(registry) {
 		return res.json();
 	}
 	const path = join(registry, 'index.json');
-	if (!existsSync(path)) throw new Error(`no registry index at ${path}`);
+	if (!existsSync(path)) throw new Error('registry index not found');
 	return JSON.parse(readFileSync(path, 'utf8'));
 }
 
@@ -232,7 +232,7 @@ Usage:
   aronia add <component...> [options]  add one or more components (adopts a style on first use)
 
 Options:
-  --style <id>        neo-brutalism | glassmorphism | swiss
+  --style <id>        neo-brutalism | glassmorphism | swiss | risograph
                       required for the first add unless \`init\` + conversation chose one
   --framework <fw>    react | html | svelte              [default: detected, else react]
   --cwd <dir>         where to write the aronia/ folder   [default: .]
@@ -291,11 +291,35 @@ async function add(components, flags) {
 		} else {
 			console.error('error: `aronia add <component> --style <style>` requires both.\n');
 		}
-		process.stdout.write(HELP);
+		process.stderr.write(HELP);
 		process.exit(1);
 	}
+
+	// Validate the style + every component against the registry index BEFORE any
+	// filesystem lookup, so a typo yields a clear "unknown … — choose from: …"
+	// instead of a raw file-not-found that leaks an internal cache path. Done
+	// before the mixed-family note too, so a bogus id is never mistaken for a
+	// real family.
+	const index = await loadIndex(registry);
+	const validStyles = [...new Set(index.items.map((i) => i.style))];
+	if (!validStyles.includes(style)) {
+		console.error(`error: unknown style "${style}" — choose from: ${validStyles.join(', ')}`);
+		process.exit(1);
+	}
+	const validComponents = new Set(
+		index.items.filter((i) => i.style === style).map((i) => i.component)
+	);
+	const unknown = components.filter((c) => !validComponents.has(c));
+	if (unknown.length) {
+		const names = unknown.map((c) => `"${c}"`).join(', ');
+		console.error(
+			`error: unknown component${unknown.length > 1 ? 's' : ''} ${names} — available: ${[...validComponents].join(', ')}`
+		);
+		process.exit(1);
+	}
+
 	if (flags.style && adopted && flags.style !== adopted) {
-		console.log(`note: this project adopted "${adopted}"; adding "${flags.style}" mixes two families.`);
+		console.error(`note: this project adopted "${adopted}"; adding "${flags.style}" mixes two families.`);
 	}
 	const framework = flags.framework || manifest?.framework || 'react';
 
@@ -320,7 +344,7 @@ async function add(components, flags) {
 	for (const f of files) console.log(`  ${f}`);
 	console.log(`  aronia/aronia.manifest.json`);
 	if (justAdopted) {
-		console.log(`\nAdopted ${style}. Further components need no --style:  aronia add <component>`);
+		console.log(`\nAdopted ${style}. Further components need no --style: aronia add <component>`);
 	}
 	console.log('');
 }
@@ -342,7 +366,7 @@ async function main() {
 		return;
 	}
 	console.error(`unknown command: ${cmd}\n`);
-	process.stdout.write(HELP);
+	process.stderr.write(HELP);
 	process.exit(1);
 }
 
