@@ -269,6 +269,7 @@ Usage:
   aronia init [options]                bring the language + onboarding in, no style yet
   aronia add <component...> [options]  add one or more components (adopts a style on first use)
   aronia rebuild [--check] [options]   regenerate the manifest from the registry (repair drift)
+  aronia diff [options]                preview how your files differ from the registry
 
 Options:
   --style <id>        neo-brutalism | glassmorphism | swiss | risograph
@@ -401,8 +402,8 @@ async function add(components, flags) {
 // installed. Classic LCS over lines; O(n·m) — fine for a component file or the
 // manifest. Only the changed regions are shown, with `context` unchanged lines
 // on each side and a `…` marker where long unchanged runs are collapsed, so a
-// three-line change in a big manifest doesn't dump the whole file. Used by
-// `rebuild --check` to render the manifest delta.
+// three-line change in a big manifest doesn't dump the whole file. Shared by
+// `diff` (file contents) and `rebuild --check` (the manifest).
 function diffText(a, b, context = 3) {
 	const oldLines = a.split('\n');
 	const newLines = b.split('\n');
@@ -527,6 +528,65 @@ async function rebuild(flags) {
 	);
 }
 
+// --- the `diff` command --------------------------------------------------
+// Preview what re-installing would change — the honest, overwrite-nothing
+// primitive (shadcn's model). For every component in the manifest, load the
+// registry item and compare each text file it ships (tokens/css/skins) against
+// your on-disk copy in aronia/<style>/, rendering a line-level delta. Fonts are
+// binary, so they're checked for presence only, never line-diffed. Registry
+// content comes from whatever registry is in hand (the running bundle by
+// default) — point at a release with `npx aronia@<version> diff` to preview a bump.
+async function diff(flags) {
+	const cwd = flags.cwd || process.cwd();
+	const registry = flags.registry || defaultRegistry();
+	const manifest = readManifest(cwd);
+	if (!manifest) {
+		console.error(`error: no aronia manifest at ${manifestPath(cwd)} — run \`aronia init\` first.`);
+		process.exit(1);
+	}
+	const components = manifest.components ?? [];
+	if (!components.length) {
+		console.error('error: the manifest records no components to diff.');
+		process.exit(1);
+	}
+
+	let changed = 0;
+	const seen = new Set(); // shared files (tokens.css) are diffed once
+	for (const c of components) {
+		const item = await loadItem(registry, c.style, c.component);
+		const skinFiles = item.skins[c.framework] ?? [];
+		const files = [
+			{ file: item.tokens.file, content: item.tokens.content },
+			{ file: item.css.file, content: item.css.content },
+			...skinFiles.map((f) => ({ file: f.file, content: f.content }))
+		];
+		for (const rf of files) {
+			const rel = join('aronia', c.style, rf.file);
+			if (seen.has(rel)) continue;
+			seen.add(rel);
+			const abs = join(cwd, rel);
+			if (!existsSync(abs)) {
+				console.log(`\n### ${rel}  — missing on disk (add would create it)`);
+				changed++;
+				continue;
+			}
+			const local = readFileSync(abs, 'utf8');
+			if (local === rf.content) continue;
+			console.log(`\n### ${rel}`);
+			process.stdout.write(diffText(local, rf.content));
+			changed++;
+		}
+	}
+
+	if (!changed) {
+		console.log(`✓ no differences — your ${components.length} installed components match the registry.`);
+		return;
+	}
+	console.log(
+		`\n${changed} file(s) differ from the registry. Re-run \`aronia add\` to overwrite component files; \`aronia rebuild\` regenerates the manifest.`
+	);
+}
+
 // --- entry ---------------------------------------------------------------
 async function main() {
 	const { positional, flags } = parseArgs(process.argv.slice(2));
@@ -545,6 +605,10 @@ async function main() {
 	}
 	if (cmd === 'rebuild') {
 		await rebuild(flags);
+		return;
+	}
+	if (cmd === 'diff') {
+		await diff(flags);
 		return;
 	}
 	console.error(`unknown command: ${cmd}\n`);
