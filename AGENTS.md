@@ -25,6 +25,9 @@ build or edit UI:
    `fontGuidance` (how to swap the family's typeface without dissolving its
    character) under `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
    as the style, not just as a pile of its components.
+   **It's a generated file — never hand-edit or merge it** (e.g. when consolidating
+   repos); to change what it records, re-run `npx aronia add`, which regenerates
+   it. The `_generated` marker at its top says the same.
 2. **Read the real source in `aronia/<style>/`** as a worked example, and build
    new UI in the same design language — the same tokens, the same `data-*`
    conventions, the same structure. Consistency with the existing components is
