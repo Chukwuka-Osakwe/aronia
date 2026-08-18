@@ -56,4 +56,8 @@ aronia add <component...> [options]    # add components; the first add adopts a 
 Four design languages, 20 components each; dependencies are pulled in
 automatically (e.g. `toast` also adds `alert`).
 
+**Sharing one copy across a monorepo?** Point every app at a common folder with
+`aronia add --cwd <shared-dir>` and alias it in each app's bundler config — one
+language, many apps. (Or keep a copy per app to customise independently — your call.)
+
 Full docs and source: https://github.com/Chukwuka-Osakwe/aronia
