@@ -80,8 +80,7 @@ function styleEntry(item) {
 // by reading one item per style from the registry. This is what lets an agent
 // describe all three families during the START.md conversation before any style
 // is committed.
-async function buildStyleMenu(registry) {
-	const index = await loadIndex(registry);
+async function buildStyleMenu(registry, index) {
 	const styles = {};
 	const seen = new Set();
 	for (const it of index.items) {
@@ -111,8 +110,28 @@ function readManifest(cwd) {
 function writeManifest(cwd, manifest) {
 	writeFileSync(manifestPath(cwd), JSON.stringify(manifest, null, '\t') + '\n');
 }
+// The manifest is a GENERATED artifact — every `init`/`add` rewrites it. This
+// top-level marker warns an agent (which may reconcile the file without reading
+// AGENTS.md) against hand-editing or merging it; the fix for a broken manifest is
+// to re-run `aronia add`, not to patch it by hand.
+const GENERATED_NOTE = 'by aronia; do not hand-edit or merge — re-run npx aronia add';
 function emptyManifest() {
-	return { name: 'aronia', adopted: null, framework: null, styles: {}, components: [] };
+	return {
+		_generated: GENERATED_NOTE,
+		name: 'aronia',
+		version: null,
+		registry: null,
+		adopted: null,
+		framework: null,
+		styles: {},
+		components: []
+	};
+}
+// Where these components came from, recorded at the manifest top so a version bump
+// can be traced. `"bundled"` (the CLI-embedded registry) by default — never the
+// absolute cache path, which would leak — or the explicit url/dir when chosen.
+function registrySource(flags) {
+	return flags.registry ?? process.env.ARONIA_REGISTRY ?? 'bundled';
 }
 
 // Best-effort framework detection from the consumer's package.json, so `init`
@@ -133,9 +152,30 @@ function detectFramework(cwd) {
 }
 
 // --- install -------------------------------------------------------------
+// Build one component's manifest entry: the durable {style, component, framework}
+// tuple (what a `rebuild` trusts) + the version it was pulled at + the
+// registry-derived fields (styleClass/dataAttrs/files/spec). Extracted so `add`
+// and a future `rebuild` emit byte-identical entries. `version` is the registry
+// index's version at install time — per-component so a mixed-version project
+// surfaces its own skew instead of one top-level field going stale-wrong.
+function manifestEntry(item, framework, version) {
+	const skinFiles = item.skins[framework];
+	return {
+		style: item.style,
+		component: item.component,
+		framework,
+		name: item.name,
+		version: version ?? null,
+		styleClass: item.styleClass,
+		dataAttrs: item.dataAttrs,
+		files: [...skinFiles.map((f) => f.file), item.css.file, item.tokens.file, ...(item.fonts ?? [])],
+		spec: item.spec
+	};
+}
+
 // Write one component's files into `aronia/<style>/` and record it in the
 // consumer-facing manifest. Returns the relative paths written.
-function installItem(item, framework, cwd) {
+function installItem(item, framework, cwd, version) {
 	const skinFiles = item.skins[framework];
 	if (!skinFiles) {
 		const have = Object.keys(item.skins).join(', ');
@@ -165,16 +205,7 @@ function installItem(item, framework, cwd) {
 	manifest.components = manifest.components.filter(
 		(c) => !(c.style === item.style && c.component === item.component && c.framework === framework)
 	);
-	manifest.components.push({
-		style: item.style,
-		component: item.component,
-		framework,
-		name: item.name,
-		styleClass: item.styleClass,
-		dataAttrs: item.dataAttrs,
-		files: [...skinFiles.map((f) => f.file), item.css.file, item.tokens.file, ...(item.fonts ?? [])],
-		spec: item.spec
-	});
+	manifest.components.push(manifestEntry(item, framework, version));
 	writeManifest(cwd, manifest);
 
 	return written;
@@ -199,16 +230,16 @@ async function installFonts(registry, item, cwd, seen) {
 
 // Resolve a component and its registry dependencies (depth-first, deps first),
 // installing each once. `seen` guards against duplicates / cycles.
-async function installTree(registry, style, component, framework, cwd, seen, written) {
+async function installTree(registry, style, component, framework, cwd, seen, written, version) {
 	const key = `${style}/${component}`;
 	if (seen.has(key)) return;
 	seen.add(key);
 
 	const item = await loadItem(registry, style, component);
 	for (const dep of item.registryDeps ?? []) {
-		await installTree(registry, style, dep, framework, cwd, seen, written);
+		await installTree(registry, style, dep, framework, cwd, seen, written, version);
 	}
-	const files = installItem(item, framework, cwd);
+	const files = installItem(item, framework, cwd, version);
 	files.push(...(await installFonts(registry, item, cwd, seen)));
 	written.push({ name: item.name, files });
 }
@@ -258,11 +289,15 @@ async function init(flags) {
 		writeFileSync(join(destDir, doc), readFileSync(docPath(doc), 'utf8'));
 	}
 
+	const index = await loadIndex(registry);
 	const manifest = readManifest(cwd) ?? emptyManifest();
-	manifest.styles = await buildStyleMenu(registry); // refresh the full menu
+	manifest.styles = await buildStyleMenu(registry, index); // refresh the full menu
 	manifest.adopted ??= null;
 	manifest.framework = flags.framework ?? manifest.framework ?? detectFramework(cwd) ?? null;
 	manifest.components ??= [];
+	manifest._generated = GENERATED_NOTE;
+	manifest.version = index.version ?? null;
+	manifest.registry = registrySource(flags);
 	writeManifest(cwd, manifest);
 
 	const styleCount = Object.keys(manifest.styles).length;
@@ -326,7 +361,7 @@ async function add(components, flags) {
 	const written = [];
 	const seen = new Set();
 	for (const component of components) {
-		await installTree(registry, style, component, framework, cwd, seen, written);
+		await installTree(registry, style, component, framework, cwd, seen, written, index.version);
 	}
 
 	// Adopt-on-first-add: remember the style + framework so later `add`s need no
@@ -335,6 +370,9 @@ async function add(components, flags) {
 	const justAdopted = !adopted;
 	after.adopted ??= style;
 	after.framework ??= framework;
+	after._generated = GENERATED_NOTE;
+	after.version = index.version ?? null;
+	after.registry = registrySource(flags);
 	writeManifest(cwd, after);
 
 	console.log(`\n✓ added ${written.map((w) => w.name).join(', ')} (${style}, ${framework})`);
