@@ -250,8 +250,15 @@ function parseArgs(argv) {
 	const flags = {};
 	for (let i = 0; i < argv.length; i++) {
 		const a = argv[i];
-		if (a.startsWith('--')) flags[a.slice(2)] = argv[++i];
-		else positional.push(a);
+		if (a.startsWith('--')) {
+			// A flag takes the next token as its value, UNLESS the next token is
+			// itself a flag (or absent) — then it's a boolean like `--check`. Every
+			// value-flag here (--style/--framework/--cwd/--registry) is always
+			// followed by a non-`--` value, so this stays backward compatible.
+			const next = argv[i + 1];
+			if (next === undefined || next.startsWith('--')) flags[a.slice(2)] = true;
+			else flags[a.slice(2)] = argv[++i];
+		} else positional.push(a);
 	}
 	return { positional, flags };
 }
@@ -261,6 +268,7 @@ const HELP = `aronia — copy a design language into your repo
 Usage:
   aronia init [options]                bring the language + onboarding in, no style yet
   aronia add <component...> [options]  add one or more components (adopts a style on first use)
+  aronia rebuild [--check] [options]   regenerate the manifest from the registry (repair drift)
 
 Options:
   --style <id>        neo-brutalism | glassmorphism | swiss | risograph
@@ -268,6 +276,7 @@ Options:
   --framework <fw>    react | html | svelte              [default: detected, else react]
   --cwd <dir>         where to write the aronia/ folder   [default: .]
   --registry <src>    registry URL or local dir           [default: bundled]
+  --check             rebuild: report drift + exit non-zero, don't write (for CI)
 
 Typical flow:
   npx aronia init            # brings aronia in; point your agent at aronia/START.md
@@ -387,6 +396,137 @@ async function add(components, flags) {
 	console.log('');
 }
 
+// --- a small line differ -------------------------------------------------
+// Render a unified-style -/+ delta between two texts, without assuming `git` is
+// installed. Classic LCS over lines; O(n·m) — fine for a component file or the
+// manifest. Only the changed regions are shown, with `context` unchanged lines
+// on each side and a `…` marker where long unchanged runs are collapsed, so a
+// three-line change in a big manifest doesn't dump the whole file. Used by
+// `rebuild --check` to render the manifest delta.
+function diffText(a, b, context = 3) {
+	const oldLines = a.split('\n');
+	const newLines = b.split('\n');
+	const n = oldLines.length;
+	const m = newLines.length;
+	const lcs = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+	for (let i = n - 1; i >= 0; i--) {
+		for (let j = m - 1; j >= 0; j--) {
+			lcs[i][j] =
+				oldLines[i] === newLines[j]
+					? lcs[i + 1][j + 1] + 1
+					: Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+		}
+	}
+	const out = [];
+	let i = 0;
+	let j = 0;
+	while (i < n && j < m) {
+		if (oldLines[i] === newLines[j]) out.push(`  ${oldLines[i++]}`), j++;
+		else if (lcs[i + 1][j] >= lcs[i][j + 1]) out.push(`- ${oldLines[i++]}`);
+		else out.push(`+ ${newLines[j++]}`);
+	}
+	while (i < n) out.push(`- ${oldLines[i++]}`);
+	while (j < m) out.push(`+ ${newLines[j++]}`);
+
+	// Keep only lines within `context` of a change; collapse the rest to `…`.
+	const changed = out.map((l) => l[0] === '-' || l[0] === '+');
+	if (!changed.some(Boolean)) return '';
+	const keep = out.map((_, k) => changed.slice(Math.max(0, k - context), k + context + 1).some(Boolean));
+	const lines = [];
+	let collapsed = false;
+	for (let k = 0; k < out.length; k++) {
+		if (keep[k]) {
+			lines.push(out[k]);
+			collapsed = false;
+		} else if (!collapsed) {
+			lines.push('  …');
+			collapsed = true;
+		}
+	}
+	return lines.join('\n') + '\n';
+}
+
+// --- the `rebuild` command -----------------------------------------------
+// Repair a manifest whose registry-DERIVED fields drifted — the classic case
+// being an agent that hand-merged or reconciled it (not knowing it's generated),
+// corrupting styleClass/dataAttrs/spec/files or the styles guidance prose. We
+// TRUST only the durable {style, component, framework} tuple + each component's
+// recorded version, throw away every derived field, and regenerate from the
+// registry with the SAME code `add` uses — so the result is byte-identical to a
+// fresh install. `--check` reports drift and exits non-zero WITHOUT writing (for
+// CI); the default rewrites in place. Files on disk are never touched (the
+// expensive filesystem reconstruction was deliberately not built).
+//
+// Fidelity caveat: derived fields come from whatever registry is in hand (the
+// running bundle by default). A component recorded at a different version keeps
+// its recorded version but is regenerated from the current registry, and we WARN
+// — run `npx aronia@<version> rebuild` for an exact same-version repair.
+async function rebuild(flags) {
+	const cwd = flags.cwd || process.cwd();
+	const registry = flags.registry || defaultRegistry();
+	const manifest = readManifest(cwd);
+	if (!manifest) {
+		console.error(`error: no aronia manifest at ${manifestPath(cwd)} — run \`aronia init\` first.`);
+		process.exit(1);
+	}
+	const components = manifest.components ?? [];
+	if (!components.length) {
+		console.error('error: the manifest records no components to rebuild.');
+		process.exit(1);
+	}
+
+	const index = await loadIndex(registry);
+
+	// Regenerate the styles guidance + every component entry from the registry,
+	// trusting only the recorded tuple; keep the durable top-level fields (name,
+	// adopted, framework, version, registry) and each component's recorded version.
+	// Start `styles` from what's there (so `init`'s full family MENU survives) and
+	// only refresh the entries for installed styles — exactly as `installItem` does.
+	const rebuilt = { ...manifest };
+	rebuilt._generated = GENERATED_NOTE;
+	rebuilt.styles = { ...(manifest.styles ?? {}) };
+	rebuilt.components = [];
+	const stale = [];
+	for (const c of components) {
+		const item = await loadItem(registry, c.style, c.component);
+		if (item.styleGuidance || item.composition) rebuilt.styles[c.style] = styleEntry(item);
+		rebuilt.components.push(manifestEntry(item, c.framework, c.version ?? null));
+		if (c.version && index.version && c.version !== index.version) {
+			stale.push(`${c.style}/${c.component} @ ${c.version}`);
+		}
+	}
+
+	if (stale.length) {
+		console.error(
+			`note: regenerated from registry version ${index.version ?? 'unknown'}, but these were installed at another version:\n` +
+				stale.map((s) => `        ${s}`).join('\n') +
+				`\n      For an exact same-version repair, run \`npx aronia@<version> rebuild\`.`
+		);
+	}
+
+	const onDisk = readFileSync(manifestPath(cwd), 'utf8');
+	const next = JSON.stringify(rebuilt, null, '\t') + '\n';
+
+	if (flags.check) {
+		if (onDisk === next) {
+			console.log('✓ manifest is in sync with the registry.');
+			return;
+		}
+		console.error('✗ manifest is out of sync with the registry — run `aronia rebuild` to fix:\n');
+		process.stderr.write(diffText(onDisk, next));
+		process.exit(1);
+	}
+
+	if (onDisk === next) {
+		console.log('✓ manifest already in sync — nothing to rebuild.');
+		return;
+	}
+	writeManifest(cwd, rebuilt);
+	console.log(
+		`\n✓ rebuilt aronia/aronia.manifest.json from the registry (${rebuilt.components.length} components).\n`
+	);
+}
+
 // --- entry ---------------------------------------------------------------
 async function main() {
 	const { positional, flags } = parseArgs(process.argv.slice(2));
@@ -401,6 +541,10 @@ async function main() {
 	}
 	if (cmd === 'add') {
 		await add(positional.slice(1), flags);
+		return;
+	}
+	if (cmd === 'rebuild') {
+		await rebuild(flags);
 		return;
 	}
 	console.error(`unknown command: ${cmd}\n`);
