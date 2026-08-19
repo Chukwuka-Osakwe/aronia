@@ -86,7 +86,39 @@ const CASES = [
 	{ label: 'riso: info-ink on info wash (alert title/icon)', fg: '#005c9a', bg: '#e1e6e5' },
 	{ label: 'riso: success-ink on success wash (alert title/icon)', fg: '#10672e', bg: '#e3e7da' },
 	{ label: 'riso: warning-ink on warning wash (alert title/icon)', fg: '#805400', bg: '#f5ead6' },
-	{ label: 'riso: danger-ink on danger wash (alert title/icon)', fg: '#af1d2b', bg: '#f5e3dd' }
+	{ label: 'riso: danger-ink on danger wash (alert title/icon)', fg: '#af1d2b', bg: '#f5e3dd' },
+
+	// --- Risograph: DARK theme ([data-theme='dark']) — the palette turns inside-out,
+	// so pairs are re-audited on the plum-indigo STOCK #241f31 (never pure black).
+	// Constant spot-ink surfaces (accent-ink on the fluoro #ff48b0; paper-tone on the
+	// blue-fill #0069a8) don't flip — they're already covered by the light rows above.
+	// Values mirror the dark half of each light-dark() token in styles/riso.css.
+	{ label: 'riso-dark: ink on stock (body text)', fg: '#f5f0e8', bg: '#241f31' },
+	{ label: 'riso-dark: ink-soft on stock (secondary text)', fg: '#a79fb2', bg: '#241f31' },
+	// The reflected ink FILLS invert to paper (#f5f0e8) carrying plum (#241f31) mark/
+	// text — solid badge, ink card, checked box/radio, active tab.
+	{ label: 'riso-dark: on-ink on re-inverted ink fill', fg: '#241f31', bg: '#f5f0e8' },
+	{ label: 'riso-dark: ink on muted fill (muted button rest)', fg: '#f5f0e8', bg: '#342e44' },
+	// Overprint flips ADDITIVE (button.css). Hovers pinned so a lift/deepen tweak can't
+	// silently break AA:  #fd70bd = mix(#ff48b0, #f5f0e8 24%) — primary lifts toward paper;
+	//   #625d6b = mix(#342e44, #f5f0e8 24%) — muted lifts; #09578b = mix(#0069a8, #241f31 24%)
+	//   — secondary DEEPENS toward stock (light label, low headroom, lifting fails AA).
+	{ label: 'riso-dark: accent-ink on primary hover (additive lift)', fg: '#1a1a1a', bg: '#fd70bd' },
+	{ label: 'riso-dark: on-spot on secondary hover (deepen→stock)', fg: '#f5f0e8', bg: '#09578b' },
+	{ label: 'riso-dark: ink on muted hover (lift)', fg: '#f5f0e8', bg: '#625d6b' },
+	// Inline link: accent-text lightens on dark; hover lifts toward paper.
+	//   #fd96cb = mix(#ff7ac2, #f5f0e8 24%).
+	{ label: 'riso-dark: accent-text on stock (link/emphasis rest)', fg: '#ff7ac2', bg: '#241f31' },
+	{ label: 'riso-dark: accent-text on stock hover (lift)', fg: '#fd96cb', bg: '#241f31' },
+	{ label: 'riso-dark: danger-ink on stock (field error)', fg: '#ff8a8a', bg: '#241f31' },
+	// Alert wash on dark = 8% vivid status ink over the STOCK, printed with the
+	// LIGHTENED -ink tone (title/icon). Washes pinned:
+	//   #21263c = 8% #0078bf, #232731 = 8% #1a7f37, #34292d = 8% #f2a005,
+	//   #342335 = 8% #f15060 — all over #241f31.
+	{ label: 'riso-dark: info-ink on info wash', fg: '#7cc0f5', bg: '#21263c' },
+	{ label: 'riso-dark: success-ink on success wash', fg: '#6fce8c', bg: '#232731' },
+	{ label: 'riso-dark: warning-ink on warning wash', fg: '#f2b84d', bg: '#34292d' },
+	{ label: 'riso-dark: danger-ink on danger wash', fg: '#ff8a8a', bg: '#342335' }
 ];
 
 let failures = 0;
