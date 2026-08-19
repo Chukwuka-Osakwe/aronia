@@ -26,6 +26,21 @@
 	// Show the lab link only in dev, and only when this style actually has a local lab.
 	const hasLab = $derived(dev && !!activeStyle && labStyles.has(activeStyle));
 
+	// Dark-mode pilot: a dev-only playground toggle so we can eyeball the inside-out
+	// palette. Only risograph carries dark tokens today, so the switch shows only
+	// there; it flips `data-theme` on the content pane (see the CSS below), which
+	// cascades `color-scheme` + `light-dark()` resolution into the rendered
+	// components. NOT shipped to consumers — purely a tuning affordance.
+	const hasDark = $derived(dev && activeStyle === 'risograph');
+	let theme = $state<'light' | 'dark'>('light');
+	// Honour `?theme=dark|light` on load so a headless screenshot (which can't click
+	// the toggle) can force a mode. Nav links don't carry the param, so switching
+	// components after a manual toggle won't reset it.
+	$effect(() => {
+		const t = $page.url.searchParams.get('theme');
+		if (t === 'dark' || t === 'light') theme = t;
+	});
+
 	// Toast host: mount the ACTIVE style's Toaster at the app root so fired toasts
 	// overlay the page. Each style owns its own store + host; only one style is in
 	// view at a time, so we mount that one (none on the home/guide routes).
@@ -95,10 +110,24 @@
 			{#if hasLab}
 				<a class="meta-link" href="/lab/{activeStyle}">lab ↗</a>
 			{/if}
+			{#if hasDark}
+				<button
+					type="button"
+					class="meta-link theme-toggle"
+					aria-pressed={theme === 'dark'}
+					onclick={() => (theme = theme === 'dark' ? 'light' : 'dark')}
+				>
+					theme: {theme}
+				</button>
+			{/if}
 		</div>
 	</aside>
 
-	<main class="content" class:full-bleed={fullBleed}>
+	<main
+		class="content"
+		class:full-bleed={fullBleed}
+		data-theme={activeStyle === 'risograph' ? theme : undefined}
+	>
 		{@render children()}
 	</main>
 </div>
@@ -277,6 +306,22 @@
 		background: var(--doc-bg);
 	}
 	.meta-link.active {
+		color: var(--doc-ink);
+	}
+	/* Dev-only dark-mode toggle: a <button> wearing the meta-link look, so reset
+	   native button chrome. When engaged it reads in full ink (like an active link)
+	   so the current mode is legible at a glance. */
+	.theme-toggle {
+		width: 100%;
+		border: none;
+		background: none;
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.875rem;
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+	}
+	.theme-toggle[aria-pressed='true'] {
 		color: var(--doc-ink);
 	}
 

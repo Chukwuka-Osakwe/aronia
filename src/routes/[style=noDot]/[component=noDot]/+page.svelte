@@ -204,6 +204,10 @@
 	   the details card wears the family's blocky ink chrome + coloured offset — so
 	   the specimens sit on print stock, not the default white. */
 	.workbench__main[data-style='risograph'] {
+		/* Establish the surface's ambient ink as the reflecting token, so text that
+		   follows the surface (e.g. a ghost button's `color: inherit`) is theme-aware
+		   and flips with data-theme — not stuck on the fixed docs-chrome ink. */
+		color: var(--riso-ink);
 		--doc-card-bg: var(--riso-paper);
 		--doc-card-ink: var(--riso-ink);
 		--doc-card-muted: var(--riso-ink-soft);
@@ -211,17 +215,34 @@
 		--doc-card-shadow: none;
 		--doc-card-radius: 0;
 		--doc-card-hover: var(--riso-muted);
+		/* Stage grain layer. Light uses the shipped 0.35-baked --riso-grain; dark
+		   swaps to a gentler 0.22 tooth (below) so the screen blend doesn't lift the
+		   deep plum stock too far. Docs-stage only — not a shipped token. */
+		--stage-grain: var(--riso-grain);
 		background:
-			var(--riso-grain),
+			var(--stage-grain),
 			var(--riso-paper);
 		background-size: 120px 120px, auto;
-		background-blend-mode: multiply, normal;
+		/* Token-driven so the tooth flips multiply→screen on dark stock, matching
+		   the components' own grain (see --riso-grain-blend in riso.css). */
+		background-blend-mode: var(--riso-grain-blend), normal;
+	}
+	/* Dark: gentler stage tooth (0.22 vs the baked 0.35) — same feTurbulence.
+	   data-theme is set on the layout's .content, so :global keeps svelte from
+	   pruning this as an "unused" ancestor selector. */
+	:global([data-theme='dark']) .workbench__main[data-style='risograph'] {
+		--stage-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
 	}
 	.workbench__main[data-style='risograph'] .desc {
 		color: var(--riso-ink-soft);
 	}
 	.workbench__side {
 		border-left: 1px solid var(--doc-ink);
+		/* The props rail is docs chrome and stays LIGHT (until a docs dark theme
+		   exists — a filed follow-up). data-theme='dark' on .content otherwise leaks
+		   color-scheme:dark into the rail, flipping native inputs' UA text colour to
+		   light → it vanishes on the light --doc-panel background. Pin it light. */
+		color-scheme: light;
 		/* Background comes from the global `.scroll-shadows` utility (panel + the
 		   dynamic edge shadows); kept out of this scoped rule so it doesn't out-
 		   specificity the utility and cancel the shadows. This rail is wider and
@@ -267,6 +288,11 @@
 	}
 	header[data-style='risograph'] h1 {
 		font-family: var(--riso-font);
+		/* The specimen heading adopts riso's ink (not doc-ink) so it reflects with
+		   the family in dark mode — otherwise it goes invisible once the pane paints
+		   itself from --riso-paper (dark stock). In light mode riso-ink ≈ doc-ink,
+		   so no visible change there. */
+		color: var(--riso-ink);
 	}
 	.desc {
 		font-size: 1rem; /* 16px */

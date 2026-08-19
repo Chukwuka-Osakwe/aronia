@@ -192,4 +192,11 @@
 		font-size: 0.875rem;
 		color: var(--doc-card-ink, var(--doc-ink));
 	}
+	/* Match the library's own DropdownMenu item hover (the riso stage maps
+	   --doc-card-hover to --riso-muted). The base item hover is a fixed --doc-ink
+	   tint that doesn't flip — barely visible and wrong-toned on the dark stage. */
+	.copymenu[data-variant='card'] .copymenu__item:hover,
+	.copymenu[data-variant='card'] .copymenu__item:focus-visible {
+		background: var(--doc-card-hover, var(--doc-bg));
+	}
 </style>
