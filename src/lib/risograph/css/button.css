@@ -36,7 +36,7 @@
 	inset: 0;
 	background-image: var(--riso-grain);
 	background-size: 90px 90px;
-	mix-blend-mode: multiply;
+	mix-blend-mode: var(--riso-grain-blend);
 	opacity: 0.18;
 	pointer-events: none;
 	z-index: -1;
@@ -64,7 +64,7 @@
 
 .riso-btn[data-variant='secondary'] {
 	background: var(--riso-blue-fill);
-	color: var(--riso-on-ink);
+	color: var(--riso-on-spot); /* constant blue fill → constant paper-tone text (not reflecting) */
 	border-color: transparent;
 }
 .riso-btn[data-variant='secondary']:hover,
@@ -80,6 +80,31 @@
 .riso-btn[data-variant='muted']:hover,
 .riso-btn[data-variant='muted'][data-state='hover'] {
 	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
+}
+
+/* DARK — overprint flips ADDITIVE. On warm paper a hover overprints toward a
+   complementary spot ink and DARKENS (subtractive, above). On dark stock a second
+   ink pass ADDS light, so hover must INCREASE the label's contrast, not muddy down
+   (muddying reads as the button receding into the ground). Shared amount:
+   `--riso-overprint-lift`.
+     · primary (DARK label on fluoro) + muted (light label on a DARK fill w/ head-
+       room) → lift toward the paper-tone ink (`--riso-ink` → paper on dark).
+     · secondary is the EXCEPTION: light label on a MID blue with little contrast
+       headroom (~5.2:1 at rest), so lifting would drop it below AA (measured 3.4).
+       It DEEPENS toward the stock (`--riso-paper` → stock on dark) instead —
+       still "more ink", and it RAISES the label's contrast. (see contrast-audit)
+   Ghost brightens via its `--riso-ghost-hover-bg` token (re-valued in riso.css). */
+[data-theme='dark'] .riso-btn[data-variant='primary']:hover,
+[data-theme='dark'] .riso-btn[data-variant='primary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-accent), var(--riso-ink) var(--riso-overprint-lift));
+}
+[data-theme='dark'] .riso-btn[data-variant='secondary']:hover,
+[data-theme='dark'] .riso-btn[data-variant='secondary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-blue-fill), var(--riso-paper) var(--riso-overprint-lift));
+}
+[data-theme='dark'] .riso-btn[data-variant='muted']:hover,
+[data-theme='dark'] .riso-btn[data-variant='muted'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-muted), var(--riso-ink) var(--riso-overprint-lift));
 }
 
 /* ghost — the lowest-emphasis rung: a bare text button. Transparent AND

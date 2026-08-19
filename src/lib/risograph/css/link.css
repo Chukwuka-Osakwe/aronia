@@ -33,6 +33,14 @@
 .riso-link[data-variant='inline'][data-state='hover'] {
 	color: color-mix(in srgb, var(--riso-accent-text) 80%, #000);
 }
+/* DARK — the text analog of the button overprint flip: on paper the inline hover
+   deepens toward black (subtractive); on dark stock it must BRIGHTEN instead (a
+   darker hover would recede into the ground), so it lifts toward the paper-tone
+   ink by the same shared --riso-overprint-lift. Also raises contrast on dark. */
+[data-theme='dark'] .riso-link[data-variant='inline']:hover,
+[data-theme='dark'] .riso-link[data-variant='inline'][data-state='hover'] {
+	color: color-mix(in srgb, var(--riso-accent-text), var(--riso-ink) var(--riso-overprint-lift));
+}
 
 /* nav — colour-only state, constant weight → zero reflow. */
 .riso-link[data-variant='nav'] {

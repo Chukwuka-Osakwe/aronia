@@ -37,7 +37,7 @@
 	inset: 0;
 	background-image: var(--riso-grain);
 	background-size: 90px 90px;
-	mix-blend-mode: multiply;
+	mix-blend-mode: var(--riso-grain-blend);
 	opacity: 0.2;
 	pointer-events: none;
 	z-index: -1;
@@ -81,7 +81,7 @@
 /* Over the masthead the close prints paper-tone, and hovers with the secondary
    button's red overprint (blue leaning toward ink-violet) — colour, not lift. */
 .riso-modal[data-has-header='true'] .riso-modal__close {
-	color: var(--riso-on-ink);
+	color: var(--riso-on-spot); /* over the constant blue masthead → constant paper-tone */
 }
 .riso-modal[data-has-header='true'] .riso-modal__close:hover {
 	background: color-mix(in srgb, var(--riso-blue-fill) calc(100% - var(--riso-overprint)), var(--riso-red));
@@ -98,7 +98,7 @@
 	z-index: 1; /* above the grain layer */
 	padding: 1.1rem 3rem 1.1rem 1.5rem; /* right room for the close button */
 	background: var(--riso-blue-fill);
-	color: var(--riso-on-ink);
+	color: var(--riso-on-spot); /* constant blue masthead → constant paper-tone title */
 	font-size: var(--riso-size-title);
 	font-weight: var(--riso-font-weight-semibold);
 }

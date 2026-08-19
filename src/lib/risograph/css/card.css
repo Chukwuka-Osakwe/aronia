@@ -31,7 +31,7 @@
 	inset: 0;
 	background-image: var(--riso-grain);
 	background-size: 90px 90px;
-	mix-blend-mode: multiply;
+	mix-blend-mode: var(--riso-grain-blend);
 	opacity: 0.2;
 	pointer-events: none;
 	z-index: -1;
@@ -51,7 +51,9 @@
 	border-color: var(--riso-ink);
 }
 .riso-card[data-variant='ink']::after {
-	mix-blend-mode: screen;
+	/* Inverse surface: the ink card is dark on the light theme (tooth screens) and
+	   light paper on dark (tooth multiplies) — the opposite blend of the page. */
+	mix-blend-mode: var(--riso-grain-blend-inv);
 	opacity: 0.12;
 }
 
@@ -71,7 +73,7 @@
 .riso-card__header {
 	padding: 0.875rem 1.5rem;
 	background: var(--riso-blue-fill);
-	color: var(--riso-on-ink);
+	color: var(--riso-on-spot); /* constant blue masthead → constant paper-tone text */
 }
 /* Footer is button-aware like the Modal's: the roomier band rhythm, with actions
    gapped and right-aligned by default; data-footer-align switches the arrangement. */

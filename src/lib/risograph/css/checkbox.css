@@ -83,7 +83,7 @@
 	inset: 0;
 	background-image: var(--riso-grain);
 	background-size: 90px 90px;
-	mix-blend-mode: multiply;
+	mix-blend-mode: var(--riso-grain-blend);
 	opacity: 0;
 	pointer-events: none;
 	z-index: -1;

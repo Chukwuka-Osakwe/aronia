@@ -40,15 +40,29 @@
 }
 
 :root {
-  /* palette — warm paper ground + ink, two classic spot inks, one fluoro pop */
-  --riso-paper: #f5f0e8; /* the warm uncoated-paper surface — NEVER pure white */
-  --riso-ink: #241f31; /* deep plum-indigo — the Riso "black" (NEVER true black).
-                          Echoes the pink+blue overprint; kills the last neo tell. */
-  --riso-muted: #ece5d8; /* subtle fills (muted button, disabled) — a deeper paper */
-  --riso-line: #d9cfbe; /* hairline dividers on paper */
-  --riso-skeleton: #ddd3c2; /* loading placeholder */
-  --riso-ink-soft: #595466; /* secondary text — desaturated indigo-grey, AA on paper */
-  --riso-on-ink: #f5f0e8; /* paper-tone text on an ink fill (not stark white) */
+  /* palette — warm paper ground + ink, two classic spot inks, one fluoro pop.
+   *
+   * DARK MODE (riso pilot): the palette turns INSIDE-OUT — print on dark stock,
+   * honest to the medium (riso prints on black/coloured stock too). Every colour
+   * is a `light-dark(<light>, <dark>)` pair authored ONCE here; the three
+   * `[data-theme]` modes at the bottom of this file flip which half resolves.
+   * The two anchors REFLECT through each other (paper<->ink); it never touches
+   * pure black/white (riso doctrine AND the a11y off-black/off-white rule are the
+   * same rule here). The dark tones were first-guessed then LOCKED: text-bearing
+   * pairs are gated by the contrast-audit dark rows (scripts/contrast-audit.mjs);
+   * the non-text surfaces (line, skeleton, backdrop) are eyeball-locked. */
+  --riso-paper: light-dark(#f5f0e8, #241f31); /* warm paper ↔ plum-indigo stock — NEVER pure white/black */
+  --riso-ink: light-dark(#241f31, #f5f0e8); /* the Riso "black" ↔ paper-tone ink (reflects the anchor) */
+  --riso-muted: light-dark(#ece5d8, #342e44); /* subtle fills — deeper paper ↔ plum LIFTED off the ground (elevation inverts) — AA-gated (ink-on-muted dark row) */
+  --riso-line: light-dark(#d9cfbe, #45405a); /* hairline dividers — on paper ↔ lifted-plum hairline on stock — eyeball-locked (hairline, no AA text row) */
+  --riso-skeleton: light-dark(#ddd3c2, #4a4360); /* loading placeholder — deeper paper ↔ a clearly-raised plum (a timid lift vanishes into the stock, worsened by the opacity pulse) — eyeball-locked (surface, no AA text row) */
+  --riso-ink-soft: light-dark(#595466, #a79fb2); /* secondary text — desaturated indigo-grey ↔ dimmed paper-grey, AA on stock — AA-gated (dark row) */
+  --riso-on-ink: light-dark(#f5f0e8, #241f31); /* text on an ink FILL: when the fill goes paper-tone, its text goes plum (reflects) */
+  --riso-on-spot: #f5f0e8; /* text on a CONSTANT spot-ink fill (blue-fill mastheads,
+                              secondary button). Those fills are vivid/dark in BOTH
+                              themes, so their text stays paper-tone — it must NOT
+                              reflect like --riso-on-ink (which is for --riso-ink
+                              fills that flip). Using on-ink here = plum-on-blue on dark. */
 
   /* the two signature spot inks — vivid, semi-transparent in spirit. Their
      overprint (multiply) gives a purple secondary "for free". */
@@ -61,24 +75,30 @@
 
   /* the fluoro accent — the unmistakable riso pop. Bright FILL takes ink text;
      as TEXT on paper it's too light, so a darkened tone is used for links. */
-  --riso-accent: #ff48b0; /* fluoro pink */
-  --riso-accent-ink: #1a1a1a; /* ink on the fluoro fill */
-  --riso-accent-text: #c31877; /* darkened magenta for accent TEXT on paper */
+  --riso-accent: #ff48b0; /* fluoro pink — pops harder on dark stock, unchanged across themes */
+  --riso-accent-ink: #1a1a1a; /* ink on the fluoro fill — fluoro stays light in both themes, so dark text holds */
+  --riso-accent-text: light-dark(#c31877, #ff7ac2); /* accent TEXT: darkened magenta on paper ↔ LIGHTENED magenta on stock (dark-on-dark would fail) — AA-gated (dark rows) */
 
   /* semantic status — kept in the riso key; darkened -ink tones clear AA as text
      with margin even on the Alert's 8% spot-ink wash grounds (~5.5:1 there, ~6:1
      on plain paper — tuned to the wash, the honest worse case). */
   --riso-info: #0078bf;
-  --riso-info-ink: #005c9a;
+  --riso-info-ink: light-dark(#005c9a, #7cc0f5); /* status TEXT/icon: darkened for AA on light wash ↔ LIGHTENED for the dark wash — AA-gated (dark rows) */
   --riso-success: #1a7f37;
-  --riso-success-ink: #10672e;
+  --riso-success-ink: light-dark(#10672e, #6fce8c); /* AA-gated (dark row) */
   --riso-warning: #f2a005;
-  --riso-warning-ink: #805400;
+  --riso-warning-ink: light-dark(#805400, #f2b84d); /* AA-gated (dark row) */
   --riso-danger: #f15060;
-  --riso-danger-ink: #af1d2b;
+  --riso-danger-ink: light-dark(#af1d2b, #ff8a8a); /* AA-gated (dark row) */
 
-  /* overlay backdrop dim — derived from ink so re-tinting carries it. */
-  --riso-backdrop: color-mix(in srgb, var(--riso-ink) 45%, transparent);
+  /* overlay backdrop dim — MUST stay a darkening on both themes. On light it
+     derives from ink (plum). On dark, `--riso-ink` reflects to PAPER, so a
+     derived dim would turn LIGHT and invert the overlay — so the dark half is
+     pinned to a deep plum-black instead of tracking the token. — eyeball-locked (overlay dim, no AA text row) */
+  --riso-backdrop: light-dark(
+    color-mix(in srgb, var(--riso-ink) 45%, transparent),
+    color-mix(in srgb, #14101f 62%, transparent)
+  );
 
   /* structure — NO offset, NO drop shadow, NO heavy black outline. Depth comes
      from OVERPRINT (multiply ink mixing) and grain, never elevation — that's the
@@ -98,8 +118,18 @@
                                    full 22% overprint would push the hover below AA. */
 
   /* grain — SVG feTurbulence, FINE and FAINT (paper tooth, not TV static).
-     Multiply-blended over surfaces; the element sets its own low opacity. */
+     Blended over surfaces via --riso-grain-blend; the element sets its own low
+     opacity. On LIGHT paper the tooth MULTIPLIES (darkens the stock, like ink
+     bite). On DARK stock multiply can't darken further and the tooth vanishes, so
+     it flips to SCREEN — the grain reads as light flecks catching the stock,
+     honest to print on dark paper. (Blend mode isn't a colour, so it can't ride
+     light-dark(); it flips on the [data-theme] hooks at the foot of this file.) */
   --riso-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  --riso-grain-blend: multiply;
+  --riso-grain-blend-inv: screen; /* for INVERSE surfaces (the `ink` card): it's the
+                                     OPPOSITE of the page — dark on the light theme,
+                                     light on the dark theme — so its tooth takes the
+                                     opposite blend of --riso-grain-blend. */
 
   /* control size scale — pairs padding (v h) with text size. */
   --riso-size-xs-pad: 0.375rem 0.625rem;
@@ -147,4 +177,39 @@
   --riso-transition:
     background-color 120ms ease, color 120ms ease, border-color 120ms ease,
     outline-color 120ms ease;
+}
+
+/* Dark mode — OPT-IN, three modes. aronia has no root family class (it's copied
+   into a consumer's page), so a naked `@media (prefers-color-scheme: dark)` would
+   HIJACK the developer's page on the END-USER's OS setting. Instead the developer
+   sets `data-theme` on the subtree they want themed, and `color-scheme` flips
+   which half of every `light-dark()` pair above resolves. No attribute → light,
+   zero hijack. `color-scheme` also renders native scrollbars/controls in-scheme.
+   `light-dark()` is Baseline across modern browsers since 2024. */
+[data-theme='light'] { color-scheme: light; } /* force light regardless of OS */
+[data-theme='dark']  { color-scheme: dark; }  /* force dark  regardless of OS */
+[data-theme='auto']  { color-scheme: light dark; } /* follow the OS, by opt-in */
+
+/* The non-colour / direction tail — differences light-dark() can't carry. Flip
+   them on the same hooks: explicitly for forced dark, and via a media query for
+   `auto` when the OS is dark.
+     · --riso-grain-blend  — the paper tooth flips multiply→screen (see grain note).
+     · --riso-overprint-lift — hover overprint flips ADDITIVE: on dark stock a
+       second ink pass ADDS light, so filled hovers BRIGHTEN toward the paper-tone
+       ink instead of darkening toward a complementary spot ink (button.css).
+     · --riso-ghost-hover-bg — the transparent ghost's hover tint flips to a faint
+       paper-tone wash (the light default is tuned for paper). */
+[data-theme='dark'] {
+  --riso-grain-blend: screen;
+  --riso-grain-blend-inv: multiply;
+  --riso-overprint-lift: 24%;
+  --riso-ghost-hover-bg: color-mix(in srgb, var(--riso-ink) 14%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --riso-grain-blend: screen;
+    --riso-grain-blend-inv: multiply;
+    --riso-overprint-lift: 24%;
+    --riso-ghost-hover-bg: color-mix(in srgb, var(--riso-ink) 14%, transparent);
+  }
 }

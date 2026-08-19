@@ -27,6 +27,11 @@
 	animation: riso-spin var(--riso-spinner-duration, var(--_riso-spinner-speed, 0.9s)) linear
 		infinite;
 }
+/* DARK — the fluoro finally earns its loudness on the plum stock, where the spot
+   blue reads quiet. Light keeps the reserved workhorse blue (see header). */
+[data-theme='dark'] .riso-spinner__box {
+	border-top-color: var(--riso-accent);
+}
 
 /* speed prop → private preset duration (public --riso-spinner-duration overrides) */
 .riso-spinner[data-speed='slow'] {
