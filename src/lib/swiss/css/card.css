@@ -30,9 +30,12 @@
 	background: var(--swiss-muted);
 }
 /* Inverted editorial panel — ink fill, paper text, dividers dropped to a quiet
-   translucent white so they read on the dark ground. */
+   translucent tint of the panel's OWN text tone so they read on it. Deriving from
+   --swiss-on-ink (not a hardcoded white) means the divider REFLECTS with the
+   panel: on dark this variant re-inverts to a light panel (ink → off-white), and
+   a hardcoded white rule would vanish — the on-ink tint flips dark to stay read. */
 .swiss-card[data-variant='ink'] {
-	--_divider: rgba(255, 255, 255, 0.22);
+	--_divider: color-mix(in srgb, var(--swiss-on-ink) 22%, transparent);
 	/* On this dark ground a ghost button's tuned light-grey hover would vanish;
 	   swap it for a faint on-ink tint (cascades to the footer's ghost actions). */
 	--swiss-ghost-hover-bg: color-mix(in srgb, var(--swiss-on-ink) 14%, transparent);

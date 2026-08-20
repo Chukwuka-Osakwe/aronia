@@ -35,7 +35,10 @@
 }
 .swiss-link[data-variant='inline']:hover,
 .swiss-link[data-variant='inline'][data-state='hover'] {
-	color: color-mix(in srgb, var(--swiss-accent-text) 80%, #000);
+	/* Shift toward the INK anchor (not a hardcoded #000) so it reflects: on light
+	   it deepens the darkened orange; on dark the anchor is off-white, so the
+	   lightened orange BRIGHTENS on hover instead of sinking toward the stock. */
+	color: color-mix(in srgb, var(--swiss-accent-text) 80%, var(--swiss-ink));
 }
 
 /* nav — state rides on COLOUR, never font-weight (a weight change alters glyph
