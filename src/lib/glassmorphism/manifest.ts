@@ -36,13 +36,15 @@ export const glassmorphism: StyleSpec = {
 		'Always place glass over a non-uniform backdrop (gradient, image, or overlapping content) — see `requires`.',
 		'Edge each surface with a subtle light rim / hairline border to suggest the thickness of glass.',
 		'Keep depth soft — diffuse low-opacity shadows and generous rounded corners; elements float on hover rather than pressing.',
-		'Use glass sparingly on key surfaces (cards, modals, nav), not the whole layout; keep text on a strong-enough tint to clear WCAG AA.'
+		'Use glass sparingly on key surfaces (cards, modals, nav), not the whole layout; keep text on a strong-enough tint to clear WCAG AA.',
+		'Dark mode is the same frosted glass over DARK stock — off-white ink on off-black, opt-in via a data-theme flag, never a second look. The signature carries: the ambient surface stays a LIGHT film (just dropped to a low opacity, so the dark backdrop shows through frosted and lifted) and KEEPS its white rim — the light catching the glass edge is what still reads as "glass", so never swap the ambient surface for a smoky dark tint (that reading loses the rim). Elevation inverts the honest way: a diffuse drop shadow barely reads on dark, so the rim carries the lift (raised = lighter on dark). The one exception is the dense OVERLAY panels (Modal, DropdownMenu) — a light film this opaque would glare, so they go dark-tinted while the white rim still frosts their edge. The vivid brand/status fills are constant and only bloom brighter on the dark stock, each still carrying its white label. Off-black not pure black, off-white not pure white — a bright ink on pure black vibrates into the generic "charcoal glass" monoculture the family exists to escape; stay in glass\'s own cool off-tones.'
 	],
 	avoid: [
 		'Frosted glass on a flat, single-colour background (it degrades to a plain card).',
 		'Low-contrast text over busy blur.',
 		'Hard offset shadows, thick opaque borders, or flat brutalist fills.',
-		'Over-using the effect everywhere — it loses impact and hurts readability and performance.'
+		'Over-using the effect everywhere — it loses impact and hurts readability and performance.',
+		'A bespoke second dark engine — a twin token set, a separate dark stylesheet, or a smoky-tinted ambient surface just for dark. Dark is the SAME tokens re-valued through the surface/ink anchors; the frost, rim, and elevation all ride the light-dark() pairs, so a component needing hand-written dark CSS is a smell. And a glaring white panel or pure-black stock on dark — the never-pure rule, and why the ambient frost stays a faint LIGHT film while only the dense overlays tint dark.'
 	],
 	requires:
 		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost` treatments do not.',
