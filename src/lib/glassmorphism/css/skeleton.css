@@ -34,7 +34,18 @@
 	border-radius: 50%;
 }
 /* Shared skin: frosted translucent base + a bright highlight band that sweeps
-   left→right (background-position animation). */
+   left→right. The sweep POSITION is a single animated custom property, not a
+   per-element background-position animation — so every bar reads the SAME phase at
+   any instant. For a multi-line text skeleton the animation runs ONCE on the
+   container and all bars sample its live value; a line added after mount inherits
+   the current position and joins the sweep in phase, with no per-bar animation
+   clock to drift and no remount/flash. (@property makes the custom property both
+   animatable and inheritable — Baseline 2024, like light-dark().) */
+@property --glass-shimmer-x {
+	syntax: '<percentage>';
+	inherits: true;
+	initial-value: -65%;
+}
 .glass-skeleton__bar,
 .glass-skeleton--rect,
 .glass-skeleton--circle {
@@ -42,27 +53,38 @@
 	background-image: linear-gradient(
 		90deg,
 		transparent,
-		rgba(255, 255, 255, 0.55),
+		var(--glass-skeleton-sheen),
 		transparent
 	);
 	background-size: 65% 100%;
 	background-repeat: no-repeat;
-	background-position: -65% 0;
+	background-position: var(--glass-shimmer-x) 0;
 	-webkit-backdrop-filter: blur(var(--glass-blur));
 	backdrop-filter: blur(var(--glass-blur));
+}
+/* Drive the shared position from the CONTAINER (text) or the single block
+   (rect|circle) — one animation instance per skeleton, so every bar it holds
+   sweeps in lockstep. */
+.glass-skeleton--text,
+.glass-skeleton--rect,
+.glass-skeleton--circle {
 	animation: glass-skeleton-shimmer 1.4s ease-in-out infinite;
 }
 @keyframes glass-skeleton-shimmer {
 	to {
-		background-position: 165% 0;
+		--glass-shimmer-x: 165%;
 	}
 }
 /* No sweep for reduced motion — the flat frosted surface still reads as a placeholder. */
 @media (prefers-reduced-motion: reduce) {
-	.glass-skeleton__bar,
+	.glass-skeleton--text,
 	.glass-skeleton--rect,
 	.glass-skeleton--circle {
 		animation: none;
+	}
+	.glass-skeleton__bar,
+	.glass-skeleton--rect,
+	.glass-skeleton--circle {
 		background-image: none;
 	}
 }
