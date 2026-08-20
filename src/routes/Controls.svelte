@@ -29,6 +29,18 @@
 	const childrenSnip = $derived((spec.snippets ?? []).find((s) => s.name === 'children'));
 	const extraSnips = $derived((spec.snippets ?? []).filter((s) => s.name !== 'children'));
 
+	// Number props render as a range slider — always fully visible and draggable,
+	// unlike a native number field whose stepper Blink only paints on hover/focus.
+	// The bounds are a DOCS-rendering detail (a consumer's prop is just a number, so
+	// min/max don't belong in the shipped manifest), keyed by prop name; anything
+	// unlisted falls back to a 0–100 slider. [min, max, step]:
+	const NUMBER_RANGES: Record<string, [number, number, number]> = {
+		value: [0, 100, 1], // Progress — percentage
+		rows: [1, 12, 1], // Textarea — visible text rows
+		lines: [1, 12, 1], // Skeleton — line count
+		duration: [0, 10000, 500] // Toast — auto-dismiss ms
+	};
+
 	// These are control-panel inputs, not a form — they must never autofill (Chrome
 	// happily fills the string control whose value is e.g. "Email", corrupting the
 	// live prop). `autocomplete="off"` is not enough: Chrome ignores it for profile
@@ -114,19 +126,22 @@
 				{:else if prop.type === 'boolean'}
 					<Switch checked={!!values[prop.name]} onChange={(v) => (values[prop.name] = v)} />
 				{:else if prop.type === 'number'}
-					<!-- Explicit write (like the enum/array controls) so the number reliably
-					     flows to the shared `values` proxy; coerce to a real number. -->
-					<input
-						type="number"
-						autocomplete="off"
-						use:noAutofill
-						placeholder={prop.placeholder ?? String(prop.default ?? '')}
-						value={values[prop.name] ?? ''}
-						oninput={(e) => {
-							const n = e.currentTarget.valueAsNumber;
-							values[prop.name] = Number.isNaN(n) ? undefined : n;
-						}}
-					/>
+					<!-- A range slider (always visible/draggable) rather than a native number
+					     field, whose stepper Blink only paints on hover/focus. Bounds from
+					     NUMBER_RANGES (docs-only), with a live readout of the current value. -->
+					{@const [rmin, rmax, rstep] = NUMBER_RANGES[prop.name] ?? [0, 100, 1]}
+					<div class="range">
+						<input
+							type="range"
+							min={rmin}
+							max={rmax}
+							step={rstep}
+							aria-label={prop.name}
+							value={values[prop.name] ?? prop.default ?? rmin}
+							oninput={(e) => (values[prop.name] = e.currentTarget.valueAsNumber)}
+						/>
+						<output class="range__value">{values[prop.name] ?? prop.default ?? rmin}</output>
+					</div>
 				{:else if prop.type === 'array'}
 					<!-- Comma-separated editor → string[]. No empty-filter here so a
 					     trailing comma keeps typing; consumers filter empties. -->
@@ -191,8 +206,7 @@
 		display: flex;
 		justify-content: center;
 	}
-	.control__artifact input[type='text'],
-	.control__artifact input[type='number'] {
+	.control__artifact input[type='text'] {
 		font: inherit;
 		font-size: var(--doc-xs); /* 12px */
 		padding: 0.3rem 0.45rem;
@@ -200,6 +214,27 @@
 		background: var(--doc-panel);
 		width: 100%;
 		max-width: 220px;
+	}
+
+	/* Number props render as an always-visible slider + a live value readout. */
+	.range {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		width: 100%;
+		max-width: 220px;
+	}
+	.range input[type='range'] {
+		flex: 1;
+		min-width: 0;
+		accent-color: var(--doc-ink);
+		cursor: pointer;
+	}
+	.range__value {
+		font-size: var(--doc-xs); /* 12px */
+		font-variant-numeric: tabular-nums; /* digits keep width → no jiggle as it drags */
+		min-width: 2.5em;
+		text-align: right;
 	}
 
 	/* Enum values as an inline row of link-style options — all visible at once. */
