@@ -46,13 +46,15 @@ export const neoBrutalism: StyleSpec = {
 		'Outline elements in thick black borders; keep corners square.',
 		'Give interactive/raised elements a hard offset shadow (no blur, solid colour); flat containers rely on the border alone.',
 		'Use bold, clashing, high-contrast fills — flat saturated colour, pure black and white; do not be timid.',
-		'Make interaction tactile and obvious — elements "shove" into their shadow on press, with big, unmistakable hover and focus states.'
+		'Make interaction tactile and obvious — elements "shove" into their shadow on press, with big, unmistakable hover and focus states.',
+		'Dark mode is the same brutalist punch turned inside-out — off-white ink and its hard offset on an off-black STOCK, opt-in via a data-theme flag, never a second look. The signature carries UNCHANGED: thick borders, square corners, and the tactile shove (pure geometry — it presses into the shadow the same on either ground). What flips is the hard offset itself: border and shadow are both ink, so they stay one continuous hard edge and invert together to off-WHITE — a light-edge reading as the block catching light, so elevation inverts the honest way (raised = lighter on dark). The punch now comes from the saturated flats, not near-pure contrast — the yellow/cyan/pink/status fills are constant and read LOUDEST on the dark stock, each still wearing its dark label (a yellow button is black-on-yellow in both themes). Off-black not pure black, off-white not pure white: a bright ink on pure black vibrates into the generic "charcoal SaaS" drama the loud palette already escapes — stay maximal through the fills and the offset, never through pure-black-on-white.'
 	],
 	avoid: [
 		'Soft or blurred shadows, gradients, or glassy translucency.',
 		'Muted, low-contrast, or pastel-timid palettes.',
 		'Polished "corporate minimal" restraint, or heavily rounded corners.',
-		'Thin, subtle borders — keep them thick and black.'
+		'Thin, subtle borders — keep them thick and black.',
+		'A bespoke second dark engine — a twin token set, a separate dark stylesheet, or a new shadow/elevation trick just for dark. Dark is the SAME tokens re-valued through the ink/paper anchors; the hard offset inverts to off-white on its own, so a component needing hand-written dark CSS is a smell. And pure-black stock or a bright-white ink on it — the never-pure rule, and why the saturated fills keep their dark labels.'
 	],
 	tokens: 'src/lib/styles/neo-brutalism.css',
 	// How to swap the face while keeping neo's character — a lens, not a shortlist.
