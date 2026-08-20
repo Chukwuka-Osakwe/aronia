@@ -62,7 +62,7 @@
 	border-color: rgba(255, 255, 255, 0.3);
 }
 .glass-btn[data-variant='muted'] {
-	background: rgba(255, 255, 255, 0.3);
+	background: var(--glass-muted);
 }
 /* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
    borderless (no frost, no shadow); a soft surface fill on hover. `muted`

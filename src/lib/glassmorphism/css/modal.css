@@ -10,8 +10,9 @@
 	border: var(--glass-border);
 	border-radius: var(--glass-radius);
 	/* A more-solid frosted surface than the surfaces elsewhere — it carries body
-	   text over an unknown page, so it leans opaque for reliable AA contrast. */
-	background: rgba(255, 255, 255, 0.82);
+	   text over an unknown page, so it leans opaque for reliable AA contrast. On
+	   dark this token goes dark-tinted (a light film this opaque would glare). */
+	background: var(--glass-surface-solid);
 	-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
 	backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
 	color: var(--glass-ink);
@@ -43,7 +44,9 @@
 /* Dim + blur the page behind (not a flat wash) — the glass signature; fades in
    and out with the dialog. */
 .glass-modal::backdrop {
-	background: color-mix(in srgb, var(--glass-ink) 32%, transparent);
+	/* A darkening scrim in BOTH themes — pinned dark, not --glass-ink (which
+	   reflects to off-white on dark and would light-wash the page behind). */
+	background: var(--glass-scrim);
 	-webkit-backdrop-filter: blur(3px);
 	backdrop-filter: blur(3px);
 	opacity: 0;
