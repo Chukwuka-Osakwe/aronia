@@ -38,14 +38,16 @@ export const swiss: StyleSpec = {
 		'Limit the palette to ink, paper, and greys plus the single hazard-orange accent — reserve the accent for one primary action or emphasis per view.',
 		'Let whitespace do the work; leave generous, deliberate empty space instead of filling every region.',
 		'Set text flush-left, ragged-right; keep line lengths readable.',
-		'Separate elements with hairline 1px borders and keep surfaces flat — reserve shadow for true overlays (modal, menu) only.'
+		'Separate elements with hairline 1px borders and keep surfaces flat — reserve shadow for true overlays (modal, menu) only.',
+		'Dark mode is the same near-monochrome discipline turned inside-out — off-black stock, off-white ink, opt-in via a data-theme flag, never a second aesthetic. Off-black not pure black, off-white not pure white: the same rule both ways — near-pure contrast vibrates and reads as the generic "charcoal SaaS" drama Swiss exists to escape. Nothing else changes its logic — hierarchy still rides type weight, the single hazard-orange stays the one reserved accent (its dark ink label holds on the orange in both themes). Elevation leans HARDER on the hairline: a dark shadow is near-invisible on a dark ground, so the light 1px border does the separating. State stays colour-only, but a hover RAISES the fill↔label contrast — lift a dark-labelled fill toward the ink anchor, deepen a light-labelled one — so it never drifts to a white halo or sinks into the stock.'
 	],
 	// Anti-patterns — the things that break the language.
 	avoid: [
 		'Gradients, glows, blur, or decorative drop shadows.',
 		'More than one accent colour, or using the accent for large fills and backgrounds.',
 		'Ornamentation, overly rounded "friendly" shapes, or skeuomorphic depth.',
-		'Centred body text or justified columns.'
+		'Centred body text or justified columns.',
+		'A bespoke second dark theme — a twin token set or a separate dark stylesheet. Dark is the same tokens re-valued through the ink/paper anchors; a component needing hand-written dark CSS is a smell. And pure-black stock or pure-white ink — the never-pure rule in both directions.'
 	],
 	tokens: 'src/lib/styles/swiss.css',
 	// How to swap the face while keeping Swiss's character — a lens, not a shortlist.
