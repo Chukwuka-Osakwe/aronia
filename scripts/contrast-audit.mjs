@@ -159,7 +159,25 @@ const CASES = [
 	{ label: 'NB-dark: ink on stock (body text)', fg: '#ececec', bg: '#17181a' },
 	{ label: 'NB-dark: ink on muted fill (muted button/card, elevation inverts)', fg: '#ececec', bg: '#26282c' },
 	{ label: 'NB-dark: danger-ink on stock (field error, lightened)', fg: '#ff7070', bg: '#17181a' },
-	{ label: 'NB-dark: link-ink on stock (link/nav active, lightened)', fg: '#6ea8ff', bg: '#17181a' }
+	{ label: 'NB-dark: link-ink on stock (link/nav active, lightened)', fg: '#6ea8ff', bg: '#17181a' },
+
+	// --- Glassmorphism: DARK theme ([data-theme='dark']) — the frost turns to a
+	// faint LIGHT film over dark stock (never a smoky dark tint; that reading lost
+	// the rim). Ink flips to off-white #f2f2f7. Glass has NO fixed ground — its stock
+	// is the consumer's own dark backdrop — so the translucent surfaces are composited
+	// over a reference dark stock #141422 (the deep indigo the playground stage uses);
+	// every pair also clears AA on a lighter dark page (#2a2a38), so the reference isn't
+	// a flattering cherry-pick. The CONSTANT vivid fills carry white text unchanged —
+	// already covered by the 'glass: white label on … fill' rows above. Values mirror
+	// the dark half of each light-dark() token in styles/glassmorphism.css.
+	{ label: 'glass-dark: ink on ambient surface (body text)', fg: '#f2f2f7', bg: 'rgba(255,255,255,0.08)', base: '#141422' },
+	{ label: 'glass-dark: ink-soft on ambient surface (secondary text)', fg: 'rgba(242,242,247,0.62)', bg: 'rgba(255,255,255,0.08)', base: '#141422' },
+	// Dense overlay panels go dark-tinted (a light film this opaque would glare):
+	{ label: 'glass-dark: ink on surface-solid (modal/menu panel)', fg: '#f2f2f7', bg: 'rgba(30,30,48,0.85)', base: '#141422' },
+	{ label: 'glass-dark: ink on muted fill (muted button)', fg: '#f2f2f7', bg: 'rgba(255,255,255,0.12)', base: '#141422' },
+	// Text-role tones LIGHTEN on dark (the dark halves would vanish on the stock):
+	{ label: 'glass-dark: link-ink on stock (link/nav active, lightened)', fg: '#a5b4fc', bg: '#141422' },
+	{ label: 'glass-dark: danger-ink on stock (field error, lightened)', fg: '#f87171', bg: '#141422' }
 ];
 
 let failures = 0;
