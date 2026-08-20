@@ -194,11 +194,23 @@
 			linear-gradient(135deg, #c4b5fd, #bae6fd);
 	}
 	/* Swiss: flat, hairline-bordered card chrome — no shadow, crisp 2px corners,
-	   matching the family's own restraint. */
+	   matching the family's own restraint. The stage rides the family's own
+	   paper/ink tokens (not the fixed docs chrome) so it flips to off-black stock
+	   under data-theme='dark' — otherwise dark specimens would float on a white
+	   stage. In light this is visually identical to the old docs-white stage. */
 	.workbench__main[data-style='swiss'] {
-		--doc-card-border: 1px solid var(--doc-line);
+		color: var(--swiss-ink);
+		background: var(--swiss-paper);
+		--doc-card-bg: var(--swiss-paper);
+		--doc-card-ink: var(--swiss-ink);
+		--doc-card-muted: var(--swiss-ink-soft);
+		--doc-card-border: 1px solid var(--swiss-line);
 		--doc-card-shadow: none;
 		--doc-card-radius: 2px;
+		--doc-card-hover: var(--swiss-muted);
+	}
+	.workbench__main[data-style='swiss'] .desc {
+		color: var(--swiss-ink-soft);
 	}
 	/* Riso: the whole pane is warm paper with a multiply-blended grain tooth, and
 	   the details card wears the family's blocky ink chrome + coloured offset — so

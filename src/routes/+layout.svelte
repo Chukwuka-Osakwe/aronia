@@ -26,12 +26,13 @@
 	// Show the lab link only in dev, and only when this style actually has a local lab.
 	const hasLab = $derived(dev && !!activeStyle && labStyles.has(activeStyle));
 
-	// Dark-mode pilot: a dev-only playground toggle so we can eyeball the inside-out
-	// palette. Only risograph carries dark tokens today, so the switch shows only
-	// there; it flips `data-theme` on the content pane (see the CSS below), which
-	// cascades `color-scheme` + `light-dark()` resolution into the rendered
+	// Dark-mode roll-out: a dev-only playground toggle so we can eyeball each
+	// family's dark tokens. Only families that carry dark `light-dark()` pairs get
+	// the switch; it flips `data-theme` on the content pane (see the CSS below),
+	// which cascades `color-scheme` + `light-dark()` resolution into the rendered
 	// components. NOT shipped to consumers — purely a tuning affordance.
-	const hasDark = $derived(dev && activeStyle === 'risograph');
+	const darkStyles = new Set(['risograph', 'swiss']);
+	const hasDark = $derived(dev && !!activeStyle && darkStyles.has(activeStyle));
 	let theme = $state<'light' | 'dark'>('light');
 	// Honour `?theme=dark|light` on load so a headless screenshot (which can't click
 	// the toggle) can force a mode. Nav links don't carry the param, so switching
@@ -126,7 +127,7 @@
 	<main
 		class="content"
 		class:full-bleed={fullBleed}
-		data-theme={activeStyle === 'risograph' ? theme : undefined}
+		data-theme={hasDark ? theme : undefined}
 	>
 		{@render children()}
 	</main>
