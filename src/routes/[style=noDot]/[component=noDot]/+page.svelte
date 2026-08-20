@@ -165,10 +165,25 @@
 	   neutral `--doc-card-*` contract (consumed in Preview.svelte) to its own
 	   tokens. Add one block per new style and the card follows automatically; no
 	   style is the privileged default. */
+	/* Neo: flat, hairline-bordered details-card chrome. The stage rides the family's
+	   own paper/ink tokens (not the fixed docs chrome) so it flips to off-black stock
+	   under data-theme='dark' — otherwise dark specimens would float on a white stage.
+	   In light this is visually identical to the old docs-white stage (--nb-ink #111 ==
+	   --doc-ink, --nb-paper #fff == the pane white). Neo has no soft-grey text tier, so
+	   the muted slots ride full ink (on-brand for its high-contrast palette). */
 	.workbench__main[data-style='neo-brutalism'] {
-		--doc-card-border: 1px solid var(--doc-ink);
+		color: var(--nb-ink);
+		background: var(--nb-paper);
+		--doc-card-bg: var(--nb-paper);
+		--doc-card-ink: var(--nb-ink);
+		--doc-card-muted: var(--nb-ink);
+		--doc-card-border: 1px solid var(--nb-ink);
 		--doc-card-shadow: none;
 		--doc-card-radius: 0;
+		--doc-card-hover: var(--nb-muted);
+	}
+	.workbench__main[data-style='neo-brutalism'] .desc {
+		color: var(--nb-ink);
 	}
 	/* On the glass gradient the muted grey description drops below WCAG AA (1.9–3.8:1
 	   across the gradient); dark ink clears it everywhere (6.5–13:1). */
