@@ -147,7 +147,19 @@ const CASES = [
 	{ label: 'swiss-dark: info-ink on info wash (alert bar/icon)', fg: '#6ea8ff', bg: '#1e232b' },
 	{ label: 'swiss-dark: success-ink on success wash (alert bar/icon)', fg: '#5fce80', bg: '#1d2622' },
 	{ label: 'swiss-dark: warning-ink on warning wash (alert bar/icon)', fg: '#e5a72b', bg: '#26231c' },
-	{ label: 'swiss-dark: danger-ink on danger wash (alert bar/icon)', fg: '#ff7070', bg: '#281f21' }
+	{ label: 'swiss-dark: danger-ink on danger wash (alert bar/icon)', fg: '#ff7070', bg: '#281f21' },
+
+	// --- Neo-Brutalism: DARK theme ([data-theme='dark']) — turns inside-out to an
+	// off-white ink #ececec on an off-black STOCK #17181a (never pure #000/#fff). Only
+	// the ground-borne text changes; the saturated brand/status FILLS are CONSTANT and
+	// carry --nb-on-spot (#111111) text, already covered by the 'NB: ink on …' fill
+	// rows above (on-spot == the light ink, same #111 on the same fills). No hover rows:
+	// neo's hover is the geometric shove, not a colour shift. Values mirror the dark
+	// half of each light-dark() token in styles/neo-brutalism.css.
+	{ label: 'NB-dark: ink on stock (body text)', fg: '#ececec', bg: '#17181a' },
+	{ label: 'NB-dark: ink on muted fill (muted button/card, elevation inverts)', fg: '#ececec', bg: '#26282c' },
+	{ label: 'NB-dark: danger-ink on stock (field error, lightened)', fg: '#ff7070', bg: '#17181a' },
+	{ label: 'NB-dark: link-ink on stock (link/nav active, lightened)', fg: '#6ea8ff', bg: '#17181a' }
 ];
 
 let failures = 0;
