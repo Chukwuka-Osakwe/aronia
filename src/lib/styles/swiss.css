@@ -144,9 +144,19 @@
    query for `auto` when the OS is dark. */
 [data-theme='dark'] {
   --swiss-shadow-overlay: 0 10px 30px rgba(0, 0, 0, 0.55);
+  /* WebKit resolves light-dark() inside the ::-webkit-scrollbar pseudo against the
+     SCROLLBAR's own color-scheme (normal), not the element's inherited dark one — so
+     the scrollbar tokens keep printing their LIGHT branch on dark. Force the dark
+     halves on the hook. Literals mirror the dark side of the tokens above. */
+  --swiss-scrollbar-thumb: #4c4d52;
+  --swiss-scrollbar-thumb-hover: #63646b;
+  --swiss-scrollbar-track: #2f3034; /* --swiss-line dark half */
 }
 @media (prefers-color-scheme: dark) {
   [data-theme='auto'] {
     --swiss-shadow-overlay: 0 10px 30px rgba(0, 0, 0, 0.55);
+    --swiss-scrollbar-thumb: #4c4d52;
+    --swiss-scrollbar-thumb-hover: #63646b;
+    --swiss-scrollbar-track: #2f3034;
   }
 }

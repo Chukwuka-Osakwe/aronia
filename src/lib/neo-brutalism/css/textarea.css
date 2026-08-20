@@ -68,7 +68,11 @@
 }
 .nb-textarea::-webkit-scrollbar-track {
 	background: var(--nb-scrollbar-track);
-	border-left: var(--nb-border-width) solid var(--nb-ink);
+	/* Hairline ink rule on the inline-start edge via an INSET shadow, not a border:
+	   a real border on ::-webkit-scrollbar-track distorts Blink's thumb geometry
+	   (the thumb mis-positions/teleports as you scroll). A shadow paints the same
+	   rule without changing the thumb's travel box. */
+	box-shadow: inset var(--nb-border-width) 0 0 0 var(--nb-scrollbar-thumb);
 }
 .nb-textarea::-webkit-scrollbar-thumb {
 	background: var(--nb-scrollbar-thumb);

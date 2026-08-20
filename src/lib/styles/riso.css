@@ -204,6 +204,13 @@
   --riso-grain-blend-inv: multiply;
   --riso-overprint-lift: 24%;
   --riso-ghost-hover-bg: color-mix(in srgb, var(--riso-ink) 14%, transparent);
+  /* WebKit resolves light-dark() inside the ::-webkit-scrollbar pseudo against the
+     SCROLLBAR's own color-scheme (normal), not the element's inherited dark one — so
+     the scrollbar tokens keep printing their LIGHT branch on dark. Force the dark
+     halves on the hook. Literals mirror the dark side of --riso-ink / --riso-line. */
+  --riso-scrollbar-thumb: #f5f0e8;
+  --riso-scrollbar-thumb-hover: color-mix(in srgb, #f5f0e8 82%, var(--riso-blue));
+  --riso-scrollbar-track: #45405a; /* --riso-line dark half */
 }
 @media (prefers-color-scheme: dark) {
   [data-theme='auto'] {
@@ -211,5 +218,8 @@
     --riso-grain-blend-inv: multiply;
     --riso-overprint-lift: 24%;
     --riso-ghost-hover-bg: color-mix(in srgb, var(--riso-ink) 14%, transparent);
+    --riso-scrollbar-thumb: #f5f0e8;
+    --riso-scrollbar-thumb-hover: color-mix(in srgb, #f5f0e8 82%, var(--riso-blue));
+    --riso-scrollbar-track: #45405a;
   }
 }
