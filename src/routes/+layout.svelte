@@ -31,7 +31,7 @@
 	// the switch; it flips `data-theme` on the content pane (see the CSS below),
 	// which cascades `color-scheme` + `light-dark()` resolution into the rendered
 	// components. NOT shipped to consumers — purely a tuning affordance.
-	const darkStyles = new Set(['risograph', 'swiss', 'neo-brutalism']);
+	const darkStyles = new Set(['risograph', 'swiss', 'neo-brutalism', 'glassmorphism']);
 	const hasDark = $derived(dev && !!activeStyle && darkStyles.has(activeStyle));
 	let theme = $state<'light' | 'dark'>('light');
 	// Honour `?theme=dark|light` on load so a headless screenshot (which can't click

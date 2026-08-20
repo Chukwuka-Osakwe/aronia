@@ -191,6 +191,12 @@
 		color: var(--glass-ink);
 	}
 	.workbench__main[data-style='glassmorphism'] {
+		/* Establish the surface's ambient ink as the reflecting token, so the heading
+		   and any text that follows the surface (e.g. a ghost button's `color: inherit`)
+		   are theme-aware and flip with data-theme — not stuck on the fixed docs-chrome
+		   dark ink (which vanishes on the dark stage). No-op in light (--glass-ink ≈ the
+		   docs ink). */
+		color: var(--glass-ink);
 		/* Frosted card chrome... */
 		--doc-card-bg: var(--glass-surface-strong);
 		--doc-card-ink: var(--glass-ink);
@@ -207,6 +213,17 @@
 			radial-gradient(120% 120% at 100% 0%, #f0abfc 0%, transparent 55%),
 			radial-gradient(140% 140% at 50% 120%, #7dd3fc 0%, transparent 55%),
 			linear-gradient(135deg, #c4b5fd, #bae6fd);
+	}
+	/* Dark: glass has no --glass-paper to flip (its ground is the consumer's own
+	   backdrop), so the stage gradient is swapped explicitly for a DARK jewel-tone
+	   one — still busy, so the frost has something to refract on dark stock. Same
+	   :global() wrapper as riso (data-theme lives on the layout's .content). */
+	:global([data-theme='dark']) .workbench__main[data-style='glassmorphism'] {
+		background:
+			radial-gradient(120% 120% at 0% 0%, #4c1d95 0%, transparent 52%),
+			radial-gradient(120% 120% at 100% 0%, #0e4a6e 0%, transparent 52%),
+			radial-gradient(140% 140% at 50% 120%, #0f5132 0%, transparent 55%),
+			linear-gradient(135deg, #14122b, #0b0b14);
 	}
 	/* Swiss: flat, hairline-bordered card chrome — no shadow, crisp 2px corners,
 	   matching the family's own restraint. The stage rides the family's own
