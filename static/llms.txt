@@ -2,7 +2,7 @@
 
 > An agent-friendly design language delivered shadcn-style: `npx aronia add` copies real component source (tokens, styles, a thin framework skin) plus a machine-readable manifest into a project's repo. Point an agent at the manifest and it can use every component correctly from the schema alone.
 
-Four design-language families, 20 components each: `neo-brutalism` (bold, high-contrast, hard shadows), `glassmorphism` (frosted, layered — needs a non-uniform backdrop), `swiss` (clean, grid-driven minimalism, a single hazard-orange accent), and `risograph` (warm risograph print — paper ground, plum-indigo ink, spot red/blue with a fluoro-pink accent, grain and overprint texture, sharp corners, no shadows). A component's contract is the same across frameworks; only a ~30-line skin differs, selected via `--framework react|svelte|html`.
+Four design-language families, 20 components each: `neo-brutalism` (bold, high-contrast, hard shadows), `glassmorphism` (frosted, layered — needs a non-uniform backdrop), `swiss` (clean, grid-driven minimalism, a single hazard-orange accent), and `risograph` (warm risograph print — paper ground, plum-indigo ink, spot red/blue with a fluoro-pink accent, grain and overprint texture, sharp corners, no shadows). A component's contract is the same across frameworks; only a ~30-line skin differs, selected via `--framework react|svelte|html`. Every family also ships an opt-in dark theme — set `data-theme="dark"` (or `"auto"` to follow the OS) on any subtree; light is the default (aronia never flips a page on the end-user's OS).
 
 ## Registry
 

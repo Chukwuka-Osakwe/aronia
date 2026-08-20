@@ -38,6 +38,23 @@ build or edit UI:
 4. **Re-theme by overriding CSS custom properties** in `aronia/<style>/tokens.css`
    — never by hand-editing a component's internals. The palette is meant to be
    overridden; the structural tokens change the style's identity.
+5. **Dark mode is opt-in, via a `data-theme` attribute.** Every family ships a dark
+   theme inside the same `aronia/<style>/tokens.css` — no separate file, nothing to
+   wire; it arrives on install. Set `data-theme` on the subtree you want themed:
+   `"dark"` forces dark, `"light"` forces light, and `"auto"` follows the reader's OS
+   (`prefers-color-scheme`). With **no attribute the components stay light** — aronia
+   never flips your page on the end-user's OS setting, so going dark is always your
+   explicit choice, on the scope you pick. Under the hood it re-values the one palette
+   (`light-dark()` + `color-scheme`), so components adapt for free — don't hand-write
+   per-component dark overrides. How each family's dark mode *looks* (and what it
+   deliberately avoids) is in its `principles`/`avoid` (see item 1).
+   **The one gotcha — give a surface YOU style a theme-aware ink.** aronia's bare-text
+   rungs (a `ghost` button, an inline link) follow their surface via `color: inherit`
+   by design, so they read on an inverted card. If you place them on a surface you've
+   styled yourself, set that surface's `color: var(--<style>-ink)` — otherwise they
+   inherit whatever ambient text colour is there and can vanish against a dark ground.
+   aronia's own cards and panels already handle this; it only bites on surfaces you
+   author.
 
 Everything you need is local — the manifest and the real source under `aronia/`
 are the authoritative reference, and no network access is required. (The registry
