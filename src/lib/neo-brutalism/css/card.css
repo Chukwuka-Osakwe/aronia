@@ -20,11 +20,16 @@
 	max-width: var(--nb-card-max-width, 32rem);
 }
 
+/* primary/secondary sit on CONSTANT saturated fills → their text is pinned dark
+   (--nb-on-spot) in both themes; `muted` inverts to a dark panel and keeps the
+   reflecting ink. See the on-spot rule in styles/neo-brutalism.css. */
 .nb-card[data-variant='primary'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot);
 }
 .nb-card[data-variant='secondary'] {
 	background: var(--nb-secondary);
+	color: var(--nb-on-spot);
 }
 .nb-card[data-variant='muted'] {
 	background: var(--nb-muted);

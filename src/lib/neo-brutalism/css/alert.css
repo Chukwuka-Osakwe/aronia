@@ -44,6 +44,15 @@
 .nb-alert[data-variant='error'] {
 	background: var(--nb-danger);
 }
+/* every status variant is a CONSTANT saturated fill → pin the label dark
+   (--nb-on-spot) in both themes; a variant-less alert on paper keeps the base
+   reflecting ink. See the on-spot rule in styles/neo-brutalism.css. */
+.nb-alert[data-variant='info'],
+.nb-alert[data-variant='success'],
+.nb-alert[data-variant='warning'],
+.nb-alert[data-variant='error'] {
+	color: var(--nb-on-spot);
+}
 
 /* The container centres the icon vertically (align-items: center), so the box is
    just the mark itself — no line-height matching needed. */

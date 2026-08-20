@@ -47,11 +47,17 @@
 }
 
 /* variants */
+/* primary/secondary ride CONSTANT saturated fills, so their label is pinned to
+   --nb-on-spot (dark in both themes) — the base --nb-ink would flip to off-white on
+   dark and vanish on the light fill. `muted` keeps the reflecting ink (its fill
+   inverts to a dark panel, where off-white ink is correct). */
 .nb-btn[data-variant='primary'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot);
 }
 .nb-btn[data-variant='secondary'] {
 	background: var(--nb-secondary);
+	color: var(--nb-on-spot);
 }
 .nb-btn[data-variant='muted'] {
 	background: var(--nb-muted);

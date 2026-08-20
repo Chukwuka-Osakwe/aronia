@@ -32,6 +32,7 @@
 /* Active tab fills yellow and lifts on its shadow. */
 .nb-tabs__tab[data-active='true'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot); /* dark label on the constant yellow fill, both themes */
 	box-shadow: var(--nb-shadow);
 }
 .nb-tabs__tab:focus-visible {

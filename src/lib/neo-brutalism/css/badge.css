@@ -22,17 +22,23 @@
 	white-space: nowrap;
 }
 
+/* primary/secondary/accent are CONSTANT saturated fills → pin the label dark
+   (--nb-on-spot) in both themes; `muted` inverts to a dark panel and keeps the
+   reflecting ink. See the on-spot rule in styles/neo-brutalism.css. */
 .nb-badge[data-variant='primary'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot);
 }
 .nb-badge[data-variant='secondary'] {
 	background: var(--nb-secondary);
+	color: var(--nb-on-spot);
 }
 .nb-badge[data-variant='muted'] {
 	background: var(--nb-muted);
 }
 .nb-badge[data-variant='accent'] {
 	background: var(--nb-accent);
+	color: var(--nb-on-spot);
 }
 
 /* shape — square (default) or a fully rounded pill. */

@@ -73,11 +73,12 @@
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
 }
 
-/* The tick: hidden until checked, hard black on the yellow fill. */
+/* The tick: hidden until checked, dark on the constant yellow fill (on-spot, both
+   themes — the reflecting ink would flip to off-white-on-yellow on dark). */
 .nb-checkbox__check {
 	width: var(--_tick);
 	height: var(--_tick);
-	color: var(--nb-ink);
+	color: var(--nb-on-spot);
 	opacity: 0;
 }
 .nb-checkbox[data-checked='true'] .nb-checkbox__check {

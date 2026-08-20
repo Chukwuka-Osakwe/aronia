@@ -15,7 +15,7 @@
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight);
 	background: var(--nb-primary);
-	color: var(--nb-ink);
+	color: var(--nb-on-spot); /* dark label on the constant yellow fill, both themes */
 	border: var(--nb-border);
 	box-shadow: var(--nb-shadow);
 	cursor: pointer;
@@ -97,6 +97,7 @@
 .nb-dropdown__item:focus-visible {
 	outline: none;
 	background: var(--nb-primary);
+	color: var(--nb-on-spot); /* dark label on the yellow hover fill, both themes */
 }
 @media (prefers-reduced-motion: reduce) {
 	.nb-dropdown__chevron {
