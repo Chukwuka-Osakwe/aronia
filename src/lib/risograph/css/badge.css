@@ -14,7 +14,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	line-height: 1;
-	padding: 0.25rem 0.5rem;
+	padding: var(--riso-space-1) var(--riso-space-2);
 	color: var(--riso-ink);
 	background: var(--riso-paper);
 	border: var(--riso-border);

@@ -18,7 +18,7 @@
 .riso-dropdown__trigger {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--riso-space-2);
 	font-family: var(--riso-font);
 	font-weight: var(--riso-font-weight-medium);
 	background: var(--riso-paper);
@@ -109,15 +109,15 @@
 }
 .riso-dropdown[data-size='sm'] .riso-dropdown__item {
 	font-size: var(--riso-size-xs-text);
-	padding: 0.4rem 0.8rem;
+	padding: var(--riso-space-2) var(--riso-space-3);
 }
 .riso-dropdown[data-size='md'] .riso-dropdown__item {
 	font-size: var(--riso-size-sm-text);
-	padding: 0.55rem 1rem;
+	padding: var(--riso-space-2) var(--riso-space-4);
 }
 .riso-dropdown[data-size='lg'] .riso-dropdown__item {
 	font-size: var(--riso-size-md-text);
-	padding: 0.7rem 1.2rem;
+	padding: var(--riso-space-3) var(--riso-space-5);
 }
 .riso-dropdown__item:hover,
 .riso-dropdown__item:focus-visible {

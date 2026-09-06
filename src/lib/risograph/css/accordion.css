@@ -56,8 +56,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
-	padding: 0.75rem 1rem;
+	gap: var(--riso-space-4);
+	padding: var(--riso-space-3) var(--riso-space-4);
 	cursor: pointer;
 	font-weight: var(--riso-font-weight-semibold);
 	user-select: none;
@@ -101,7 +101,7 @@
 }
 
 .riso-accordion__panel {
-	padding: 1rem;
+	padding: var(--riso-space-4);
 	border-top: var(--riso-border);
 	font-weight: var(--riso-font-weight-regular);
 	line-height: 1.5;

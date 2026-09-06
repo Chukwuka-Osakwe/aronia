@@ -16,7 +16,7 @@
 	z-index: 1000;
 	display: flex;
 	flex-direction: column;
-	gap: 0.75rem;
+	gap: var(--riso-space-3);
 	width: min(24rem, calc(100vw - 2.5rem));
 	/* Let clicks fall through the empty gaps; the toasts themselves opt back in. */
 	pointer-events: none;
@@ -33,7 +33,7 @@
    reserve room on the right so the message never runs under the ×. */
 .riso-toast .riso-alert {
 	align-items: center;
-	padding-right: 2.5rem;
+	padding-right: 2.5rem; /* close-button clearance, not a rhythm rung */
 }
 /* Opacity-only entry — the toast "prints" into place, no translate. */
 @keyframes riso-toast-in {

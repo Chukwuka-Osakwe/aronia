@@ -13,7 +13,7 @@
 .riso-skeleton--text {
 	display: flex;
 	flex-direction: column;
-	gap: 0.6rem;
+	gap: var(--riso-space-2);
 	/* Concrete default width (not 100%) so it has intrinsic size when standalone
 	   — e.g. the docs' shrink-to-content stage, where 100% collapses to zero.
 	   Overridable via the `width` prop; caps at the container. */

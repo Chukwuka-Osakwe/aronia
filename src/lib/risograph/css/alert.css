@@ -64,18 +64,18 @@
 /* size scale — one font-size + padding/gap per step; icon & title follow via em */
 .riso-alert[data-size='sm'] {
 	font-size: var(--riso-size-sm-text);
-	gap: 0.625rem;
-	padding: 0.75rem 1rem;
+	gap: var(--riso-space-2);
+	padding: var(--riso-space-3) var(--riso-space-4);
 }
 .riso-alert[data-size='md'] {
 	font-size: var(--riso-size-md-text);
-	gap: 0.75rem;
-	padding: 1rem 1.25rem;
+	gap: var(--riso-space-3);
+	padding: var(--riso-space-4) var(--riso-space-5);
 }
 .riso-alert[data-size='lg'] {
 	font-size: var(--riso-size-lg-text);
-	gap: 0.875rem;
-	padding: 1.25rem 1.5rem;
+	gap: var(--riso-space-4);
+	padding: var(--riso-space-5) var(--riso-space-6);
 }
 
 /* The container centres the icon vertically (align-items: center), so the box is
@@ -93,7 +93,7 @@
 }
 
 .riso-alert__title {
-	margin: 0 0 0.2rem;
+	margin: 0 0 var(--riso-space-1);
 	font-size: 1.05em;
 	font-weight: var(--riso-font-weight-bold);
 	color: var(--_ink);

@@ -16,7 +16,7 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--riso-space-2);
 	cursor: pointer;
 	font-family: var(--riso-font);
 	font-weight: var(--riso-font-weight-regular);

@@ -22,14 +22,14 @@
 .riso-tabs__list {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin-bottom: 0.75rem;
+	gap: var(--riso-space-2);
+	margin-bottom: var(--riso-space-3);
 }
 .riso-tabs__tab {
 	font-family: var(--riso-font);
 	font-weight: var(--riso-font-weight-medium);
 	font-size: var(--riso-size-md-text);
-	padding: 0.5rem 1rem;
+	padding: var(--riso-space-2) var(--riso-space-4);
 	background: transparent;
 	color: var(--riso-ink);
 	border: none;
@@ -60,7 +60,7 @@
 	min-width: 100%;
 	border: var(--riso-border);
 	border-radius: var(--riso-radius);
-	padding: 1.5rem;
+	padding: var(--riso-space-6);
 	font-family: var(--riso-font);
 	font-weight: var(--riso-font-weight-regular);
 	line-height: 1.5;

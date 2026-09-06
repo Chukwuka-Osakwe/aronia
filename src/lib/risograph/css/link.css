@@ -45,7 +45,7 @@
 /* nav — colour-only state, constant weight → zero reflow. */
 .riso-link[data-variant='nav'] {
 	display: inline-block;
-	padding: 0.3rem 0.5rem;
+	padding: var(--riso-space-1) var(--riso-space-2);
 	font-size: var(--riso-size-sm-text);
 	font-weight: var(--riso-font-weight-medium);
 	color: var(--riso-ink-soft);

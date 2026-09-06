@@ -17,7 +17,7 @@
 	display: flex;
 	width: 100%;
 	flex-direction: column;
-	gap: 0.375rem;
+	gap: var(--riso-space-2);
 	font-family: var(--riso-font);
 	color: var(--riso-ink);
 }

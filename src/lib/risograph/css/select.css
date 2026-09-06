@@ -72,7 +72,7 @@
 	min-width: 12rem;
 }
 .riso-select__field[data-size] {
-	padding-right: 2.75rem;
+	padding-right: 2.75rem; /* chevron clearance, not a rhythm rung */
 }
 
 .riso-select__chevron {

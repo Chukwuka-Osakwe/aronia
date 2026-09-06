@@ -71,17 +71,17 @@
    printed label bar, not a ruled strip. Kept compact, but its horizontal padding
    matches the body so the label aligns with the body text below. */
 .riso-card__header {
-	padding: 0.875rem 1.5rem;
+	padding: var(--riso-space-3) var(--riso-space-6);
 	background: var(--riso-blue-fill);
 	color: var(--riso-on-spot); /* constant blue masthead → constant paper-tone text */
 }
 /* Footer is button-aware like the Modal's: the roomier band rhythm, with actions
    gapped and right-aligned by default; data-footer-align switches the arrangement. */
 .riso-card__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--riso-space-5) var(--riso-space-6);
 	border-top: var(--riso-border-width) solid var(--_divider);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--riso-space-3);
 	justify-content: flex-end;
 }
 .riso-card__footer[data-footer-align='center'] {
@@ -94,7 +94,7 @@
 	justify-content: space-between;
 }
 .riso-card__body {
-	padding: 1.5rem;
+	padding: var(--riso-space-6);
 	font-weight: var(--riso-font-weight-regular);
 	line-height: 1.55;
 }
