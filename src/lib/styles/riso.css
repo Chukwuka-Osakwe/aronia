@@ -143,6 +143,21 @@
   --riso-size-lg-text: 1.125rem;
   --riso-size-title: 1.375rem;
 
+  /* spacing scale — the shared 4px ramp (Tailwind keys) materialized as tokens.
+     Values are IDENTICAL across all four families on purpose: spacing is structural
+     rhythm, not style identity. Per-family density comes from which step a component
+     reaches for, never from redefining a step. Mirrors the composition.spacing guidance. */
+  --riso-space-1: 0.25rem; /* 4 */
+  --riso-space-2: 0.5rem; /* 8 */
+  --riso-space-3: 0.75rem; /* 12 */
+  --riso-space-4: 1rem; /* 16 */
+  --riso-space-5: 1.25rem; /* 20 */
+  --riso-space-6: 1.5rem; /* 24 */
+  --riso-space-8: 2rem; /* 32 */
+  --riso-space-12: 3rem; /* 48 */
+  --riso-space-16: 4rem; /* 64 */
+  --riso-space-24: 6rem; /* 96 */
+
   /* type — Space Grotesk display + Space Mono for the uppercase print labels. */
   --riso-font: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
   --riso-font-mono: 'Space Mono', 'SFMono-Regular', ui-monospace, monospace;

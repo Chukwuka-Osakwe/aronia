@@ -93,6 +93,21 @@
   --swiss-size-lg-text: 1.125rem; /* 18px */
   --swiss-size-title: 1.375rem; /* 22px */
 
+  /* spacing scale — the shared 4px ramp (Tailwind keys) materialized as tokens.
+     Values are IDENTICAL across all four families on purpose: spacing is structural
+     rhythm, not style identity. Per-family density comes from which step a component
+     reaches for, never from redefining a step. Mirrors the composition.spacing guidance. */
+  --swiss-space-1: 0.25rem; /* 4 */
+  --swiss-space-2: 0.5rem; /* 8 */
+  --swiss-space-3: 0.75rem; /* 12 */
+  --swiss-space-4: 1rem; /* 16 */
+  --swiss-space-5: 1.25rem; /* 20 */
+  --swiss-space-6: 1.5rem; /* 24 */
+  --swiss-space-8: 2rem; /* 32 */
+  --swiss-space-12: 3rem; /* 48 */
+  --swiss-space-16: 4rem; /* 64 */
+  --swiss-space-24: 6rem; /* 96 */
+
   /* type — the true Swiss face via the system Helvetica/Arial stack. Hierarchy
      comes from WEIGHT, so a full weight scale (not multiple families). */
   --swiss-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
