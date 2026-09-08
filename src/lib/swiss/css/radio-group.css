@@ -13,7 +13,7 @@
 .swiss-radio {
 	display: inline-flex;
 	flex-direction: column;
-	gap: 0.625rem;
+	gap: var(--swiss-space-3);
 }
 .swiss-radio[data-disabled='true'] {
 	opacity: 0.55;
@@ -24,7 +24,7 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--swiss-space-2);
 	cursor: pointer;
 	font-family: var(--swiss-font);
 	font-weight: var(--swiss-font-weight-regular);

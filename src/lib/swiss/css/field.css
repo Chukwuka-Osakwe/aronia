@@ -16,7 +16,7 @@
 	display: flex;
 	width: 100%;
 	flex-direction: column;
-	gap: 0.375rem;
+	gap: var(--swiss-space-2);
 	font-family: var(--swiss-font);
 	color: var(--swiss-ink);
 }

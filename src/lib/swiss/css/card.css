@@ -47,7 +47,7 @@
 /* Regions share the Modal's roomier rhythm — the two are sibling panels. */
 .swiss-card__header,
 .swiss-card__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--swiss-space-5) var(--swiss-space-6);
 	font-weight: var(--swiss-font-weight-semibold);
 }
 .swiss-card__header {
@@ -58,7 +58,7 @@
 .swiss-card__footer {
 	border-top: var(--swiss-border-width) solid var(--_divider);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--swiss-space-3);
 	justify-content: flex-end;
 }
 .swiss-card__footer[data-footer-align='center'] {
@@ -71,7 +71,7 @@
 	justify-content: space-between;
 }
 .swiss-card__body {
-	padding: 1.5rem;
+	padding: var(--swiss-space-6);
 	font-weight: var(--swiss-font-weight-regular);
 	line-height: 1.5;
 }

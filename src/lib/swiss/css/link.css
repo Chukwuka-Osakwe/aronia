@@ -47,7 +47,7 @@
    persistent underline (+ aria-current). Constant weight → zero reflow. */
 .swiss-link[data-variant='nav'] {
 	display: inline-block;
-	padding: 0.3rem 0.5rem;
+	padding: var(--swiss-space-1) var(--swiss-space-2);
 	font-size: var(--swiss-size-sm-text);
 	font-weight: var(--swiss-font-weight-medium);
 	color: var(--swiss-ink-soft);

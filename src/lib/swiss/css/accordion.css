@@ -39,8 +39,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
-	padding: 0.75rem 1rem;
+	gap: var(--swiss-space-4);
+	padding: var(--swiss-space-3) var(--swiss-space-4);
 	cursor: pointer;
 	font-weight: var(--swiss-font-weight-semibold);
 	user-select: none;
@@ -83,7 +83,7 @@
 }
 
 .swiss-accordion__panel {
-	padding: 1rem;
+	padding: var(--swiss-space-4);
 	border-top: var(--swiss-border);
 	font-weight: var(--swiss-font-weight-regular);
 	line-height: 1.5;
