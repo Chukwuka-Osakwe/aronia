@@ -40,7 +40,7 @@
    the card's bottom/right borders. */
 .nb-card__header,
 .nb-card__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--nb-space-5) var(--nb-space-6);
 	font-weight: var(--nb-font-weight);
 }
 .nb-card__header {
@@ -51,7 +51,7 @@
 .nb-card__footer {
 	border-top: var(--nb-border);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--nb-space-3);
 	justify-content: flex-end;
 }
 .nb-card__footer[data-footer-align='center'] {
@@ -64,7 +64,7 @@
 	justify-content: space-between;
 }
 .nb-card__body {
-	padding: 1.5rem;
+	padding: var(--nb-space-6);
 	font-weight: var(--nb-font-weight-regular);
 	line-height: 1.45;
 }

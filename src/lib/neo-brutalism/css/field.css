@@ -12,7 +12,7 @@
 	display: flex;
 	width: 100%;
 	flex-direction: column;
-	gap: 0.5rem;
+	gap: var(--nb-space-2);
 	font-family: var(--nb-font);
 	color: var(--nb-ink);
 }

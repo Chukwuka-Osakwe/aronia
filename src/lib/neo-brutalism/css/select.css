@@ -65,7 +65,7 @@
 	min-width: 12rem;
 }
 .nb-select__field[data-size] {
-	padding-right: 2.75rem;
+	padding-right: 2.75rem; /* chevron clearance, not a rhythm rung */
 }
 
 .nb-select__chevron {

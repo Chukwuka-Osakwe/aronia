@@ -14,7 +14,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	line-height: 1;
-	padding: 0.3rem 0.5rem;
+	padding: var(--nb-space-1) var(--nb-space-2);
 	color: var(--nb-ink);
 	background: var(--nb-paper);
 	border: 2px solid var(--nb-ink);

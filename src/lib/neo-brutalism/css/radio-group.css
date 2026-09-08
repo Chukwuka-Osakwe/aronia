@@ -8,7 +8,7 @@
 .nb-radio {
 	display: inline-flex;
 	flex-direction: column;
-	gap: 0.75rem;
+	gap: var(--nb-space-3);
 }
 .nb-radio[data-disabled='true'] {
 	opacity: 0.6;
@@ -19,7 +19,7 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.625rem;
+	gap: var(--nb-space-2);
 	cursor: pointer;
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight);
