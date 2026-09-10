@@ -11,7 +11,7 @@
 .glass-dropdown__trigger {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--glass-space-2);
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight);
 	background: var(--glass-primary);
@@ -120,15 +120,15 @@
 }
 .glass-dropdown[data-size='sm'] .glass-dropdown__item {
 	font-size: var(--glass-size-xs-text);
-	padding: 0.4rem 0.8rem;
+	padding: var(--glass-space-2) var(--glass-space-3);
 }
 .glass-dropdown[data-size='md'] .glass-dropdown__item {
 	font-size: var(--glass-size-sm-text);
-	padding: 0.55rem 1rem;
+	padding: var(--glass-space-2) var(--glass-space-4);
 }
 .glass-dropdown[data-size='lg'] .glass-dropdown__item {
 	font-size: var(--glass-size-md-text);
-	padding: 0.7rem 1.2rem;
+	padding: var(--glass-space-3) var(--glass-space-5);
 }
 .glass-dropdown__item:hover,
 .glass-dropdown__item:focus-visible {

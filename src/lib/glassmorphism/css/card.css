@@ -42,7 +42,7 @@
 /* Regions share the Modal's roomier rhythm — the two are sibling panels. */
 .glass-card__header,
 .glass-card__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--glass-space-5) var(--glass-space-6);
 	font-weight: var(--glass-font-weight);
 }
 .glass-card__header {
@@ -53,7 +53,7 @@
 .glass-card__footer {
 	border-top: var(--glass-divider);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--glass-space-3);
 	justify-content: flex-end;
 }
 .glass-card__footer[data-footer-align='center'] {
@@ -66,7 +66,7 @@
 	justify-content: space-between;
 }
 .glass-card__body {
-	padding: 1.5rem;
+	padding: var(--glass-space-6);
 	font-weight: var(--glass-font-weight-regular);
 	line-height: 1.5;
 }

@@ -44,7 +44,7 @@
    persistent underline (+ aria-current). Constant weight → zero reflow. */
 .glass-link[data-variant='nav'] {
 	display: inline-block;
-	padding: 0.3rem 0.55rem;
+	padding: var(--glass-space-1) var(--glass-space-2);
 	font-size: var(--glass-size-sm-text);
 	font-weight: var(--glass-font-weight-medium);
 	border-radius: var(--glass-radius-sm);

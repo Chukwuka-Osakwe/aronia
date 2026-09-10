@@ -71,7 +71,7 @@
 }
 /* reserve room for the chevron */
 .glass-select__field[data-size] {
-	padding-right: 2.75rem;
+	padding-right: 2.75rem; /* chevron clearance, not a rhythm rung */
 }
 
 .glass-select__chevron {

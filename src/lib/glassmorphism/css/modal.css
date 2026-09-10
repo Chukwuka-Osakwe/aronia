@@ -100,26 +100,26 @@
 }
 
 .glass-modal__header {
-	padding: 1.25rem 3rem 1.25rem 1.5rem; /* right room for the close button */
+	padding: var(--glass-space-5) 3rem var(--glass-space-5) var(--glass-space-6); /* 3rem right = close-button clearance, not a rhythm rung */
 	border-bottom: var(--glass-divider);
 	font-size: var(--glass-size-title);
 	font-weight: var(--glass-font-weight);
 }
 .glass-modal__body {
-	padding: 1.5rem;
+	padding: var(--glass-space-6);
 	font-weight: var(--glass-font-weight-regular);
 	line-height: 1.5;
 }
 /* With no header, the close button floats over the body's top-right — give the
    body top clearance so its first line drops below the button. */
 .glass-modal[data-has-header='false'] .glass-modal__body {
-	padding-top: 3rem;
+	padding-top: 3rem; /* close-button clearance, not a rhythm rung */
 }
 .glass-modal__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--glass-space-5) var(--glass-space-6);
 	border-top: var(--glass-divider);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--glass-space-3);
 	justify-content: flex-end;
 }
 

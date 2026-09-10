@@ -14,7 +14,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	line-height: 1;
-	padding: 0.3rem 0.65rem;
+	padding: var(--glass-space-1) var(--glass-space-2);
 	color: #fff;
 	background: var(--glass-primary);
 	-webkit-backdrop-filter: blur(var(--glass-blur));

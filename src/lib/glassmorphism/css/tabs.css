@@ -14,14 +14,14 @@
 .glass-tabs__list {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin-bottom: 0.75rem;
+	gap: var(--glass-space-2);
+	margin-bottom: var(--glass-space-3);
 }
 .glass-tabs__tab {
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight);
 	font-size: var(--glass-size-md-text);
-	padding: 0.5rem 1rem;
+	padding: var(--glass-space-2) var(--glass-space-4);
 	background: var(--glass-surface);
 	-webkit-backdrop-filter: blur(var(--glass-blur));
 	backdrop-filter: blur(var(--glass-blur));
@@ -62,7 +62,7 @@
 	border: var(--glass-border);
 	border-radius: var(--glass-radius);
 	box-shadow: var(--glass-shadow), var(--glass-highlight);
-	padding: 1.5rem;
+	padding: var(--glass-space-6);
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight-regular);
 	line-height: 1.5;
