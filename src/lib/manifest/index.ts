@@ -11,6 +11,6 @@ import { risograph } from '../risograph/manifest.js';
 export * from './schema.js';
 
 export const manifest: Manifest = {
-	version: '0.4.0',
+	version: '0.5.0',
 	styles: [neoBrutalism, glassmorphism, swiss, risograph]
 };
