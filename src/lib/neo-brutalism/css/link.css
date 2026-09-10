@@ -44,7 +44,7 @@
    a persistent underline (+ aria-current). Constant weight → zero reflow. */
 .nb-link[data-variant='nav'] {
 	display: inline-block;
-	padding: 0.3rem 0.5rem;
+	padding: var(--nb-space-1) var(--nb-space-2);
 	font-size: var(--nb-size-sm-text);
 	font-weight: var(--nb-font-weight-medium);
 }

@@ -1,0 +1,45 @@
+/* Risograph — Badge (Layer 2: the style)
+ *
+ * A small uppercase MONO print label — the ink-swatch caption. Bold 2px ink
+ * border, blocky. Neutral (outline) is the default; solid/muted/accent step up,
+ * accent being the fluoro pop.
+ */
+
+.riso-badge {
+	display: inline-flex;
+	align-items: center;
+	font-family: var(--riso-font-mono);
+	font-weight: var(--riso-font-weight-bold);
+	font-size: var(--riso-size-xs-text);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	line-height: 1;
+	padding: var(--riso-space-1) var(--riso-space-2);
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	white-space: nowrap;
+}
+
+.riso-badge[data-variant='neutral'] {
+	background: var(--riso-paper);
+}
+.riso-badge[data-variant='solid'] {
+	background: var(--riso-ink);
+	color: var(--riso-on-ink);
+	border-color: var(--riso-ink);
+}
+.riso-badge[data-variant='muted'] {
+	background: var(--riso-muted);
+}
+.riso-badge[data-variant='accent'] {
+	background: var(--riso-accent);
+	color: var(--riso-accent-ink);
+	border-color: var(--riso-ink);
+}
+
+/* shape — square (default) or a fully rounded pill. */
+.riso-badge[data-shape='pill'] {
+	border-radius: var(--riso-radius-pill);
+}

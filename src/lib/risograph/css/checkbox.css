@@ -1,0 +1,117 @@
+/* Risograph — Checkbox (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-checkbox` + `[data-*]` attributes —
+ * the framework-agnostic design language for Checkbox. Depends only on the
+ * Layer-1 tokens (styles/riso.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * Restrained + monochrome: the checked state is a plum-indigo INK printed field
+ * with a paper-tone tick, not the fluoro accent — the accent stays reserved for
+ * one primary emphasis per view, and forms often stack many checkboxes. The
+ * filled box carries the faint grain tooth (like Button), so it reads as printed
+ * ink, not a flat block. Hard 0px box, ink hairline.
+ */
+
+.riso-checkbox {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--riso-space-2);
+	cursor: pointer;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-regular);
+	color: var(--riso-ink);
+}
+/* Size scale — box + tick dimensions per step, on the shared text scale. */
+.riso-checkbox[data-size='sm'] {
+	--_box: 18px;
+	--_tick: 12px;
+	font-size: var(--riso-size-sm-text);
+}
+.riso-checkbox[data-size='md'] {
+	--_box: 20px;
+	--_tick: 14px;
+	font-size: var(--riso-size-md-text);
+}
+.riso-checkbox[data-size='lg'] {
+	--_box: 24px;
+	--_tick: 16px;
+	font-size: var(--riso-size-lg-text);
+}
+/* Disabled — dim the whole control. */
+.riso-checkbox[data-disabled='true'] {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+/* Native input kept present & focusable (NOT display:none) but visually hidden;
+   the styled box mirrors its state. */
+.riso-checkbox__input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+}
+
+.riso-checkbox__box {
+	position: relative;
+	isolation: isolate;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+	width: var(--_box);
+	height: var(--_box);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	transition: var(--riso-transition);
+	overflow: hidden;
+}
+.riso-checkbox[data-checked='true'] .riso-checkbox__box {
+	background: var(--riso-ink);
+	border-color: var(--riso-ink);
+}
+/* Grain tooth over the filled box — the paper texture that reads as print. Only
+   shows once the box is the ink field (hidden by default over paper). */
+.riso-checkbox__box::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0;
+	pointer-events: none;
+	z-index: -1;
+}
+.riso-checkbox[data-checked='true'] .riso-checkbox__box::after {
+	opacity: 0.2;
+}
+
+/* Focus ring on the box — the family's fluoro accent outline (offset), real
+   keyboard focus or docs-forced via data-state. */
+.riso-checkbox__input:focus-visible + .riso-checkbox__box,
+.riso-checkbox[data-state='focus'] .riso-checkbox__box {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+/* The tick: hidden until checked, paper-tone on the ink fill. */
+.riso-checkbox__check {
+	width: var(--_tick);
+	height: var(--_tick);
+	color: var(--riso-on-ink);
+	opacity: 0;
+}
+.riso-checkbox[data-checked='true'] .riso-checkbox__check {
+	opacity: 1;
+}
+
+/* shape — square (default) or fully round (a circular box). */
+.riso-checkbox[data-shape='pill'] .riso-checkbox__box {
+	border-radius: var(--riso-radius-pill);
+}

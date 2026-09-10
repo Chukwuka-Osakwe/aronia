@@ -1,0 +1,100 @@
+/* Risograph — Card (Layer 2: the style)
+ *
+ * A printed panel: warm paper ground with a FAINT multiply-blended grain tooth,
+ * a thin ink hairline, blocky corners — and NO offset, NO drop shadow (that was
+ * the neo tell). The header is a printed spot-ink band; grain is the load-bearing
+ * identity that separates this from a flat neo/swiss panel.
+ */
+
+.riso-card {
+	--_divider: var(--riso-ink);
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	display: flex;
+	flex-direction: column;
+	background: var(--riso-paper);
+	color: var(--riso-ink);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	font-family: var(--riso-font);
+	overflow: hidden;
+	/* Caps long-form content at a readable measure (matches Modal). Only an upper
+	   bound — the card still shrinks to fill narrower parents. Override per
+	   instance with style="--riso-card-max-width: 40rem", or set `none` to fill. */
+	max-width: var(--riso-card-max-width, 32rem);
+}
+
+/* The paper tooth — SVG grain, multiply-blended, faint, non-interactive. */
+.riso-card::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.riso-card[data-variant='muted'] {
+	background: var(--riso-muted);
+}
+/* Inverted ink panel — paper-tone text; grain drops to a lighter blend. */
+.riso-card[data-variant='ink'] {
+	--_divider: rgba(245, 240, 232, 0.24);
+	/* On this dark plum ground a ghost button's tuned hover would vanish; swap it
+	   for a faint on-ink tint (cascades to the footer's ghost actions). */
+	--riso-ghost-hover-bg: color-mix(in srgb, var(--riso-on-ink) 14%, transparent);
+	background: var(--riso-ink);
+	color: var(--riso-on-ink);
+	border-color: var(--riso-ink);
+}
+.riso-card[data-variant='ink']::after {
+	/* Inverse surface: the ink card is dark on the light theme (tooth screens) and
+	   light paper on dark (tooth multiplies) — the opposite blend of the page. */
+	mix-blend-mode: var(--riso-grain-blend-inv);
+	opacity: 0.12;
+}
+
+.riso-card__header,
+.riso-card__footer {
+	position: relative;
+	z-index: 1; /* above the grain layer */
+	font-family: var(--riso-font-mono);
+	font-weight: var(--riso-font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-size: var(--riso-size-sm-text);
+}
+/* The header is a printed spot-ink masthead band (paper-tone text on blue) — a
+   printed label bar, not a ruled strip. Kept compact, but its horizontal padding
+   matches the body so the label aligns with the body text below. */
+.riso-card__header {
+	padding: var(--riso-space-3) var(--riso-space-6);
+	background: var(--riso-blue-fill);
+	color: var(--riso-on-spot); /* constant blue masthead → constant paper-tone text */
+}
+/* Footer is button-aware like the Modal's: the roomier band rhythm, with actions
+   gapped and right-aligned by default; data-footer-align switches the arrangement. */
+.riso-card__footer {
+	padding: var(--riso-space-5) var(--riso-space-6);
+	border-top: var(--riso-border-width) solid var(--_divider);
+	display: flex;
+	gap: var(--riso-space-3);
+	justify-content: flex-end;
+}
+.riso-card__footer[data-footer-align='center'] {
+	justify-content: center;
+}
+.riso-card__footer[data-footer-align='start'] {
+	justify-content: flex-start;
+}
+.riso-card__footer[data-footer-align='between'] {
+	justify-content: space-between;
+}
+.riso-card__body {
+	padding: var(--riso-space-6);
+	font-weight: var(--riso-font-weight-regular);
+	line-height: 1.55;
+}

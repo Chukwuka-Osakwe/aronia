@@ -2,14 +2,15 @@
 
 > An agent-friendly design language delivered shadcn-style: `npx aronia add` copies real component source (tokens, styles, a thin framework skin) plus a machine-readable manifest into a project's repo. Point an agent at the manifest and it can use every component correctly from the schema alone.
 
-Three design-language families, 20 components each: `neo-brutalism` (bold, high-contrast, hard shadows), `glassmorphism` (frosted, layered — needs a non-uniform backdrop), and `swiss` (clean, grid-driven minimalism, a single hazard-orange accent). A component's contract is the same across frameworks; only a ~30-line skin differs, selected via `--framework react|svelte|html`.
+Four design-language families, 20 components each: `neo-brutalism` (bold, high-contrast, hard shadows), `glassmorphism` (frosted, layered — needs a non-uniform backdrop), `swiss` (clean, grid-driven minimalism, a single hazard-orange accent), and `risograph` (warm risograph print — paper ground, plum-indigo ink, spot red/blue with a fluoro-pink accent, grain and overprint texture, sharp corners, no shadows). A component's contract is the same across frameworks; only a ~30-line skin differs, selected via `--framework react|svelte|html`. Every family also ships an opt-in dark theme — set `data-theme="dark"` (or `"auto"` to follow the OS) on any subtree; light is the default (aronia never flips a page on the end-user's OS).
 
 ## Registry
 
-- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document — each style also carries `principles` (how to compose tastefully in that design language), `avoid` (anti-patterns), and `composition` (page-level type scale, spacing ramp, breakpoints, container, and media treatment)
+- [Full manifest](/manifest.json): every style, component, prop, enum, and behaviour in one document — each style also carries `principles` (how to compose tastefully in that design language), `avoid` (anti-patterns), `composition` (page-level type scale, spacing ramp, breakpoints, container, and media treatment), and `fontGuidance` (how to swap the family's typeface without dissolving its character)
 - [Neo-Brutalism manifest](/neo-brutalism/manifest.json): the neo-brutalism family only
 - [Glassmorphism manifest](/glassmorphism/manifest.json): the glassmorphism family only
 - [Swiss manifest](/swiss/manifest.json): the swiss family only
+- [Risograph manifest](/risograph/manifest.json): the risograph family only
 - [Registry index](/r/index.json): every per-component item and the frameworks it ships
 - Per-component item — `/r/{style}/{component}.json`: embeds the prop spec, tokens, component CSS, and every framework skin
 

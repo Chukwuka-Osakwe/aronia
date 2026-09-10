@@ -1,0 +1,87 @@
+/* Risograph — Select (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-select` + `[data-*]` attributes — the
+ * framework-agnostic design language for Select. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * Input's field language (paper ground, ink hairline, 0px corners, fluoro accent
+ * focus ring with a blue border nudge) with the native arrow stripped and a
+ * custom plum-indigo ink chevron overlaid. The entry surface stays clean.
+ */
+
+.riso-select {
+	position: relative;
+	display: inline-block;
+}
+.riso-select[data-disabled='true'] {
+	cursor: not-allowed;
+}
+
+.riso-select__field {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 100%;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	cursor: pointer;
+	transition: var(--riso-transition);
+}
+.riso-select__field:disabled {
+	background: var(--riso-muted);
+	color: var(--riso-ink-soft);
+	border-color: var(--riso-line);
+	cursor: not-allowed;
+}
+
+/* Focus: the family's fluoro accent ring (offset) + the colour-only blue border
+   nudge, exactly like Input. */
+.riso-select__field:focus,
+.riso-select[data-state='focus'] .riso-select__field {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+	border-color: var(--riso-blue);
+}
+
+/* Invalid: a Field with `error` set wires `aria-invalid` onto the native select —
+   danger border off that semantic hook (matches Input). `:not(:disabled)` keeps
+   it above focus. */
+.riso-select__field[aria-invalid='true']:not(:disabled) {
+	border-color: var(--riso-danger-ink);
+}
+
+/* Shared control size scale for text + padding; a trailing rule (same
+   specificity, later source order) reserves room for the chevron on the right. */
+.riso-select__field[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+	min-width: 8rem;
+}
+.riso-select__field[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+	min-width: 10rem;
+}
+.riso-select__field[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+	min-width: 12rem;
+}
+.riso-select__field[data-size] {
+	padding-right: 2.75rem; /* chevron clearance, not a rhythm rung */
+}
+
+.riso-select__chevron {
+	position: absolute;
+	top: 50%;
+	right: 0.9rem;
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+	color: var(--riso-ink);
+	pointer-events: none;
+}

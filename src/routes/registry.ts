@@ -1,5 +1,5 @@
 import type { Component } from 'svelte';
-import { neoBrutalism, glassmorphism, swiss } from '$lib/index.js';
+import { neoBrutalism, glassmorphism, swiss, risograph } from '$lib/index.js';
 import type { AlertVariant } from '$lib/neo-brutalism/options.js';
 
 // Maps manifest ids → the actual Svelte components. Kept OUT of the manifest so
@@ -79,6 +79,31 @@ export const registry: Record<string, Record<string, Component<any>>> = {
 		// Toaster host stands in for `toast` (imperative — Preview skips the inline
 		// instance and fires the action instead; the app root mounts it).
 		toast: swiss.Toaster
+	},
+	// Risograph — PREVIEW slice (Button/Link/Card/Badge; no Toaster yet).
+	risograph: {
+		button: risograph.Button,
+		link: risograph.Link,
+		card: risograph.Card,
+		badge: risograph.Badge,
+		input: risograph.Input,
+		textarea: risograph.Textarea,
+		field: risograph.Field,
+		checkbox: risograph.Checkbox,
+		'radio-group': risograph.RadioGroup,
+		toggle: risograph.Toggle,
+		select: risograph.Select,
+		alert: risograph.Alert,
+		spinner: risograph.Spinner,
+		progress: risograph.Progress,
+		skeleton: risograph.Skeleton,
+		tabs: risograph.Tabs,
+		accordion: risograph.Accordion,
+		modal: risograph.Modal,
+		'dropdown-menu': risograph.DropdownMenu,
+		// The Toaster host stands in for `toast` — the docs never render it inline
+		// (Preview skips the instance for action-triggers); the app root mounts it.
+		toast: risograph.Toaster
 	}
 };
 
@@ -108,6 +133,14 @@ export const triggerActions: Record<
 	swiss: {
 		toast: (a) =>
 			swiss.toast(a.message || 'Notification', {
+				variant: a.variant as AlertVariant,
+				duration:
+					typeof a.duration === 'number' && Number.isFinite(a.duration) ? a.duration : undefined
+			})
+	},
+	risograph: {
+		toast: (a) =>
+			risograph.toast(a.message || 'Notification', {
 				variant: a.variant as AlertVariant,
 				duration:
 					typeof a.duration === 'number' && Number.isFinite(a.duration) ? a.duration : undefined

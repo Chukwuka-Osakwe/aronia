@@ -20,10 +20,14 @@ build or edit UI:
    for every component that's been added — its style class, `data-*` attributes,
    files, and full prop spec. Match it exactly; do not invent props, values, or
    class names. It also carries each style's `principles` (how to compose in the
-   design language), `avoid` (anti-patterns), and `composition` (page-level type
-   scale, spacing ramp, breakpoints, container, and media treatment) under
-   `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
+   design language), `avoid` (anti-patterns), `composition` (page-level type
+   scale, spacing ramp, breakpoints, container, and media treatment), and
+   `fontGuidance` (how to swap the family's typeface without dissolving its
+   character) under `styles.<style>` — **follow them when laying out whole pages**, so the UI reads
    as the style, not just as a pile of its components.
+   **It's a generated file — never hand-edit or merge it** (e.g. when consolidating
+   repos); to change what it records, re-run `npx aronia add`, which regenerates
+   it. The `_generated` marker at its top says the same.
 2. **Read the real source in `aronia/<style>/`** as a worked example, and build
    new UI in the same design language — the same tokens, the same `data-*`
    conventions, the same structure. Consistency with the existing components is
@@ -34,10 +38,28 @@ build or edit UI:
 4. **Re-theme by overriding CSS custom properties** in `aronia/<style>/tokens.css`
    — never by hand-editing a component's internals. The palette is meant to be
    overridden; the structural tokens change the style's identity.
+5. **Dark mode is opt-in, via a `data-theme` attribute.** Every family ships a dark
+   theme inside the same `aronia/<style>/tokens.css` — no separate file, nothing to
+   wire; it arrives on install. Set `data-theme` on the subtree you want themed:
+   `"dark"` forces dark, `"light"` forces light, and `"auto"` follows the reader's OS
+   (`prefers-color-scheme`). With **no attribute the components stay light** — aronia
+   never flips your page on the end-user's OS setting, so going dark is always your
+   explicit choice, on the scope you pick. Under the hood it re-values the one palette
+   (`light-dark()` + `color-scheme`), so components adapt for free — don't hand-write
+   per-component dark overrides. How each family's dark mode *looks* (and what it
+   deliberately avoids) is in its `principles`/`avoid` (see item 1).
+   **The one gotcha — give a surface YOU style a theme-aware ink.** aronia's bare-text
+   rungs (a `ghost` button, an inline link) follow their surface via `color: inherit`
+   by design, so they read on an inverted card. If you place them on a surface you've
+   styled yourself, set that surface's `color: var(--<style>-ink)` — otherwise they
+   inherit whatever ambient text colour is there and can vanish against a dark ground.
+   aronia's own cards and panels already handle this; it only bites on surfaces you
+   author.
 
-The full hosted reference (whole catalog and per-component items with tokens,
-CSS, and framework skins) is `/manifest.json` and `/r/<style>/<component>.json`;
-see [`static/llms.txt`](./static/llms.txt) for the machine-readable index.
+Everything you need is local — the manifest and the real source under `aronia/`
+are the authoritative reference, and no network access is required. (The registry
+can also be self-hosted over HTTP and pulled with `aronia add --registry <url>`,
+but there's no public host today.)
 
 ## Recommended companion skills
 

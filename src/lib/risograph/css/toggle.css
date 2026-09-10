@@ -1,0 +1,118 @@
+/* Risograph — Toggle (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-toggle` + `[data-*]` attributes — the
+ * framework-agnostic design language for Toggle. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * The one form control that DOES take the fluoro accent: a toggle is a single
+ * prominent switch (not a stacked list), so its "on" state is a legitimate
+ * reserved-accent moment — the track fills fluoro pink when on. The track carries
+ * the grain tooth (a printed field, like Button); hard 0px corners, ink hairline.
+ * State rides COLOUR, but the thumb still slides — the one deliberate transform in
+ * the family (a physical switch reads wrong if the thumb teleports).
+ */
+
+.riso-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--riso-space-2);
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-regular);
+	color: var(--riso-ink);
+}
+/* Size scale — track width/height + thumb per step; the thumb auto-centres and
+   its travel derives from track-w − track-h. Smallest track is 24px tall to keep
+   the hit target within reach of WCAG 2.5.8. */
+.riso-toggle[data-size='sm'] {
+	--_track-w: 44px;
+	--_track-h: 24px;
+	--_thumb: 16px;
+	font-size: var(--riso-size-sm-text);
+}
+.riso-toggle[data-size='md'] {
+	--_track-w: 52px;
+	--_track-h: 28px;
+	--_thumb: 20px;
+	font-size: var(--riso-size-md-text);
+}
+.riso-toggle[data-size='lg'] {
+	--_track-w: 64px;
+	--_track-h: 34px;
+	--_thumb: 26px;
+	font-size: var(--riso-size-lg-text);
+}
+/* Disabled — dim as the inert cue, but keep the on/off colour: the track colour
+   IS the state, so collapsing it to grey would hide whether it's on or off. */
+.riso-toggle:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+.riso-toggle:focus-visible,
+.riso-toggle[data-state='focus'] {
+	outline: none;
+}
+
+.riso-toggle__track {
+	position: relative;
+	isolation: isolate;
+	display: inline-block;
+	width: var(--_track-w);
+	height: var(--_track-h);
+	background: var(--riso-muted);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	transition: var(--riso-transition);
+	overflow: hidden;
+}
+.riso-toggle[data-checked='true'] .riso-toggle__track {
+	background: var(--riso-accent);
+}
+/* Grain tooth over the track — the paper texture that reads as print. */
+.riso-toggle__track::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0.18;
+	pointer-events: none;
+	z-index: -1;
+}
+/* Offset accent ring — sits on the paper outside the track, so it reads even
+   over the fluoro "on" fill. */
+.riso-toggle:focus-visible .riso-toggle__track,
+.riso-toggle[data-state='focus'] .riso-toggle__track {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+.riso-toggle__thumb {
+	position: absolute;
+	/* Even inset on all sides. The track is border-box (global reset), so --_track-h
+	   INCLUDES its border; the thumb sits inside the border, so subtract both border
+	   widths before centring. The same corrected inset on left keeps the travel
+	   (track-w − track-h) symmetric at both ends. */
+	top: calc((var(--_track-h) - 2 * var(--riso-border-width) - var(--_thumb)) / 2);
+	left: calc((var(--_track-h) - 2 * var(--riso-border-width) - var(--_thumb)) / 2);
+	width: var(--_thumb);
+	height: var(--_thumb);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	transition: transform 120ms ease;
+}
+.riso-toggle[data-checked='true'] .riso-toggle__thumb {
+	transform: translateX(calc(var(--_track-w) - var(--_track-h)));
+}
+
+/* shape — square (default) or a pill track with a round thumb. */
+.riso-toggle[data-shape='pill'] .riso-toggle__track,
+.riso-toggle[data-shape='pill'] .riso-toggle__thumb {
+	border-radius: var(--riso-radius-pill);
+}

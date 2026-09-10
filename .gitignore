@@ -17,11 +17,18 @@ node_modules
 /cli/START.md
 /cli/AGENTS.md
 
+# Local-only per-style tuning labs (off-component look exploration). Never ship
+# with real code; the playground footer links to them only when present in dev.
+/src/routes/lab
+
 # Design-research reading notes (personal, never committed)
 /research
 
 # Living session-to-session open-threads log (personal, never committed)
 /OPEN_THREADS.md
+
+# General working documentation (plans, notes) — personal, never committed
+/docs
 
 # OS
 .DS_Store

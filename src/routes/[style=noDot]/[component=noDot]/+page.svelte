@@ -31,10 +31,18 @@
 	// prop values; `slots` holds snippet state (editable `children` text + boolean
 	// toggles for icon/header/footer). Both are re-seeded whenever the component
 	// changes (effect keeps `spec` inside a closure, which is what Svelte wants).
+	// A real, real-length paragraph for eyeballing text-bearing components — a short
+	// placeholder hides how they wrap, grow, and stack. Reused by the Card & Modal
+	// bodies and the Textarea value. Kept deliberately (see the Card width work).
+	const HONOURS_TEXT =
+		'Arsenal Football Club has won 13 league titles, a record 14 FA Cups, 2 League Cups, a record 17 FA Community Shields, the 1993–94 European Cup Winners’ Cup, and the 1969–70 Inter-Cities Fairs Cup.';
+
 	function initValues(s: ComponentSpec): Record<string, unknown> {
 		const v: Record<string, unknown> = {};
 		for (const p of s.props)
 			v[p.name] = p.default ?? (p.type === 'boolean' ? false : p.type === 'array' ? [] : '');
+		// Text-bearing controls want real content, not the empty placeholder state.
+		if (s.id === 'textarea') v.value = HONOURS_TEXT;
 		return v;
 	}
 	// Status components (Alert, Toast) track their variant with the sample copy — a
@@ -46,11 +54,21 @@
 		warning: "Careful — this action can't be undone.",
 		error: 'Something went wrong. Please try again.'
 	};
+	// Short variant-appropriate headings for Alert. A playground affordance only —
+	// the manifest keeps `title` optional (no default), so the documented API stays
+	// honest; this just makes the titled layout (and its icon/title registration)
+	// visible by default, since a title-less alert can't show it.
+	const STATUS_TITLES: Record<string, string> = {
+		info: 'Heads up',
+		success: 'Success',
+		warning: 'Careful',
+		error: 'Something went wrong'
+	};
 
 	function defaultChildren(s: ComponentSpec): string {
-		if (s.id === 'card') return 'Card body content.';
+		if (s.id === 'card') return HONOURS_TEXT;
 		if (s.id === 'badge') return 'Badge';
-		if (s.id === 'modal') return 'This is a modal dialog. Press Esc, click the backdrop, or the × to close.';
+		if (s.id === 'modal') return HONOURS_TEXT;
 		if (s.id === 'alert' || s.id === 'toast') return STATUS_MESSAGES.info;
 		return s.name; // e.g. "Button"
 	}
@@ -77,6 +95,13 @@
 	$effect(() => {
 		if (spec.id !== 'alert' && spec.id !== 'toast') return;
 		slots.children = STATUS_MESSAGES[values.variant] ?? STATUS_MESSAGES.info;
+		// Alert only — Toast is fired imperatively and has no title prop. Re-seed the
+		// title alongside the message on variant change. The guard reads `spec` (not
+		// `values.title`) on purpose: reading `values.title` here would subscribe this
+		// effect to the field, so every keystroke — including clearing it — would
+		// retrigger and clobber the edit. Keyed off the variant only, the field stays
+		// freely editable between variant switches, just like the message.
+		if (spec.id === 'alert') values.title = STATUS_TITLES[values.variant] ?? STATUS_TITLES.info;
 	});
 </script>
 
@@ -140,10 +165,25 @@
 	   neutral `--doc-card-*` contract (consumed in Preview.svelte) to its own
 	   tokens. Add one block per new style and the card follows automatically; no
 	   style is the privileged default. */
+	/* Neo: flat, hairline-bordered details-card chrome. The stage rides the family's
+	   own paper/ink tokens (not the fixed docs chrome) so it flips to off-black stock
+	   under data-theme='dark' — otherwise dark specimens would float on a white stage.
+	   In light this is visually identical to the old docs-white stage (--nb-ink #111 ==
+	   --doc-ink, --nb-paper #fff == the pane white). Neo has no soft-grey text tier, so
+	   the muted slots ride full ink (on-brand for its high-contrast palette). */
 	.workbench__main[data-style='neo-brutalism'] {
-		--doc-card-border: 1px solid var(--doc-ink);
+		color: var(--nb-ink);
+		background: var(--nb-paper);
+		--doc-card-bg: var(--nb-paper);
+		--doc-card-ink: var(--nb-ink);
+		--doc-card-muted: var(--nb-ink);
+		--doc-card-border: 1px solid var(--nb-ink);
 		--doc-card-shadow: none;
 		--doc-card-radius: 0;
+		--doc-card-hover: var(--nb-muted);
+	}
+	.workbench__main[data-style='neo-brutalism'] .desc {
+		color: var(--nb-ink);
 	}
 	/* On the glass gradient the muted grey description drops below WCAG AA (1.9–3.8:1
 	   across the gradient); dark ink clears it everywhere (6.5–13:1). */
@@ -151,6 +191,12 @@
 		color: var(--glass-ink);
 	}
 	.workbench__main[data-style='glassmorphism'] {
+		/* Establish the surface's ambient ink as the reflecting token, so the heading
+		   and any text that follows the surface (e.g. a ghost button's `color: inherit`)
+		   are theme-aware and flip with data-theme — not stuck on the fixed docs-chrome
+		   dark ink (which vanishes on the dark stage). No-op in light (--glass-ink ≈ the
+		   docs ink). */
+		color: var(--glass-ink);
 		/* Frosted card chrome... */
 		--doc-card-bg: var(--glass-surface-strong);
 		--doc-card-ink: var(--glass-ink);
@@ -168,15 +214,79 @@
 			radial-gradient(140% 140% at 50% 120%, #7dd3fc 0%, transparent 55%),
 			linear-gradient(135deg, #c4b5fd, #bae6fd);
 	}
+	/* Dark: glass has no --glass-paper to flip (its ground is the consumer's own
+	   backdrop), so the stage gradient is swapped explicitly for a DARK jewel-tone
+	   one — still busy, so the frost has something to refract on dark stock. Same
+	   :global() wrapper as riso (data-theme lives on the layout's .content). */
+	:global([data-theme='dark']) .workbench__main[data-style='glassmorphism'] {
+		background:
+			radial-gradient(120% 120% at 0% 0%, #4c1d95 0%, transparent 52%),
+			radial-gradient(120% 120% at 100% 0%, #0e4a6e 0%, transparent 52%),
+			radial-gradient(140% 140% at 50% 120%, #0f5132 0%, transparent 55%),
+			linear-gradient(135deg, #14122b, #0b0b14);
+	}
 	/* Swiss: flat, hairline-bordered card chrome — no shadow, crisp 2px corners,
-	   matching the family's own restraint. */
+	   matching the family's own restraint. The stage rides the family's own
+	   paper/ink tokens (not the fixed docs chrome) so it flips to off-black stock
+	   under data-theme='dark' — otherwise dark specimens would float on a white
+	   stage. In light this is visually identical to the old docs-white stage. */
 	.workbench__main[data-style='swiss'] {
-		--doc-card-border: 1px solid var(--doc-line);
+		color: var(--swiss-ink);
+		background: var(--swiss-paper);
+		--doc-card-bg: var(--swiss-paper);
+		--doc-card-ink: var(--swiss-ink);
+		--doc-card-muted: var(--swiss-ink-soft);
+		--doc-card-border: 1px solid var(--swiss-line);
 		--doc-card-shadow: none;
 		--doc-card-radius: 2px;
+		--doc-card-hover: var(--swiss-muted);
+	}
+	.workbench__main[data-style='swiss'] .desc {
+		color: var(--swiss-ink-soft);
+	}
+	/* Riso: the whole pane is warm paper with a multiply-blended grain tooth, and
+	   the details card wears the family's blocky ink chrome + coloured offset — so
+	   the specimens sit on print stock, not the default white. */
+	.workbench__main[data-style='risograph'] {
+		/* Establish the surface's ambient ink as the reflecting token, so text that
+		   follows the surface (e.g. a ghost button's `color: inherit`) is theme-aware
+		   and flips with data-theme — not stuck on the fixed docs-chrome ink. */
+		color: var(--riso-ink);
+		--doc-card-bg: var(--riso-paper);
+		--doc-card-ink: var(--riso-ink);
+		--doc-card-muted: var(--riso-ink-soft);
+		--doc-card-border: 1.5px solid var(--riso-ink);
+		--doc-card-shadow: none;
+		--doc-card-radius: 0;
+		--doc-card-hover: var(--riso-muted);
+		/* Stage grain layer. Light uses the shipped 0.35-baked --riso-grain; dark
+		   swaps to a gentler 0.22 tooth (below) so the screen blend doesn't lift the
+		   deep plum stock too far. Docs-stage only — not a shipped token. */
+		--stage-grain: var(--riso-grain);
+		background:
+			var(--stage-grain),
+			var(--riso-paper);
+		background-size: 120px 120px, auto;
+		/* Token-driven so the tooth flips multiply→screen on dark stock, matching
+		   the components' own grain (see --riso-grain-blend in riso.css). */
+		background-blend-mode: var(--riso-grain-blend), normal;
+	}
+	/* Dark: gentler stage tooth (0.22 vs the baked 0.35) — same feTurbulence.
+	   data-theme is set on the layout's .content, so :global keeps svelte from
+	   pruning this as an "unused" ancestor selector. */
+	:global([data-theme='dark']) .workbench__main[data-style='risograph'] {
+		--stage-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+	}
+	.workbench__main[data-style='risograph'] .desc {
+		color: var(--riso-ink-soft);
 	}
 	.workbench__side {
 		border-left: 1px solid var(--doc-ink);
+		/* The props rail is docs chrome and stays LIGHT (until a docs dark theme
+		   exists — a filed follow-up). data-theme='dark' on .content otherwise leaks
+		   color-scheme:dark into the rail, flipping native inputs' UA text colour to
+		   light → it vanishes on the light --doc-panel background. Pin it light. */
+		color-scheme: light;
 		/* Background comes from the global `.scroll-shadows` utility (panel + the
 		   dynamic edge shadows); kept out of this scoped rule so it doesn't out-
 		   specificity the utility and cancel the shadows. This rail is wider and
@@ -219,6 +329,14 @@
 	}
 	header[data-style='swiss'] h1 {
 		font-family: var(--swiss-font);
+	}
+	header[data-style='risograph'] h1 {
+		font-family: var(--riso-font);
+		/* The specimen heading adopts riso's ink (not doc-ink) so it reflects with
+		   the family in dark mode — otherwise it goes invisible once the pane paints
+		   itself from --riso-paper (dark stock). In light mode riso-ink ≈ doc-ink,
+		   so no visible change there. */
+		color: var(--riso-ink);
 	}
 	.desc {
 		font-size: 1rem; /* 16px */

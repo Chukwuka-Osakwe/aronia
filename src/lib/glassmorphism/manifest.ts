@@ -11,6 +11,7 @@ import {
 	LINK_VARIANTS,
 	SKELETON_SHAPES,
 	CARD_VARIANTS,
+	CARD_FOOTER_ALIGNS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
 	INPUT_SIZES,
@@ -18,6 +19,7 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS
 } from './options.js';
@@ -34,17 +36,30 @@ export const glassmorphism: StyleSpec = {
 		'Always place glass over a non-uniform backdrop (gradient, image, or overlapping content) — see `requires`.',
 		'Edge each surface with a subtle light rim / hairline border to suggest the thickness of glass.',
 		'Keep depth soft — diffuse low-opacity shadows and generous rounded corners; elements float on hover rather than pressing.',
-		'Use glass sparingly on key surfaces (cards, modals, nav), not the whole layout; keep text on a strong-enough tint to clear WCAG AA.'
+		'Use glass sparingly on key surfaces (cards, modals, nav), not the whole layout; keep text on a strong-enough tint to clear WCAG AA.',
+		'Dark mode is the same frosted glass over DARK stock — off-white ink on off-black, opt-in via a data-theme flag, never a second look. The signature carries: the ambient surface stays a LIGHT film (just dropped to a low opacity, so the dark backdrop shows through frosted and lifted) and KEEPS its white rim — the light catching the glass edge is what still reads as "glass", so never swap the ambient surface for a smoky dark tint (that reading loses the rim). Elevation inverts the honest way: a diffuse drop shadow barely reads on dark, so the rim carries the lift (raised = lighter on dark). The one exception is the dense OVERLAY panels (Modal, DropdownMenu) — a light film this opaque would glare, so they go dark-tinted while the white rim still frosts their edge. The vivid brand/status fills are constant and only bloom brighter on the dark stock, each still carrying its white label. Off-black not pure black, off-white not pure white — a bright ink on pure black vibrates into the generic "charcoal glass" monoculture the family exists to escape; stay in glass\'s own cool off-tones.'
 	],
 	avoid: [
 		'Frosted glass on a flat, single-colour background (it degrades to a plain card).',
 		'Low-contrast text over busy blur.',
 		'Hard offset shadows, thick opaque borders, or flat brutalist fills.',
-		'Over-using the effect everywhere — it loses impact and hurts readability and performance.'
+		'Over-using the effect everywhere — it loses impact and hurts readability and performance.',
+		'A bespoke second dark engine — a twin token set, a separate dark stylesheet, or a smoky-tinted ambient surface just for dark. Dark is the SAME tokens re-valued through the surface/ink anchors; the frost, rim, and elevation all ride the light-dark() pairs, so a component needing hand-written dark CSS is a smell. And a glaring white panel or pure-black stock on dark — the never-pure rule, and why the ambient frost stays a faint LIGHT film while only the dense overlays tint dark.'
 	],
 	requires:
-		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost`/`quiet` treatments do not.',
+		'a non-uniform backdrop — a gradient, image, or content it overlaps. Frosted surfaces refract what is behind them, so on a flat, solid fill (white or any single colour) the blur and translucency are invisible and glass degrades to a plain soft-shadowed card. The vivid `primary`/`secondary` colour fills still read on a flat fill; the frosted `surface`/`ghost` treatments do not.',
 	tokens: 'src/lib/styles/glassmorphism.css',
+	// How to swap the face while keeping glass's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A clean, modern humanist sans that stays crisp and legible over translucent, busy backdrops — open aperture, generous x-height and a fine low end (body sets at 450) so text feels light on frosted surfaces without turning brittle. Inter (shipped) is the reference.',
+		breaksOn:
+			'Anything brittle on a busy ground — ultra-geometric or high-contrast faces that shimmer over blur, a heavy or condensed voice that fights the airy feel, or a quirky display face that pulls focus off the material.',
+		examples:
+			'Geist, Manrope, IBM Plex Sans, Public Sans, Söhne, or the system-ui / SF Pro stack — and other clean humanist sans in this vein.',
+		watch:
+			'Glass loads its face from Fontsource (@import "@fontsource-variable/inter") — to swap, change that import (or add your own @font-face) AND the --glass-font family name. The --glass-font-weight-* ladder starts fine (450 body): prefer a VARIABLE face so the delicate low weights exist; a face shipping only 400/700 reads heavier than intended on the frosted surfaces.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {
@@ -82,7 +97,7 @@ export const glassmorphism: StyleSpec = {
 			props: [
 				{
 					name: 'variant',
-					description: 'Visual emphasis. `primary`/`secondary` are vivid translucent fills; `ghost`/`quiet` are bare.',
+					description: 'Visual emphasis. `primary`/`secondary` are vivid translucent fills; `muted` is a quiet filled option; `ghost` is a bare text button.',
 					type: 'enum',
 					values: BUTTON_VARIANTS,
 					default: 'primary'
@@ -176,7 +191,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Card',
 			import: 'glassmorphism.Card',
 			styleClass: 'glass-card',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'footer-align'],
 			files: {
 				style: 'src/lib/glassmorphism/css/card.css',
 				skins: {
@@ -194,6 +209,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: CARD_VARIANTS,
 					default: 'surface'
+				},
+				{
+					name: 'footerAlign',
+					description: 'How footer actions are arranged along the row.',
+					type: 'enum',
+					values: CARD_FOOTER_ALIGNS,
+					default: 'end'
 				}
 			],
 			snippets: [
@@ -244,8 +266,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/input.css',
 				skins: {
-					react: 'registry/glassmorphism/input/Input.tsx',
-					svelte: 'src/lib/glassmorphism/Input.svelte',
+					react: [
+						'registry/glassmorphism/input/Input.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Input.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/input/input.html'
 				}
 			},
@@ -337,8 +365,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/textarea.css',
 				skins: {
-					react: 'registry/glassmorphism/textarea/Textarea.tsx',
-					svelte: 'src/lib/glassmorphism/Textarea.svelte',
+					react: [
+						'registry/glassmorphism/textarea/Textarea.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Textarea.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/textarea/textarea.html'
 				}
 			},
@@ -495,8 +529,14 @@ export const glassmorphism: StyleSpec = {
 			files: {
 				style: 'src/lib/glassmorphism/css/select.css',
 				skins: {
-					react: 'registry/glassmorphism/select/Select.tsx',
-					svelte: 'src/lib/glassmorphism/Select.svelte',
+					react: [
+						'registry/glassmorphism/select/Select.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Select.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/select/select.html'
 				}
 			},
@@ -543,12 +583,18 @@ export const glassmorphism: StyleSpec = {
 			name: 'Field',
 			import: 'glassmorphism.Field',
 			styleClass: 'glass-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/glassmorphism/css/field.css',
 				skins: {
-					react: 'registry/glassmorphism/field/Field.tsx',
-					svelte: 'src/lib/glassmorphism/Field.svelte',
+					react: [
+						'registry/glassmorphism/field/Field.tsx',
+						'registry/glassmorphism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/glassmorphism/Field.svelte',
+						'src/lib/glassmorphism/field-context.ts'
+					],
 					html: 'registry/glassmorphism/field/field.html'
 				}
 			},
@@ -579,6 +625,13 @@ export const glassmorphism: StyleSpec = {
 					description: 'Shows a required mark after the label.',
 					type: 'boolean',
 					default: false
+				},
+				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
 				},
 				{
 					name: 'shape',
@@ -882,7 +935,7 @@ export const glassmorphism: StyleSpec = {
 			name: 'Dropdown Menu',
 			import: 'glassmorphism.DropdownMenu',
 			styleClass: 'glass-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/glassmorphism/css/dropdown-menu.css',
 				skins: {
@@ -900,6 +953,13 @@ export const glassmorphism: StyleSpec = {
 					type: 'enum',
 					values: INPUT_SIZES,
 					default: 'md'
+				},
+				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
 				},
 				{
 					name: 'label',

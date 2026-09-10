@@ -11,7 +11,7 @@
 .glass-dropdown__trigger {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--glass-space-2);
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight);
 	background: var(--glass-primary);
@@ -27,6 +27,10 @@
 		transform 160ms cubic-bezier(0.2, 0, 0, 1),
 		box-shadow 160ms ease,
 		background-color 160ms ease;
+}
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.glass-dropdown[data-shape='pill'] .glass-dropdown__trigger {
+	border-radius: var(--glass-radius-pill);
 }
 .glass-dropdown[data-size='sm'] .glass-dropdown__trigger {
 	font-size: var(--glass-size-sm-text);
@@ -67,8 +71,9 @@
 
 	padding: 0.35rem;
 	/* More-solid frosted surface — it floats over unknown content and holds text,
-	   so it leans opaque for reliable item contrast. */
-	background: rgba(255, 255, 255, 0.82);
+	   so it leans opaque for reliable item contrast. On dark this token goes
+	   dark-tinted (a light film this opaque would glare). */
+	background: var(--glass-surface-solid);
 	-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.2));
 	backdrop-filter: blur(calc(var(--glass-blur) * 1.2));
 	border: var(--glass-border);
@@ -115,15 +120,15 @@
 }
 .glass-dropdown[data-size='sm'] .glass-dropdown__item {
 	font-size: var(--glass-size-xs-text);
-	padding: 0.4rem 0.8rem;
+	padding: var(--glass-space-2) var(--glass-space-3);
 }
 .glass-dropdown[data-size='md'] .glass-dropdown__item {
 	font-size: var(--glass-size-sm-text);
-	padding: 0.55rem 1rem;
+	padding: var(--glass-space-2) var(--glass-space-4);
 }
 .glass-dropdown[data-size='lg'] .glass-dropdown__item {
 	font-size: var(--glass-size-md-text);
-	padding: 0.7rem 1.2rem;
+	padding: var(--glass-space-3) var(--glass-space-5);
 }
 .glass-dropdown__item:hover,
 .glass-dropdown__item:focus-visible {

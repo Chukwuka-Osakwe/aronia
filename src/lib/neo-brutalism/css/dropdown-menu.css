@@ -11,16 +11,20 @@
 .nb-dropdown__trigger {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--nb-space-2);
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight);
 	background: var(--nb-primary);
-	color: var(--nb-ink);
+	color: var(--nb-on-spot); /* dark label on the constant yellow fill, both themes */
 	border: var(--nb-border);
 	box-shadow: var(--nb-shadow);
 	cursor: pointer;
 	transition: var(--nb-transition);
 	/* font/padding set per size below */
+}
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.nb-dropdown[data-shape='pill'] .nb-dropdown__trigger {
+	border-radius: var(--nb-radius-pill);
 }
 .nb-dropdown[data-size='sm'] .nb-dropdown__trigger {
 	font-size: var(--nb-size-sm-text);
@@ -79,20 +83,21 @@
 }
 .nb-dropdown[data-size='sm'] .nb-dropdown__item {
 	font-size: var(--nb-size-xs-text);
-	padding: 0.4rem 0.8rem;
+	padding: var(--nb-space-2) var(--nb-space-3);
 }
 .nb-dropdown[data-size='md'] .nb-dropdown__item {
 	font-size: var(--nb-size-sm-text);
-	padding: 0.55rem 1rem;
+	padding: var(--nb-space-2) var(--nb-space-4);
 }
 .nb-dropdown[data-size='lg'] .nb-dropdown__item {
 	font-size: var(--nb-size-md-text);
-	padding: 0.7rem 1.2rem;
+	padding: var(--nb-space-3) var(--nb-space-5);
 }
 .nb-dropdown__item:hover,
 .nb-dropdown__item:focus-visible {
 	outline: none;
 	background: var(--nb-primary);
+	color: var(--nb-on-spot); /* dark label on the yellow hover fill, both themes */
 }
 @media (prefers-reduced-motion: reduce) {
 	.nb-dropdown__chevron {

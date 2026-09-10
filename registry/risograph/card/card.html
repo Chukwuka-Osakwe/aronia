@@ -1,0 +1,12 @@
+<!--
+  Risograph — Card (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./card.css once. Attribute contract:
+    data-variant      : paper | muted | ink   (default paper; ink is an inverted panel)
+    data-footer-align : end | center | start | between   (footer only; default end)
+  Header and footer are optional; omit those divs if unused.
+-->
+<div class="riso-card" data-variant="paper">
+  <div class="riso-card__header">Card title</div>
+  <div class="riso-card__body">The body content of the card goes here.</div>
+  <div class="riso-card__footer" data-footer-align="end">Footer</div>
+</div>

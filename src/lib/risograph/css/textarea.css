@@ -1,0 +1,94 @@
+/* Risograph — Textarea (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-textarea` + `[data-*]` attributes —
+ * the framework-agnostic design language for Textarea. Depends only on the
+ * Layer-1 tokens (styles/riso.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * The multiline sibling of Input: identical Riso field language (paper ground,
+ * plum-indigo ink hairline, 0px corners, fluoro accent focus ring with a blue
+ * border nudge), plus a `rows` height.
+ */
+
+.riso-textarea {
+	display: block;
+	width: 100%;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	line-height: 1.5;
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	transition: var(--riso-transition);
+	/* Only vertical resize — horizontal resize would break the grid alignment. */
+	resize: vertical;
+}
+.riso-textarea::placeholder {
+	color: var(--riso-ink-soft);
+}
+
+/* Focus: the family's fluoro accent ring plus the colour-only blue border nudge,
+   exactly like Input. */
+.riso-textarea:focus,
+.riso-textarea[data-state='focus'] {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+	border-color: var(--riso-blue);
+}
+
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it above focus. */
+.riso-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--riso-danger-ink);
+}
+
+/* Disabled — inert deeper-paper field (matches Input). */
+.riso-textarea:disabled {
+	background: var(--riso-muted);
+	color: var(--riso-ink-soft);
+	border-color: var(--riso-line);
+	cursor: not-allowed;
+}
+
+.riso-textarea[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+}
+.riso-textarea[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+}
+.riso-textarea[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+}
+
+/* Themed scrollbar — persistent ink-on-paper bar (tokens in styles/riso.css).
+   A plum-ink thumb over the deeper-paper track, 0 corner; hover overprints the
+   thumb toward spot blue (the ink-mixing language), never a lightness shift. */
+.riso-textarea::-webkit-scrollbar {
+	width: var(--riso-scrollbar-size);
+	height: var(--riso-scrollbar-size);
+}
+.riso-textarea::-webkit-scrollbar-track {
+	background: var(--riso-scrollbar-track);
+}
+.riso-textarea::-webkit-scrollbar-thumb {
+	background: var(--riso-scrollbar-thumb);
+	border-radius: var(--riso-scrollbar-radius);
+}
+.riso-textarea::-webkit-scrollbar-thumb:hover {
+	background: var(--riso-scrollbar-thumb-hover);
+}
+/* Firefox fallback: the standard properties (Firefox has no ::-webkit-scrollbar).
+   Gated with -moz-appearance, which Chrome/Safari DON'T support — so these never
+   reach Blink/WebKit, where a non-default scrollbar-width/color would disable the
+   persistent ::-webkit-scrollbar track above. (On macOS the OS still auto-hides
+   Firefox's overlay bar; this themes it where the platform keeps it visible.) */
+@supports (-moz-appearance: none) {
+	.riso-textarea {
+		scrollbar-width: thin;
+		scrollbar-color: var(--riso-scrollbar-thumb) var(--riso-scrollbar-track);
+	}
+}

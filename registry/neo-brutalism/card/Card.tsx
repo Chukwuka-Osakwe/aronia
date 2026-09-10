@@ -5,20 +5,34 @@ import './tokens.css';
 import './card.css';
 
 export type CardVariant = 'paper' | 'primary' | 'secondary' | 'muted';
+export type CardFooterAlign = 'end' | 'center' | 'start' | 'between';
 
 type Props = {
 	variant?: CardVariant;
 	header?: ReactNode;
 	footer?: ReactNode;
+	/** How footer actions are arranged along the row. */
+	footerAlign?: CardFooterAlign;
 	children?: ReactNode;
 } & HTMLAttributes<HTMLDivElement>;
 
-export function Card({ variant = 'paper', header, footer, children, ...rest }: Props) {
+export function Card({
+	variant = 'paper',
+	header,
+	footer,
+	footerAlign = 'end',
+	children,
+	...rest
+}: Props) {
 	return (
 		<div className="nb-card" data-variant={variant} {...rest}>
 			{header ? <div className="nb-card__header">{header}</div> : null}
 			{children ? <div className="nb-card__body">{children}</div> : null}
-			{footer ? <div className="nb-card__footer">{footer}</div> : null}
+			{footer ? (
+				<div className="nb-card__footer" data-footer-align={footerAlign}>
+					{footer}
+				</div>
+			) : null}
 		</div>
 	);
 }

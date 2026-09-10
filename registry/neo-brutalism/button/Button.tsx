@@ -8,7 +8,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
 import './tokens.css';
 import './button.css';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'ghost' | 'quiet';
+export type ButtonVariant = 'primary' | 'secondary' | 'muted' | 'ghost';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 export type ButtonShape = 'square' | 'pill';
 

@@ -11,37 +11,59 @@
  */
 
 :root {
-  /* palette — near-monochrome + one accent */
-  --swiss-ink: #141414; /* text, borders */
-  --swiss-paper: #ffffff; /* surfaces */
-  --swiss-muted: #f4f4f4; /* subtle fills (muted button, disabled) */
-  --swiss-line: #e2e2e2; /* hairline dividers, lighter than ink */
-  --swiss-skeleton: #dcdcdc; /* loading placeholder — muted is too pale to read on paper */
-  --swiss-ink-soft: #666666; /* secondary text — 5.7:1 on paper */
-  --swiss-on-ink: #ffffff; /* text on an ink fill */
+  /* palette — near-monochrome + one accent.
+   *
+   * DARK MODE: swiss inverts to off-black stock + off-white ink. It NEVER uses
+   * pure #000/#fff — that combo vibrates/haloes (bad for astigmatism) AND leans
+   * on near-pure contrast for the "charcoal SaaS" drama swiss exists to avoid.
+   * Dark swiss stays unmistakably swiss through its DISCIPLINE, not the palette:
+   * hairline 1px borders, 2px corners, flat surfaces, type-weight hierarchy, and
+   * the single hazard-orange all carry over untouched. Every colour is authored
+   * ONCE as a `light-dark(<light>, <dark>)` pair; the three [data-theme] modes at
+   * the foot of this file flip which half resolves. The two anchors (ink/paper)
+   * REFLECT through each other; text-bearing pairs are gated by the dark rows in
+   * scripts/contrast-audit.mjs, non-text surfaces are eyeball-locked. */
+  --swiss-ink: light-dark(#141414, #eaeaec); /* text, borders — near-black ↔ off-white (reflects the anchor) */
+  --swiss-paper: light-dark(#ffffff, #18191b); /* surfaces — white ↔ neutral off-black stock — NEVER pure #000 */
+  --swiss-muted: light-dark(#f4f4f4, #232428); /* subtle fills — near-white ↔ a panel LIFTED off the ground (elevation inverts) — eyeball-locked */
+  --swiss-line: light-dark(#e2e2e2, #2f3034); /* hairline dividers — lighter than ink on paper ↔ a soft divider on the stock — eyeball-locked (hairline, no AA text row) */
+  --swiss-skeleton: light-dark(#dcdcdc, #2c2d31); /* loading placeholder — a clearly raised grey (a timid lift vanishes into the stock under the pulse) — eyeball-locked (surface, no AA text row) */
+  --swiss-ink-soft: light-dark(#666666, #9c9ca2); /* secondary text — 5.7:1 on paper ↔ dimmed off-white, AA on stock — AA-gated (dark row) */
+  --swiss-on-ink: light-dark(#ffffff, #18191b); /* text on an ink FILL: when the fill flips to off-white, its text flips to stock-tone (reflects) */
 
-  /* the single accent — hazard orange. Its FILL takes INK text (4.9:1, AA);
-     as TEXT (links) the raw orange is too light on white (3.8:1), so a
-     darkened tone is used for link/emphasis text (5.5:1). */
-  --swiss-accent: #f24405;
-  --swiss-accent-ink: #141414; /* ink on the orange fill — 4.9:1 */
-  --swiss-accent-text: #c2350a; /* darkened orange for accent TEXT — 5.5:1 on white */
+  /* the single accent — hazard orange. CONSTANT across themes (it pops on both
+     grounds, like a spot ink). Its FILL takes INK text (4.9:1, AA) in BOTH modes
+     — --swiss-accent-ink stays dark and MUST NOT reflect, or you'd get white ink
+     on orange on dark. As TEXT (links) the raw orange is too light on white
+     (3.8:1), so a darkened tone is used on paper; on the dark stock that darkened
+     tone would fail, so accent-text LIGHTENS instead. */
+  --swiss-accent: #f24405; /* hazard orange — unchanged across themes */
+  --swiss-accent-ink: #141414; /* ink on the orange fill — 4.9:1 both themes (constant, the on-spot rule) */
+  --swiss-accent-text: light-dark(#c2350a, #ff8a5c); /* accent TEXT: darkened orange on white ↔ LIGHTENED orange on stock — AA-gated (dark rows) */
 
-  /* semantic status — restrained. Two tones each: the bright hue (for light
-     tint fills) and a darkened "-ink" tone that clears WCAG AA as TEXT on paper
-     AND ≥3:1 as a graphical element (icons, the Alert left-bar). Swiss uses the
-     -ink tones for any coloured mark; the bright hue only as a low-% tint. */
+  /* semantic status — restrained. Two tones each: the bright hue (for low-% tint
+     fills, constant across themes) and a "-ink" tone for any coloured MARK/TEXT.
+     The -ink tones are DARKENED to clear WCAG AA on paper; on the dark stock they
+     must LIGHTEN instead (a darkened tone fails on dark) — each carries a dark
+     half + a contrast-audit dark row. Swiss uses the -ink tones for any coloured
+     mark; the bright hue only as a low-% tint. */
   --swiss-info: #1f6feb;
-  --swiss-info-ink: #175cd3; /* AA as text on paper */
+  --swiss-info-ink: light-dark(#175cd3, #6ea8ff); /* AA as text on paper ↔ lightened for the dark stock — AA-gated (dark row) */
   --swiss-success: #1a7f37;
-  --swiss-success-ink: #157f3c; /* AA as text on paper */
+  --swiss-success-ink: light-dark(#157f3c, #5fce80); /* AA-gated (dark row) */
   --swiss-warning: #f2a005;
-  --swiss-warning-ink: #8a5a00; /* raw amber fails 3:1 on white; this clears AA */
+  --swiss-warning-ink: light-dark(#8a5a00, #e5a72b); /* raw amber fails 3:1 on white; darkened on paper ↔ lightened on stock — AA-gated (dark row) */
   --swiss-danger: #cf222e;
-  --swiss-danger-ink: #cf222e; /* AA as text on paper */
+  --swiss-danger-ink: light-dark(#cf222e, #ff7070); /* AA as text on paper ↔ lightened on stock — AA-gated (dark row) */
 
-  /* overlay backdrop dim — derived from ink so re-tinting carries it. */
-  --swiss-backdrop: color-mix(in srgb, var(--swiss-ink) 40%, transparent);
+  /* overlay backdrop dim — MUST stay a darkening on BOTH themes. On light it
+     derives from ink (near-black). On dark, --swiss-ink reflects to off-WHITE, so
+     a derived dim would turn the modal scrim LIGHT and invert the overlay — so the
+     dark half is PINNED to a deep neutral instead of tracking the anchor. — eyeball-locked (overlay dim, no AA text row) */
+  --swiss-backdrop: light-dark(
+    color-mix(in srgb, var(--swiss-ink) 40%, transparent),
+    color-mix(in srgb, #0b0b0c 58%, transparent)
+  );
 
   /* structure — hairline borders, crisp small radius, FLAT */
   --swiss-border-width: 1px;
@@ -50,7 +72,11 @@
   --swiss-radius-pill: 999px;
 
   /* elevation: none for flat surfaces; a soft shadow ONLY for true overlays
-     (Modal, DropdownMenu) so they lift off the page. */
+     (Modal, DropdownMenu) so they lift off the page. On the dark stock a dark
+     shadow can't darken further and the lift is lost (elevation inverts on dark)
+     — so the dark half deepens the shadow AND the overlay leans on its off-white
+     hairline border to separate. Shadow isn't a colour, so it can't ride
+     light-dark(); the token is overridden on the [data-theme] hooks below. */
   --swiss-shadow: none;
   --swiss-shadow-overlay: 0 8px 24px rgba(20, 20, 20, 0.12);
 
@@ -67,6 +93,21 @@
   --swiss-size-lg-text: 1.125rem; /* 18px */
   --swiss-size-title: 1.375rem; /* 22px */
 
+  /* spacing scale — the shared 4px ramp (Tailwind keys) materialized as tokens.
+     Values are IDENTICAL across all four families on purpose: spacing is structural
+     rhythm, not style identity. Per-family density comes from which step a component
+     reaches for, never from redefining a step. Mirrors the composition.spacing guidance. */
+  --swiss-space-1: 0.25rem; /* 4 */
+  --swiss-space-2: 0.5rem; /* 8 */
+  --swiss-space-3: 0.75rem; /* 12 */
+  --swiss-space-4: 1rem; /* 16 */
+  --swiss-space-5: 1.25rem; /* 20 */
+  --swiss-space-6: 1.5rem; /* 24 */
+  --swiss-space-8: 2rem; /* 32 */
+  --swiss-space-12: 3rem; /* 48 */
+  --swiss-space-16: 4rem; /* 64 */
+  --swiss-space-24: 6rem; /* 96 */
+
   /* type — the true Swiss face via the system Helvetica/Arial stack. Hierarchy
      comes from WEIGHT, so a full weight scale (not multiple families). */
   --swiss-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -76,7 +117,61 @@
   --swiss-font-weight-bold: 700; /* headings / display emphasis */
   --swiss-font-weight: var(--swiss-font-weight-bold); /* display weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Swiss reads as a hairline-grey bar: a neutral thumb, crisp 2px corner,
+     inset from a persistently visible groove. The track uses the divider tone
+     (not the near-white muted fill) so the channel always reads on paper — the
+     Radix signifier that there's more to scroll. */
+  --swiss-scrollbar-size: 10px;
+  --swiss-scrollbar-thumb: light-dark(#c4c4c4, #4c4d52); /* grey thumb ↔ a raised grey on the dark track */
+  --swiss-scrollbar-thumb-hover: light-dark(#9a9a9a, #63646b);
+  --swiss-scrollbar-track: var(--swiss-line); /* divider tone — reflects with the anchor */
+  --swiss-scrollbar-radius: var(--swiss-radius);
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--swiss-scrollbar-thumb) var(--swiss-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion — quick, understated; colour shifts only, never a transform. */
   --swiss-transition:
     background-color 120ms ease, color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* Dark mode — OPT-IN, three modes. aronia has no root family class (it's copied
+   into a consumer's page), so a naked `@media (prefers-color-scheme: dark)` would
+   HIJACK the developer's page on the END-USER's OS setting. Instead the developer
+   sets `data-theme` on the subtree they want themed, and `color-scheme` flips
+   which half of every `light-dark()` pair above resolves. No attribute → light,
+   zero hijack. `color-scheme` also renders native scrollbars/controls in-scheme.
+   `light-dark()` is Baseline across modern browsers since 2024. */
+[data-theme='light'] { color-scheme: light; } /* force light regardless of OS */
+[data-theme='dark']  { color-scheme: dark; }  /* force dark  regardless of OS */
+[data-theme='auto']  { color-scheme: light dark; } /* follow the OS, by opt-in */
+
+/* The non-colour tail — differences light-dark() can't carry (swiss's is small:
+   just elevation). On the dark stock the overlay's soft light-mode shadow reads
+   as nothing, so it deepens; the off-white hairline border does the real
+   separating. Flip on the same hooks: explicitly for forced dark, via a media
+   query for `auto` when the OS is dark. */
+[data-theme='dark'] {
+  --swiss-shadow-overlay: 0 10px 30px rgba(0, 0, 0, 0.55);
+  /* WebKit resolves light-dark() inside the ::-webkit-scrollbar pseudo against the
+     SCROLLBAR's own color-scheme (normal), not the element's inherited dark one — so
+     the scrollbar tokens keep printing their LIGHT branch on dark. Force the dark
+     halves on the hook. Literals mirror the dark side of the tokens above. */
+  --swiss-scrollbar-thumb: #4c4d52;
+  --swiss-scrollbar-thumb-hover: #63646b;
+  --swiss-scrollbar-track: #2f3034; /* --swiss-line dark half */
+}
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --swiss-shadow-overlay: 0 10px 30px rgba(0, 0, 0, 0.55);
+    --swiss-scrollbar-thumb: #4c4d52;
+    --swiss-scrollbar-thumb-hover: #63646b;
+    --swiss-scrollbar-track: #2f3034;
+  }
 }

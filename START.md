@@ -21,10 +21,10 @@ and never silently skip it for someone who could use it.
 
 ## Why this exists
 
-aronia hands you three fully-formed design languages. When the direction is
+aronia hands you four fully-formed design languages. When the direction is
 clear, that's a gift. When it isn't, it's a trap: the risk was never *can you
 build the UI* — you can — it's building it fast and confidently **in the wrong
-language**, or in an accidental blend of all three. That's expensive to undo,
+language**, or in an accidental blend of several. That's expensive to undo,
 because by then it's spread across every screen.
 
 So when nobody's steering, don't guess and don't build. Spend a few exchanges
@@ -39,7 +39,7 @@ back to them, not design jargon.
 1. **What are you making, and who's it for?** Enough to picture it — the kind of
    product, the audience, the feeling it should give.
 
-2. **Pick the family.** Read the three back in plain terms and steer toward the
+2. **Pick the family.** Read the four back in plain terms and steer toward the
    one that fits what they just described:
    - **neo-brutalism** — loud, playful, high-contrast: thick black borders, hard
      offset shadows, flat saturated colour, chunky type. For bold, confident,
@@ -51,6 +51,10 @@ back to them, not design jargon.
    - **swiss** — quiet, precise, content-first: near-monochrome ink on white,
      hairline borders, crisp corners, a single hazard-orange accent. For calm,
      understated, information-dense interfaces.
+   - **risograph** — warm, craft-retro, printed: soft paper ground, plum-indigo
+     ink, spot red/blue with a fluoro-pink accent, grain and overprint texture,
+     sharp corners, no shadows. For characterful interfaces with a hand-printed
+     feel that stand apart from the flat default look.
 
 3. **Any brand you have to match?** Existing colours, a logo, a product whose
    look you're extending. If yes, reassure them we'll *override the palette* in

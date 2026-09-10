@@ -61,6 +61,9 @@
 	header[data-style='glassmorphism'] h1 {
 		font-family: var(--glass-font);
 	}
+	header[data-style='risograph'] h1 {
+		font-family: var(--riso-font);
+	}
 	.lede {
 		font-size: var(--doc-lede);
 		color: var(--doc-muted);

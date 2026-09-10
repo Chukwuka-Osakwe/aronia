@@ -55,7 +55,129 @@ const CASES = [
 	{ label: 'swiss: danger-ink on paper (field required/error/alert)', fg: '#cf222e', bg: '#ffffff' },
 	{ label: 'swiss: info-ink on paper (alert bar/icon)', fg: '#175cd3', bg: '#ffffff' },
 	{ label: 'swiss: success-ink on paper (alert bar/icon)', fg: '#157f3c', bg: '#ffffff' },
-	{ label: 'swiss: warning-ink on paper (alert bar/icon)', fg: '#8a5a00', bg: '#ffffff' }
+	{ label: 'swiss: warning-ink on paper (alert bar/icon)', fg: '#8a5a00', bg: '#ffffff' },
+
+	// --- Risograph: warm paper ground, plum-indigo ink, spot inks, one fluoro accent ---
+	// Surfaces sit on the warm paper #f5f0e8 (NOT white) — the honest, slightly-worse
+	// case for dark-on-light. Bright spot inks back light text only where dark enough
+	// (--riso-blue-fill, not the raw spot blue #0078bf); the fluoro pink takes dark ink.
+	{ label: 'riso: ink on paper', fg: '#241f31', bg: '#f5f0e8' },
+	{ label: 'riso: ink-soft on paper (secondary text)', fg: '#595466', bg: '#f5f0e8' },
+	{ label: 'riso: on-ink on ink fill (solid badge/card)', fg: '#f5f0e8', bg: '#241f31' },
+	{ label: 'riso: ink on muted fill (muted button)', fg: '#241f31', bg: '#ece5d8' },
+	{ label: 'riso: accent-ink on fluoro fill (primary button/accent badge)', fg: '#1a1a1a', bg: '#ff48b0' },
+	// The overprint hover DARKENS the fluoro fill, eating the dark label's margin —
+	// so the primary uses the gentler --riso-overprint-accent (16%). This pins that:
+	// #d650b2 = color-mix(srgb, #ff48b0 84%, #0078bf). At the full 22% it drops below AA.
+	{ label: 'riso: accent-ink on primary hover (16% overprint→blue)', fg: '#1a1a1a', bg: '#d650b2' },
+	{ label: 'riso: on-ink on blue-fill (secondary button/card masthead)', fg: '#f5f0e8', bg: '#0069a8' },
+	{ label: 'riso: accent-text on paper (link/emphasis)', fg: '#c31877', bg: '#f5f0e8' },
+	{ label: 'riso: danger-ink on paper (field error/alert)', fg: '#af1d2b', bg: '#f5f0e8' },
+	{ label: 'riso: info-ink on paper (alert/link)', fg: '#005c9a', bg: '#f5f0e8' },
+	{ label: 'riso: success-ink on paper (alert)', fg: '#10672e', bg: '#f5f0e8' },
+	{ label: 'riso: warning-ink on paper (alert)', fg: '#805400', bg: '#f5f0e8' },
+	// The Alert washes the paper with 8% of the VIVID status ink (alert.css
+	// `color-mix(in srgb, var(--_c) 8%, paper)`) and prints the darkened -ink tone
+	// on that wash (title + icon + hairline). The -ink tones are tuned to ~5.5:1
+	// HERE (the wash is the honest worse case; user-eyeballed darker than the bare
+	// AA pass). Wash grounds pinned so a future tint bump can't silently break AA:
+	//   #e1e6e5 = 8% #0078bf, #e3e7da = 8% #1a7f37,
+	//   #f5ead6 = 8% #f2a005, #f5e3dd = 8% #f15060 — all over #f5f0e8.
+	{ label: 'riso: info-ink on info wash (alert title/icon)', fg: '#005c9a', bg: '#e1e6e5' },
+	{ label: 'riso: success-ink on success wash (alert title/icon)', fg: '#10672e', bg: '#e3e7da' },
+	{ label: 'riso: warning-ink on warning wash (alert title/icon)', fg: '#805400', bg: '#f5ead6' },
+	{ label: 'riso: danger-ink on danger wash (alert title/icon)', fg: '#af1d2b', bg: '#f5e3dd' },
+
+	// --- Risograph: DARK theme ([data-theme='dark']) — the palette turns inside-out,
+	// so pairs are re-audited on the plum-indigo STOCK #241f31 (never pure black).
+	// Constant spot-ink surfaces (accent-ink on the fluoro #ff48b0; paper-tone on the
+	// blue-fill #0069a8) don't flip — they're already covered by the light rows above.
+	// Values mirror the dark half of each light-dark() token in styles/riso.css.
+	{ label: 'riso-dark: ink on stock (body text)', fg: '#f5f0e8', bg: '#241f31' },
+	{ label: 'riso-dark: ink-soft on stock (secondary text)', fg: '#a79fb2', bg: '#241f31' },
+	// The reflected ink FILLS invert to paper (#f5f0e8) carrying plum (#241f31) mark/
+	// text — solid badge, ink card, checked box/radio, active tab.
+	{ label: 'riso-dark: on-ink on re-inverted ink fill', fg: '#241f31', bg: '#f5f0e8' },
+	{ label: 'riso-dark: ink on muted fill (muted button rest)', fg: '#f5f0e8', bg: '#342e44' },
+	// Overprint flips ADDITIVE (button.css). Hovers pinned so a lift/deepen tweak can't
+	// silently break AA:  #fd70bd = mix(#ff48b0, #f5f0e8 24%) — primary lifts toward paper;
+	//   #625d6b = mix(#342e44, #f5f0e8 24%) — muted lifts; #09578b = mix(#0069a8, #241f31 24%)
+	//   — secondary DEEPENS toward stock (light label, low headroom, lifting fails AA).
+	{ label: 'riso-dark: accent-ink on primary hover (additive lift)', fg: '#1a1a1a', bg: '#fd70bd' },
+	{ label: 'riso-dark: on-spot on secondary hover (deepen→stock)', fg: '#f5f0e8', bg: '#09578b' },
+	{ label: 'riso-dark: ink on muted hover (lift)', fg: '#f5f0e8', bg: '#625d6b' },
+	// Inline link: accent-text lightens on dark; hover lifts toward paper.
+	//   #fd96cb = mix(#ff7ac2, #f5f0e8 24%).
+	{ label: 'riso-dark: accent-text on stock (link/emphasis rest)', fg: '#ff7ac2', bg: '#241f31' },
+	{ label: 'riso-dark: accent-text on stock hover (lift)', fg: '#fd96cb', bg: '#241f31' },
+	{ label: 'riso-dark: danger-ink on stock (field error)', fg: '#ff8a8a', bg: '#241f31' },
+	// Alert wash on dark = 8% vivid status ink over the STOCK, printed with the
+	// LIGHTENED -ink tone (title/icon). Washes pinned:
+	//   #21263c = 8% #0078bf, #232731 = 8% #1a7f37, #34292d = 8% #f2a005,
+	//   #342335 = 8% #f15060 — all over #241f31.
+	{ label: 'riso-dark: info-ink on info wash', fg: '#7cc0f5', bg: '#21263c' },
+	{ label: 'riso-dark: success-ink on success wash', fg: '#6fce8c', bg: '#232731' },
+	{ label: 'riso-dark: warning-ink on warning wash', fg: '#f2b84d', bg: '#34292d' },
+	{ label: 'riso-dark: danger-ink on danger wash', fg: '#ff8a8a', bg: '#342335' },
+
+	// --- Swiss: DARK theme ([data-theme='dark']) — inverts to off-black stock
+	// #18191b + off-white ink #eaeaec (never pure #000/#fff). Pairs re-audited on
+	// the stock. The constant hazard-orange fill (ink on #f24405) doesn't flip —
+	// it's already covered by 'swiss: ink on accent fill' above. Values mirror the
+	// dark half of each light-dark() token in styles/swiss.css.
+	{ label: 'swiss-dark: ink on stock (body text)', fg: '#eaeaec', bg: '#18191b' },
+	{ label: 'swiss-dark: ink-soft on stock (secondary text)', fg: '#9c9ca2', bg: '#18191b' },
+	// The ink FILLS invert to off-white (#eaeaec) carrying stock-tone (#18191b) mark/
+	// text — solid badge, ink card, checked box, active tab, secondary button.
+	{ label: 'swiss-dark: on-ink on re-inverted ink fill', fg: '#18191b', bg: '#eaeaec' },
+	{ label: 'swiss-dark: ink on muted fill (muted button rest)', fg: '#eaeaec', bg: '#232428' },
+	// Button/link hovers target the ANCHORS (not #000/#fff) so they flip direction.
+	// Pinned so a tweak can't silently break AA:  #c4c4c6 = mix(#eaeaec 82%, #18191b)
+	//   — secondary DEEPENS toward stock; #333438 = mix(#232428 92%, #eaeaec) — muted/
+	//   ghost LIFT toward ink; #fb9d79 = mix(#ff8a5c 80%, #eaeaec) — link BRIGHTENS.
+	{ label: 'swiss-dark: on-ink on secondary hover (deepen→stock)', fg: '#18191b', bg: '#c4c4c6' },
+	{ label: 'swiss-dark: ink on muted/ghost hover (lift)', fg: '#eaeaec', bg: '#333438' },
+	{ label: 'swiss-dark: accent-text on stock (link/emphasis rest)', fg: '#ff8a5c', bg: '#18191b' },
+	{ label: 'swiss-dark: accent-text on stock hover (brighten)', fg: '#fb9d79', bg: '#18191b' },
+	{ label: 'swiss-dark: danger-ink on stock (field error)', fg: '#ff7070', bg: '#18191b' },
+	// Alert marks (border + icon) print the LIGHTENED -ink tone on the 7% status
+	// wash over stock (alert.css `color-mix(--_c 7%, paper)`). Washes pinned:
+	//   #1e232b = 7% #6ea8ff, #1d2622 = 7% #5fce80,
+	//   #26231c = 7% #e5a72b, #281f21 = 7% #ff7070 — all over #18191b.
+	{ label: 'swiss-dark: info-ink on info wash (alert bar/icon)', fg: '#6ea8ff', bg: '#1e232b' },
+	{ label: 'swiss-dark: success-ink on success wash (alert bar/icon)', fg: '#5fce80', bg: '#1d2622' },
+	{ label: 'swiss-dark: warning-ink on warning wash (alert bar/icon)', fg: '#e5a72b', bg: '#26231c' },
+	{ label: 'swiss-dark: danger-ink on danger wash (alert bar/icon)', fg: '#ff7070', bg: '#281f21' },
+
+	// --- Neo-Brutalism: DARK theme ([data-theme='dark']) — turns inside-out to an
+	// off-white ink #ececec on an off-black STOCK #17181a (never pure #000/#fff). Only
+	// the ground-borne text changes; the saturated brand/status FILLS are CONSTANT and
+	// carry --nb-on-spot (#111111) text, already covered by the 'NB: ink on …' fill
+	// rows above (on-spot == the light ink, same #111 on the same fills). No hover rows:
+	// neo's hover is the geometric shove, not a colour shift. Values mirror the dark
+	// half of each light-dark() token in styles/neo-brutalism.css.
+	{ label: 'NB-dark: ink on stock (body text)', fg: '#ececec', bg: '#17181a' },
+	{ label: 'NB-dark: ink on muted fill (muted button/card, elevation inverts)', fg: '#ececec', bg: '#26282c' },
+	{ label: 'NB-dark: danger-ink on stock (field error, lightened)', fg: '#ff7070', bg: '#17181a' },
+	{ label: 'NB-dark: link-ink on stock (link/nav active, lightened)', fg: '#6ea8ff', bg: '#17181a' },
+
+	// --- Glassmorphism: DARK theme ([data-theme='dark']) — the frost turns to a
+	// faint LIGHT film over dark stock (never a smoky dark tint; that reading lost
+	// the rim). Ink flips to off-white #f2f2f7. Glass has NO fixed ground — its stock
+	// is the consumer's own dark backdrop — so the translucent surfaces are composited
+	// over a reference dark stock #141422 (the deep indigo the playground stage uses);
+	// every pair also clears AA on a lighter dark page (#2a2a38), so the reference isn't
+	// a flattering cherry-pick. The CONSTANT vivid fills carry white text unchanged —
+	// already covered by the 'glass: white label on … fill' rows above. Values mirror
+	// the dark half of each light-dark() token in styles/glassmorphism.css.
+	{ label: 'glass-dark: ink on ambient surface (body text)', fg: '#f2f2f7', bg: 'rgba(255,255,255,0.08)', base: '#141422' },
+	{ label: 'glass-dark: ink-soft on ambient surface (secondary text)', fg: 'rgba(242,242,247,0.62)', bg: 'rgba(255,255,255,0.08)', base: '#141422' },
+	// Dense overlay panels go dark-tinted (a light film this opaque would glare):
+	{ label: 'glass-dark: ink on surface-solid (modal/menu panel)', fg: '#f2f2f7', bg: 'rgba(30,30,48,0.85)', base: '#141422' },
+	{ label: 'glass-dark: ink on muted fill (muted button)', fg: '#f2f2f7', bg: 'rgba(255,255,255,0.12)', base: '#141422' },
+	// Text-role tones LIGHTEN on dark (the dark halves would vanish on the stock):
+	{ label: 'glass-dark: link-ink on stock (link/nav active, lightened)', fg: '#a5b4fc', bg: '#141422' },
+	{ label: 'glass-dark: danger-ink on stock (field error, lightened)', fg: '#f87171', bg: '#141422' }
 ];
 
 let failures = 0;

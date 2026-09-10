@@ -9,7 +9,7 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.625rem;
+	gap: var(--glass-space-2);
 	cursor: pointer;
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight);

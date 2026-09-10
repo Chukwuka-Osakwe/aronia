@@ -20,33 +20,58 @@
 	border-radius: var(--swiss-radius);
 	font-family: var(--swiss-font);
 	overflow: hidden;
+	/* Caps long-form content at a readable measure (matches Modal). Only an upper
+	   bound — the card still shrinks to fill narrower parents. Override per
+	   instance with style="--swiss-card-max-width: 40rem", or set `none` to fill. */
+	max-width: var(--swiss-card-max-width, 32rem);
 }
 
 .swiss-card[data-variant='muted'] {
 	background: var(--swiss-muted);
 }
 /* Inverted editorial panel — ink fill, paper text, dividers dropped to a quiet
-   translucent white so they read on the dark ground. */
+   translucent tint of the panel's OWN text tone so they read on it. Deriving from
+   --swiss-on-ink (not a hardcoded white) means the divider REFLECTS with the
+   panel: on dark this variant re-inverts to a light panel (ink → off-white), and
+   a hardcoded white rule would vanish — the on-ink tint flips dark to stay read. */
 .swiss-card[data-variant='ink'] {
-	--_divider: rgba(255, 255, 255, 0.22);
+	--_divider: color-mix(in srgb, var(--swiss-on-ink) 22%, transparent);
+	/* On this dark ground a ghost button's tuned light-grey hover would vanish;
+	   swap it for a faint on-ink tint (cascades to the footer's ghost actions). */
+	--swiss-ghost-hover-bg: color-mix(in srgb, var(--swiss-on-ink) 14%, transparent);
 	background: var(--swiss-ink);
 	color: var(--swiss-on-ink);
 	border-color: var(--swiss-ink);
 }
 
+/* Regions share the Modal's roomier rhythm — the two are sibling panels. */
 .swiss-card__header,
 .swiss-card__footer {
-	padding: 0.75rem 1.25rem;
+	padding: var(--swiss-space-5) var(--swiss-space-6);
 	font-weight: var(--swiss-font-weight-semibold);
 }
 .swiss-card__header {
 	border-bottom: var(--swiss-border-width) solid var(--_divider);
 }
+/* Footer is button-aware like the Modal's: actions gapped and right-aligned by
+   default; data-footer-align switches the arrangement. */
 .swiss-card__footer {
 	border-top: var(--swiss-border-width) solid var(--_divider);
+	display: flex;
+	gap: var(--swiss-space-3);
+	justify-content: flex-end;
+}
+.swiss-card__footer[data-footer-align='center'] {
+	justify-content: center;
+}
+.swiss-card__footer[data-footer-align='start'] {
+	justify-content: flex-start;
+}
+.swiss-card__footer[data-footer-align='between'] {
+	justify-content: space-between;
 }
 .swiss-card__body {
-	padding: 1.25rem;
+	padding: var(--swiss-space-6);
 	font-weight: var(--swiss-font-weight-regular);
 	line-height: 1.5;
 }

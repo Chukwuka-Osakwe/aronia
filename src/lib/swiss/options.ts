@@ -3,7 +3,7 @@
 // components and manifest both import here so enum drift is structurally
 // impossible. Same pattern as the other families. See DESIGN.md, Entry 4.
 
-export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost', 'quiet'] as const;
+export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost'] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
 export const BUTTON_SIZES = ['xs', 'sm', 'md', 'lg'] as const;
@@ -36,10 +36,19 @@ export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
 export const TOGGLE_SHAPES = ['square', 'pill'] as const;
 export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
 
+// The DropdownMenu trigger is button-like, so it shares the square|pill
+// vocabulary; `pill` rounds the trigger only (the menu panel keeps its radius).
+export const DROPDOWN_SHAPES = ['square', 'pill'] as const;
+export type DropdownShape = (typeof DROPDOWN_SHAPES)[number];
+
 // Card: `paper` (default white) / `muted` (subtle grey section) / `ink` (a bold
 // inverted editorial panel). Swiss-natural set — variants diverge per family.
 export const CARD_VARIANTS = ['paper', 'muted', 'ink'] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
+
+// Card footer arrangement — actions right-aligned (default), centered, left, or split.
+export const CARD_FOOTER_ALIGNS = ['end', 'center', 'start', 'between'] as const;
+export type CardFooterAlign = (typeof CARD_FOOTER_ALIGNS)[number];
 
 // Badge: `neutral` (outline, default) / `solid` (ink fill) / `muted` (grey) /
 // `accent` (the one orange). Uppercase tracked labels.

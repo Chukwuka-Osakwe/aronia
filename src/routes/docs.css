@@ -92,6 +92,20 @@ h3 {
 	width: 0;
 	height: 0;
 }
+/* …EXCEPT aronia's own components, which ship a themed, PERSISTENT scrollbar as the
+   signifier that a region scrolls (see each family's textarea.css). Exempt those
+   containers from the chrome-wide hide above so the playground demos the real
+   behaviour a consumer gets — the consumer never loads this docs stylesheet.
+   Restoring scrollbar-width to auto also re-enables ::-webkit-scrollbar styling in
+   Blink, which `* { scrollbar-width: none }` otherwise disables on every element.
+   Extend this list as more scroll containers gain a themed bar (Modal body,
+   DropdownMenu, Accordion). */
+.swiss-textarea,
+.nb-textarea,
+.riso-textarea,
+.glass-textarea {
+	scrollbar-width: auto;
+}
 
 /* Scroll affordance for the hidden-scrollbar regions: a soft shadow at the top
    and/or bottom edge that appears ONLY when there's more content that way, and

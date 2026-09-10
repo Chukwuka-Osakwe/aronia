@@ -1,0 +1,25 @@
+<!--
+  Risograph — Toaster (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./toast.css + ./alert.css (a toast reuses the Alert skin —
+  the printed spot-ink wash; no shadow, opacity-only entry).
+  Toast is IMPERATIVE: mount this .riso-toaster once, then append/remove .riso-toast
+  children from your own queue logic (auto-dismiss via a timer, e.g. 2500ms).
+  Structure of one toast (success shown):
+-->
+<div class="riso-toaster" role="region" aria-label="Notifications">
+  <div class="riso-toast">
+    <div class="riso-alert" data-variant="success" data-size="sm" role="status">
+      <span class="riso-alert__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" /><polyline points="8 12 11 15 16 9" />
+        </svg>
+      </span>
+      <div class="riso-alert__content"><div class="riso-alert__message">Saved!</div></div>
+    </div>
+    <button type="button" class="riso-toast__close" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true">
+        <line x1="6" y1="6" x2="18" y2="18" /><line x1="18" y1="6" x2="6" y2="18" />
+      </svg>
+    </button>
+  </div>
+</div>

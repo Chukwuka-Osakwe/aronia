@@ -33,7 +33,7 @@ Then **point your agent at it**:
 > match `aronia/`.
 
 `START.md` is optional — a short conversation for when you're not a designer and
-want help settling the scope and picking one of the three families before any UI
+want help settling the scope and picking one of the four families before any UI
 gets written. Know what you want already? Tell the agent to skip it.
 
 Once a style is chosen, pull components — the first `add` adopts that style (and
@@ -51,7 +51,7 @@ full prop spec — so the agent works from the exact contract, not a guess.
 
 ## Styles
 
-Three design languages, 20 components each. Add `--style <id>` to any command.
+Four design languages, 20 components each. Add `--style <id>` to any command.
 
 - **`neo-brutalism`** — thick black borders, hard offset shadows (no blur), flat
   saturated colour, chunky heavy type, and a tactile "shove" on press. For bold,
@@ -63,8 +63,12 @@ Three design languages, 20 components each. Add `--style <id>` to any command.
 - **`swiss`** — clean, grid-driven minimalism: near-monochrome ink on white,
   hairline borders, crisp corners, flat surfaces, and a single hazard-orange
   accent. For precise, content-first, understated interfaces.
+- **`risograph`** — warm risograph print aesthetic: a soft paper ground,
+  plum-indigo ink (no true black), spot red/blue inks with a single fluoro-pink
+  accent, grain and overprint texture, sharp 0px corners, and no shadows. For
+  craft-retro, printed-feeling interfaces that stand apart from the flat default.
 
-All three families ship: Button, Link, Card, Badge, Input, Textarea, Toggle, Checkbox,
+All four families ship: Button, Link, Card, Badge, Input, Textarea, Toggle, Checkbox,
 RadioGroup, Select, Field, Modal, Alert, Tabs, Accordion, Dropdown Menu, Spinner,
 Progress, Skeleton, and Toast.
 
@@ -77,7 +81,7 @@ aronia add <component...> [options]    # add components; the first add adopts a 
 
 | Option | Description | Default |
 | --- | --- | --- |
-| `--style <id>` | `neo-brutalism`, `glassmorphism`, or `swiss`. Required for the first `add`; remembered after. | adopted |
+| `--style <id>` | `neo-brutalism`, `glassmorphism`, `swiss`, or `risograph`. Required for the first `add`; remembered after. | adopted |
 | `--framework <fw>` | `react`, `svelte`, or `html`. | detected, else `react` |
 | `--cwd <dir>` | Where to write the `aronia/` folder. | current dir |
 | `--registry <src>` | Registry URL or local directory. | bundled |
@@ -93,11 +97,14 @@ aronia is built to be read by agents, not just humans:
 
 - **In a project using aronia**, the contract lives in `aronia/aronia.manifest.json`
   and the real source in `aronia/<style>/`. See [AGENTS.md](./AGENTS.md).
-- **The full registry** (every style, component, prop, enum, and behaviour) is
-  served as JSON: `/manifest.json` (whole catalog), `/<style>/manifest.json` (one
-  family), and `/r/index.json` → `/r/<style>/<component>.json` (per-component
-  items embedding spec, tokens, CSS, and framework skins). A machine-readable
-  index is at [`/llms.txt`](./static/llms.txt).
+- **The full registry ships bundled with the CLI** — every style, component, prop,
+  enum, and behaviour — so `add` works offline and the local
+  `aronia/aronia.manifest.json` is the authoritative contract after install.
+- **Self-hosting** is supported: the registry can be served over HTTP
+  (`/manifest.json` for the whole catalog, `/r/index.json` →
+  `/r/<style>/<component>.json` per component) and consumed with
+  `aronia add --registry <url>`. There's no public host yet — the agent index at
+  [`static/llms.txt`](./static/llms.txt) is ready for when one lands.
 
 ## Development
 

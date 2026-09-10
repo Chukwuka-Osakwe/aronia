@@ -5,19 +5,23 @@
 // + media). The values still land identically on every registry item, so an agent
 // reading one style's guidance gets a self-contained set — no cross-referencing.
 //
-// None of these are CSS: the spacing ramp is a scale to follow (not override), and
-// breakpoints can't be used in a media query anyway. They're reference values.
+// These are reference values: breakpoints can't be used in a media query, and the
+// container is applied by hand. The spacing ramp IS also materialized as CSS custom
+// properties (`--<style>-space-1..24`, identical values in every family's token
+// sheet) so components can `var()` it instead of free-handing literals — but the
+// scale itself is the same to follow whether you reach for the token or the number.
 import type { CompositionSpec } from './schema.js';
 
 export const SHARED_LAYOUT: Pick<CompositionSpec, 'spacing' | 'breakpoints' | 'container'> = {
 	// Conventional 4px base scale, Tailwind-compatible keys (each = 0.25rem × key).
-	// Deliberately sparse, denser at the bottom: fine steps for component-internal
-	// spacing, wide jumps for layout so big gaps stay consistent. Snap to these.
+	// Full 4px granularity through the component-internal range (1–6), then wide jumps
+	// for layout so big gaps stay consistent. Snap to these.
 	spacing: {
 		'1': '0.25rem', // 4
 		'2': '0.5rem', // 8
 		'3': '0.75rem', // 12
 		'4': '1rem', // 16
+		'5': '1.25rem', // 20
 		'6': '1.5rem', // 24
 		'8': '2rem', // 32
 		'12': '3rem', // 48

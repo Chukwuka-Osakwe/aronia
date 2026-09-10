@@ -14,7 +14,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	line-height: 1;
-	padding: 0.3rem 0.5rem;
+	padding: var(--nb-space-1) var(--nb-space-2);
 	color: var(--nb-ink);
 	background: var(--nb-paper);
 	border: 2px solid var(--nb-ink);
@@ -22,17 +22,23 @@
 	white-space: nowrap;
 }
 
+/* primary/secondary/accent are CONSTANT saturated fills → pin the label dark
+   (--nb-on-spot) in both themes; `muted` inverts to a dark panel and keeps the
+   reflecting ink. See the on-spot rule in styles/neo-brutalism.css. */
 .nb-badge[data-variant='primary'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot);
 }
 .nb-badge[data-variant='secondary'] {
 	background: var(--nb-secondary);
+	color: var(--nb-on-spot);
 }
 .nb-badge[data-variant='muted'] {
 	background: var(--nb-muted);
 }
 .nb-badge[data-variant='accent'] {
 	background: var(--nb-accent);
+	color: var(--nb-on-spot);
 }
 
 /* shape — square (default) or a fully rounded pill. */

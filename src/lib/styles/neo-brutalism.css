@@ -13,31 +13,60 @@
 @import '@fontsource-variable/archivo';
 
 :root {
-  /* palette */
-  --nb-ink: #111111;
-  --nb-paper: #ffffff;
-  --nb-primary: #ffe600; /* electric yellow */
-  --nb-secondary: #4dabf7; /* cyan blue */
-  --nb-muted: #e9ecef; /* light grey */
-  --nb-accent: #ff5c8a; /* hot pink (focus ring) */
+  /* palette
+   *
+   * DARK MODE: neo turns inside-out — off-white ink + hard offset shadow on an
+   * off-black STOCK. It NEVER uses pure #000/#fff (they vibrate/halo, and near-pure
+   * contrast is the "charcoal SaaS" drama neo's saturated flats already sidestep).
+   * The signature carries UNCHANGED: thick borders, 0px corners, the tactile shove,
+   * and the hard offset — which is neo's whole dark story. Because --nb-shadow-color
+   * and --nb-border are BOTH --nb-ink, flipping the ink anchor flips the offset for
+   * free: on dark it becomes an off-WHITE hard offset, a light-edge that reads as
+   * elevation inverting (raised = lighter on dark). No shadow override needed.
+   * The saturated brand/status fills (yellow/cyan/green/red/pink) are CONSTANT — they
+   * pop on both grounds like spot inks — so text on them uses --nb-on-spot (constant
+   * dark), NOT the reflecting ink (see the on-spot rule below). Only the two anchors +
+   * the darkened -ink TEXT tones need dark halves; text pairs are gated by the NB-dark
+   * rows in scripts/contrast-audit.mjs. The three [data-theme] modes are at the foot. */
+  --nb-ink: light-dark(#111111, #ececec); /* text, borders, offset shadow — near-black ↔ off-white (reflects the anchor) */
+  --nb-paper: light-dark(#ffffff, #17181a); /* surfaces — white ↔ neutral off-black stock — NEVER pure #000 */
+  --nb-primary: #ffe600; /* electric yellow — CONSTANT (spot fill, pops on both grounds) */
+  --nb-secondary: #4dabf7; /* cyan blue — CONSTANT */
+  --nb-muted: light-dark(#e9ecef, #26282c); /* light grey ↔ a panel LIFTED off the stock (elevation inverts) — eyeball-locked */
+  --nb-accent: #ff5c8a; /* hot pink (focus ring) — CONSTANT (non-text ring) */
+
+  /* text on a CONSTANT saturated fill (primary/secondary/status button, card, badge,
+     alert). The fill stays light in BOTH themes, so its label stays DARK and must NOT
+     reflect — using --nb-ink here would flip to off-white-on-yellow on dark. This is
+     the on-spot rule: constant-fill text is pinned, only ground-borne text reflects. */
+  --nb-on-spot: #111111;
 
   /* semantic status colours (Alert, Toast) — the palette had no green/red, and
      these are kept separate from the decorative primary/secondary so status
-     meaning and brand colour can move independently. */
+     meaning and brand colour can move independently. All are FILLS → CONSTANT
+     across themes (they carry --nb-on-spot text, covered by the NB fill rows). */
   --nb-info: #4dabf7; /* blue */
   --nb-success: #40c057; /* green */
   --nb-warning: #ffe600; /* yellow */
   --nb-danger: #ff5c5c; /* red — a FILL colour (bold boxes); too light for text */
   /* danger as TEXT (field errors) needs a dark red to clear WCAG AA on paper/cream;
-     kept separate from the pink focus accent, which is a non-text ring. */
-  --nb-danger-ink: #b91c1c; /* red-700 — 5.8:1 on cream, 6.4:1 on white */
+     kept separate from the pink focus accent, which is a non-text ring. On the dark
+     stock a darkened red fails, so it LIGHTENS instead (dark half + audit row). */
+  --nb-danger-ink: light-dark(#b91c1c, #ff7070); /* red-700 on paper ↔ lightened red on stock — AA-gated (dark row) */
   /* link/active TEXT colour — the brand cyan darkened to clear WCAG AA as text
      (the raw --nb-secondary #4dabf7 is a fill, only ~2:1 on white). Used by Link
-     for inline links + the active nav item; pink/yellow/cyan stay decoration-only. */
-  --nb-link-ink: #1971c2; /* 5.0:1 on white */
+     for inline links + the active nav item; pink/yellow/cyan stay decoration-only.
+     Darkened on paper ↔ lightened on the dark stock. */
+  --nb-link-ink: light-dark(#1971c2, #6ea8ff); /* 5.0:1 on white ↔ lightened for the stock — AA-gated (dark row) */
 
-  /* overlay backdrop dim — derived from the ink so re-tinting --nb-ink carries it. */
-  --nb-backdrop: color-mix(in srgb, var(--nb-ink) 55%, transparent);
+  /* overlay backdrop dim — MUST stay a darkening on BOTH themes. On light it derives
+     from the ink (near-black), but on dark --nb-ink reflects to off-WHITE, which would
+     turn the modal scrim LIGHT and invert the overlay — so the dark half is PINNED to a
+     deep near-black instead of tracking the anchor. — eyeball-locked (overlay dim). */
+  --nb-backdrop: light-dark(
+    color-mix(in srgb, #111111 55%, transparent),
+    color-mix(in srgb, #05050a 64%, transparent)
+  );
 
   /* structure */
   --nb-border-width: 3px;
@@ -87,6 +116,21 @@
      carries more presence than glass's softer one (Modal title, future headings). */
   --nb-size-title: 1.375rem; /* 22px */
 
+  /* spacing scale — the shared 4px ramp (Tailwind keys) materialized as tokens.
+     Values are IDENTICAL across all four families on purpose: spacing is structural
+     rhythm, not style identity. Per-family density comes from which step a component
+     reaches for, never from redefining a step. Mirrors the composition.spacing guidance. */
+  --nb-space-1: 0.25rem; /* 4 */
+  --nb-space-2: 0.5rem; /* 8 */
+  --nb-space-3: 0.75rem; /* 12 */
+  --nb-space-4: 1rem; /* 16 */
+  --nb-space-5: 1.25rem; /* 20 */
+  --nb-space-6: 1.5rem; /* 24 */
+  --nb-space-8: 2rem; /* 32 */
+  --nb-space-12: 3rem; /* 48 */
+  --nb-space-16: 4rem; /* 64 */
+  --nb-space-24: 6rem; /* 96 */
+
   /* type */
   /* 'Archivo Variable' is the family name @fontsource-variable/archivo registers;
      Button.svelte imports the font. Fallbacks keep it sane if the font fails. */
@@ -101,6 +145,56 @@
   --nb-font-weight-bold: 800;
   --nb-font-weight: var(--nb-font-weight-bold); /* brand weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Neo reads as a hard-edged ink block: a solid ink thumb, 0 corner, boxed off
+     the muted gutter by a hairline ink rule. Chunkier than the other families. */
+  --nb-scrollbar-size: 12px;
+  --nb-scrollbar-thumb: var(--nb-ink);
+  --nb-scrollbar-thumb-hover: var(--nb-ink);
+  --nb-scrollbar-track: var(--nb-muted);
+  --nb-scrollbar-radius: 0;
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--nb-scrollbar-thumb) var(--nb-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion */
   --nb-transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+/* Dark mode — OPT-IN, three modes. aronia has no root family class (it's copied
+   into a consumer's page), so a naked `@media (prefers-color-scheme: dark)` would
+   HIJACK the developer's page on the END-USER's OS setting. Instead the developer
+   sets `data-theme` on the subtree they want themed, and `color-scheme` flips which
+   half of every `light-dark()` pair above resolves. No attribute → light, zero
+   hijack. `color-scheme` also renders native scrollbars/controls in-scheme.
+   `light-dark()` is Baseline across modern browsers since 2024.
+
+   Neo's one depth cue — the hard offset shadow — is --nb-shadow-color = --nb-ink, so
+   it reflects to an off-white light-edge for free (no override). */
+[data-theme='light'] { color-scheme: light; } /* force light regardless of OS */
+[data-theme='dark']  { color-scheme: dark; }  /* force dark  regardless of OS */
+[data-theme='auto']  { color-scheme: light dark; } /* follow the OS, by opt-in */
+
+/* The one tail neo DOES have: WebKit resolves light-dark() inside the
+   ::-webkit-scrollbar pseudo against the SCROLLBAR's own color-scheme (normal), NOT
+   the textarea's inherited dark one — so the scrollbar tokens keep printing their
+   LIGHT branch on dark (a light gutter with a dark thumb, wrong-way-round). Force the
+   dark values on the theme hook. Literals mirror the dark halves of --nb-ink (thumb =
+   off-white) and --nb-muted (track = the raised dark panel). */
+[data-theme='dark'] {
+  --nb-scrollbar-thumb: #ececec;
+  --nb-scrollbar-thumb-hover: #ececec;
+  --nb-scrollbar-track: #26282c;
+}
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --nb-scrollbar-thumb: #ececec;
+    --nb-scrollbar-thumb-hover: #ececec;
+    --nb-scrollbar-track: #26282c;
+  }
 }

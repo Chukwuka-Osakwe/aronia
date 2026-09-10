@@ -4,9 +4,10 @@
   attribute (top-layer, light-dismiss, Esc) + CSS Anchor Positioning (Chromium-
   mostly today). The trigger's popovertarget must match the menu's id, and the
   anchor-name/position-anchor pair must match too.
-    data-size : sm | md | lg on .nb-dropdown
+    data-size  : sm | md | lg on .nb-dropdown
+    data-shape : square | pill on .nb-dropdown (pill rounds the trigger only)
 -->
-<div class="nb-dropdown" data-size="md">
+<div class="nb-dropdown" data-size="md" data-shape="square">
   <button type="button" class="nb-dropdown__trigger" popovertarget="menu-1" aria-haspopup="menu" style="anchor-name: --menu-1">
     Menu
     <svg class="nb-dropdown__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>

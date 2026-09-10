@@ -8,7 +8,7 @@
 .nb-radio {
 	display: inline-flex;
 	flex-direction: column;
-	gap: 0.75rem;
+	gap: var(--nb-space-3);
 }
 .nb-radio[data-disabled='true'] {
 	opacity: 0.6;
@@ -19,7 +19,7 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.625rem;
+	gap: var(--nb-space-2);
 	cursor: pointer;
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight);
@@ -56,7 +56,7 @@
 	content: '';
 	position: absolute;
 	inset: 6px;
-	background: var(--nb-ink);
+	background: var(--nb-on-spot); /* dark mark on the constant yellow disc, both themes */
 }
 
 /* Focus ring on the dot — real keyboard focus, or docs-forced on the selection. */

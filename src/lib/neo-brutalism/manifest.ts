@@ -20,6 +20,7 @@ import {
 	BUTTON_SHAPES,
 	LINK_VARIANTS,
 	CARD_VARIANTS,
+	CARD_FOOTER_ALIGNS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
 	INPUT_SIZES,
@@ -27,6 +28,7 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	ALERT_VARIANTS,
 	SPINNER_SPEEDS,
 	SKELETON_SHAPES
@@ -44,15 +46,28 @@ export const neoBrutalism: StyleSpec = {
 		'Outline elements in thick black borders; keep corners square.',
 		'Give interactive/raised elements a hard offset shadow (no blur, solid colour); flat containers rely on the border alone.',
 		'Use bold, clashing, high-contrast fills — flat saturated colour, pure black and white; do not be timid.',
-		'Make interaction tactile and obvious — elements "shove" into their shadow on press, with big, unmistakable hover and focus states.'
+		'Make interaction tactile and obvious — elements "shove" into their shadow on press, with big, unmistakable hover and focus states.',
+		'Dark mode is the same brutalist punch turned inside-out — off-white ink and its hard offset on an off-black STOCK, opt-in via a data-theme flag, never a second look. The signature carries UNCHANGED: thick borders, square corners, and the tactile shove (pure geometry — it presses into the shadow the same on either ground). What flips is the hard offset itself: border and shadow are both ink, so they stay one continuous hard edge and invert together to off-WHITE — a light-edge reading as the block catching light, so elevation inverts the honest way (raised = lighter on dark). The punch now comes from the saturated flats, not near-pure contrast — the yellow/cyan/pink/status fills are constant and read LOUDEST on the dark stock, each still wearing its dark label (a yellow button is black-on-yellow in both themes). Off-black not pure black, off-white not pure white: a bright ink on pure black vibrates into the generic "charcoal SaaS" drama the loud palette already escapes — stay maximal through the fills and the offset, never through pure-black-on-white.'
 	],
 	avoid: [
 		'Soft or blurred shadows, gradients, or glassy translucency.',
 		'Muted, low-contrast, or pastel-timid palettes.',
 		'Polished "corporate minimal" restraint, or heavily rounded corners.',
-		'Thin, subtle borders — keep them thick and black.'
+		'Thin, subtle borders — keep them thick and black.',
+		'A bespoke second dark engine — a twin token set, a separate dark stylesheet, or a new shadow/elevation trick just for dark. Dark is the SAME tokens re-valued through the ink/paper anchors; the hard offset inverts to off-white on its own, so a component needing hand-written dark CSS is a smell. And pure-black stock or a bright-white ink on it — the never-pure rule, and why the saturated fills keep their dark labels.'
 	],
 	tokens: 'src/lib/styles/neo-brutalism.css',
+	// How to swap the face while keeping neo's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A grotesque built to go HEAVY and hold its confidence at large sizes — even body sets at 500 and headings hit 800. It wants a genuinely bold top end (800/900), chunky-but-legible letterforms and tight, industrial spacing. Archivo (shipped) is the reference.',
+		breaksOn:
+			'Anything delicate, thin, high-contrast or elegant — a refined/light face, a soft rounded voice, or a face that tops out at 700. The family’s whole force is weight and heft, so a face that can’t get heavy collapses it.',
+		examples:
+			'Space Grotesk, Neue Machina, Chivo, Anton (display only), Archivo Expanded — and other confident, heavy-capable grotesques in this vein.',
+		watch:
+			'Neo loads its face from Fontsource (@import "@fontsource-variable/archivo") — to swap, change that import (or add your own @font-face) AND the --nb-font family name. The --nb-font-weight-* ladder runs HEAVY (500/600/700/800): pick a face that actually ships those weights (ideally a variable font reaching 800+), or the hierarchy flattens.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {
@@ -192,6 +207,13 @@ export const neoBrutalism: StyleSpec = {
 					type: 'enum',
 					values: CARD_VARIANTS,
 					default: 'paper'
+				},
+				{
+					name: 'footerAlign',
+					description: 'How footer actions are arranged along the row.',
+					type: 'enum',
+					values: CARD_FOOTER_ALIGNS,
+					default: 'end'
 				}
 			],
 			snippets: [
@@ -200,7 +222,7 @@ export const neoBrutalism: StyleSpec = {
 				{ name: 'footer', description: 'Optional footer region, divided by a hard rule.' }
 			],
 			styleClass: 'nb-card',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'footer-align'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/card.css',
 				skins: {
@@ -289,8 +311,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/input.css',
 				skins: {
-					react: 'registry/neo-brutalism/input/Input.tsx',
-					svelte: 'src/lib/neo-brutalism/Input.svelte',
+					react: [
+						'registry/neo-brutalism/input/Input.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Input.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/input/input.html'
 				}
 			}
@@ -341,8 +369,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/textarea.css',
 				skins: {
-					react: 'registry/neo-brutalism/textarea/Textarea.tsx',
-					svelte: 'src/lib/neo-brutalism/Textarea.svelte',
+					react: [
+						'registry/neo-brutalism/textarea/Textarea.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Textarea.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/textarea/textarea.html'
 				}
 			}
@@ -544,8 +578,14 @@ export const neoBrutalism: StyleSpec = {
 			files: {
 				style: 'src/lib/neo-brutalism/css/select.css',
 				skins: {
-					react: 'registry/neo-brutalism/select/Select.tsx',
-					svelte: 'src/lib/neo-brutalism/Select.svelte',
+					react: [
+						'registry/neo-brutalism/select/Select.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Select.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/select/select.html'
 				}
 			}
@@ -583,6 +623,13 @@ export const neoBrutalism: StyleSpec = {
 					default: false
 				},
 				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
+				},
+				{
 					name: 'shape',
 					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
 					type: 'enum',
@@ -598,12 +645,18 @@ export const neoBrutalism: StyleSpec = {
 				}
 			],
 			styleClass: 'nb-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/field.css',
 				skins: {
-					react: 'registry/neo-brutalism/field/Field.tsx',
-					svelte: 'src/lib/neo-brutalism/Field.svelte',
+					react: [
+						'registry/neo-brutalism/field/Field.tsx',
+						'registry/neo-brutalism/field/field-context.ts'
+					],
+					svelte: [
+						'src/lib/neo-brutalism/Field.svelte',
+						'src/lib/neo-brutalism/field-context.ts'
+					],
 					html: 'registry/neo-brutalism/field/field.html'
 				}
 			}
@@ -777,6 +830,13 @@ export const neoBrutalism: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'label',
 					description: 'The trigger button text.',
 					type: 'string',
@@ -790,7 +850,7 @@ export const neoBrutalism: StyleSpec = {
 				}
 			],
 			styleClass: 'nb-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/neo-brutalism/css/dropdown-menu.css',
 				skins: {

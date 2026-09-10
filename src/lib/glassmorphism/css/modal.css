@@ -10,8 +10,9 @@
 	border: var(--glass-border);
 	border-radius: var(--glass-radius);
 	/* A more-solid frosted surface than the surfaces elsewhere — it carries body
-	   text over an unknown page, so it leans opaque for reliable AA contrast. */
-	background: rgba(255, 255, 255, 0.82);
+	   text over an unknown page, so it leans opaque for reliable AA contrast. On
+	   dark this token goes dark-tinted (a light film this opaque would glare). */
+	background: var(--glass-surface-solid);
 	-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
 	backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
 	color: var(--glass-ink);
@@ -43,7 +44,9 @@
 /* Dim + blur the page behind (not a flat wash) — the glass signature; fades in
    and out with the dialog. */
 .glass-modal::backdrop {
-	background: color-mix(in srgb, var(--glass-ink) 32%, transparent);
+	/* A darkening scrim in BOTH themes — pinned dark, not --glass-ink (which
+	   reflects to off-white on dark and would light-wash the page behind). */
+	background: var(--glass-scrim);
 	-webkit-backdrop-filter: blur(3px);
 	backdrop-filter: blur(3px);
 	opacity: 0;
@@ -97,26 +100,26 @@
 }
 
 .glass-modal__header {
-	padding: 1.25rem 3rem 1.25rem 1.5rem; /* right room for the close button */
+	padding: var(--glass-space-5) 3rem var(--glass-space-5) var(--glass-space-6); /* 3rem right = close-button clearance, not a rhythm rung */
 	border-bottom: var(--glass-divider);
 	font-size: var(--glass-size-title);
 	font-weight: var(--glass-font-weight);
 }
 .glass-modal__body {
-	padding: 1.5rem;
+	padding: var(--glass-space-6);
 	font-weight: var(--glass-font-weight-regular);
 	line-height: 1.5;
 }
 /* With no header, the close button floats over the body's top-right — give the
    body top clearance so its first line drops below the button. */
 .glass-modal[data-has-header='false'] .glass-modal__body {
-	padding-top: 3rem;
+	padding-top: 3rem; /* close-button clearance, not a rhythm rung */
 }
 .glass-modal__footer {
-	padding: 1.25rem 1.5rem;
+	padding: var(--glass-space-5) var(--glass-space-6);
 	border-top: var(--glass-divider);
 	display: flex;
-	gap: 0.75rem;
+	gap: var(--glass-space-3);
 	justify-content: flex-end;
 }
 

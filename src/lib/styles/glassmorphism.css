@@ -19,51 +19,87 @@
 @import '@fontsource-variable/inter';
 
 :root {
-  /* translucent frosted surfaces */
-  --glass-surface: rgba(255, 255, 255, 0.45);
-  --glass-surface-strong: rgba(255, 255, 255, 0.65); /* raised / hover */
+  /* DARK MODE — every colour token below is a `light-dark(<light>, <dark>)` pair
+     authored ONCE here; the three `[data-theme]` modes at the foot of this file
+     flip which half resolves. Glass's dark story, from within the medium: frosted
+     glass over DARK stock (iOS control-center / macOS dark-vibrancy). The frost
+     stays a LIGHT film but drops to a low opacity — the dark backdrop reads
+     through, frosted + lifted, and the white RIM (the detail that sells glass)
+     stays, fainter. Never a smoky dark tint for the AMBIENT surfaces; that reading
+     lost the rim. Ink flips to off-white (never pure #fff — the a11y rule). The
+     dense OVERLAY panels (modal/dropdown) are the one exception — a faint film
+     can't hold body text over unknown content, so they go dark-tinted on dark. */
+
+  /* translucent frosted surfaces — a light film, faint on dark so the backdrop
+     shows through without the panel glowing white. */
+  --glass-surface: light-dark(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.08));
+  --glass-surface-strong: light-dark(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.14)); /* raised / hover */
+  /* Dense overlay panels (Modal/DropdownMenu) — leans opaque to hold text over
+     unknown content, so on dark it must go DARK-tinted (a light film this opaque
+     would be a glaring white panel). The white rim still frosts its edge. */
+  --glass-surface-solid: light-dark(rgba(255, 255, 255, 0.82), rgba(30, 30, 48, 0.85));
+  /* Muted button fill — a subtle film, kept fainter on dark so it stays a quiet
+     raised fill rather than a bright grey slab against the dark stock. */
+  --glass-muted: light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.12));
   --glass-blur: 14px;
 
-  /* text */
-  --glass-ink: #16162a;
-  --glass-ink-soft: rgba(22, 22, 42, 0.62);
+  /* text — off-black ink ↔ off-white on dark (never pure #fff; it haloes) */
+  --glass-ink: light-dark(#16162a, #f2f2f7);
+  --glass-ink-soft: light-dark(rgba(22, 22, 42, 0.62), rgba(242, 242, 247, 0.62));
 
   /* brand / accents — vivid translucent fills that read on ANY backdrop */
-  /* Vivid fills carry WHITE text, so they're tuned dark enough to clear WCAG AA
-     (≥4.5:1) even over a pure-white backdrop — the lightest possible, so passing
-     there guarantees AA on ANY consumer background. See DESIGN.md, Entry 24. */
+  /* CONSTANT (not light-dark): these carry WHITE text everywhere (buttons,
+     badges), so they're on-SPOT fills — flipping them would break white-on-fill.
+     Tuned dark enough to clear WCAG AA (≥4.5:1) over a pure-white backdrop — the
+     lightest case — so passing there guarantees AA on ANY consumer background,
+     dark included (a darker composite only raises white-text contrast). See
+     DESIGN.md, Entry 24. Bloom on dark is watched by eyeball, not a flip. */
   --glass-primary: rgba(79, 70, 229, 0.9); /* indigo-600 (5.1:1 white) */
   --glass-primary-ink: #ffffff;
   --glass-secondary: rgba(190, 24, 93, 0.9); /* pink-700 (5.3:1 white) */
-  --glass-accent: #6366f1; /* solid — focus ring (non-text) */
-  /* link/active TEXT colour — a solid indigo dark enough to clear WCAG AA as text
-     (--glass-accent #6366f1 is a non-text ring, ~4.3:1). Used by Link for inline
-     links + the active nav item. */
-  --glass-link-ink: #4f46e5; /* indigo-600 — 6.3:1 on white */
+  --glass-accent: #6366f1; /* solid — focus ring (non-text), reads on either ground */
+  /* link/active TEXT colour — a text role, so it RE-TUNES per theme: a dark indigo
+     for AA on light ↔ a light indigo for AA on the dark stock (the dark tone would
+     vanish). --glass-accent #6366f1 is a non-text ring, ~4.3:1. Used by Link for
+     inline links + the active nav item. */
+  --glass-link-ink: light-dark(#4f46e5, #a5b4fc); /* indigo-600 (6.3:1 white) ↔ indigo-300 (dark) */
 
-  /* semantic status colours (Alert/Toast later) */
+  /* semantic status colours (Alert/Toast/Badge) — CONSTANT vivid fills, like the
+     brand accents: they carry white text on badges (on-spot) AND drive the Alert's
+     alpha-mixed wash/rim/icon, which adapt to the ground on their own (a 24% mix
+     over dark stock reads as a subtle dark tint; the 55% rim stays saturated). */
   --glass-info: rgba(29, 78, 216, 0.9); /* blue-700 — carries white text (badge), AA (5.5:1) */
   --glass-success: rgba(16, 185, 129, 0.82);
   --glass-warning: rgba(245, 158, 11, 0.85);
   --glass-danger: rgba(239, 68, 68, 0.82);
-  /* danger as TEXT (field errors) needs a dark red — the fill above is far too
-     light to clear WCAG AA on a light background. red-700, 6.4:1 on white. */
-  --glass-danger-ink: #b91c1c;
+  /* danger as TEXT (field errors) — a text role, re-tuned per theme: dark red for
+     AA on light ↔ a light red on the dark stock. red-700 (6.4:1 white) ↔ red-400. */
+  --glass-danger-ink: light-dark(#b91c1c, #f87171);
 
-  /* borders — a light edge highlight (the glass "rim"). Kept separate for the
-     internal dividers, which are fainter still. */
-  --glass-border-color: rgba(255, 255, 255, 0.6);
+  /* Modal backdrop dim — a DARKENING scrim in BOTH themes. Pinned dark, NOT
+     derived from --glass-ink: that reflects to off-white on dark, which would turn
+     the scrim into a LIGHT wash behind the dialog (a meaning-flip landmine). */
+  --glass-scrim: rgba(12, 12, 20, 0.4);
+
+  /* borders — a light edge highlight (the glass "rim"). Stays WHITE on dark (it's
+     the light catching the glass edge), just fainter. Dividers fainter still. */
+  --glass-border-color: light-dark(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.18));
   --glass-border-width: 1px;
   --glass-border: var(--glass-border-width) solid var(--glass-border-color);
-  --glass-divider: 1px solid rgba(255, 255, 255, 0.3);
-  /* inner top highlight — the detail that sells "glass" */
-  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  --glass-divider: 1px solid light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  /* inner top highlight — the detail that sells "glass"; fainter on dark */
+  --glass-highlight: inset 0 1px 0 light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.22));
 
-  /* soft diffuse shadows — the primary depth cue on light backgrounds (no hard
-     offset; that's NB's job). Bluish tint reads as cool glass. */
-  --glass-shadow-sm: 0 4px 16px rgba(31, 38, 135, 0.1);
-  --glass-shadow: 0 8px 30px rgba(31, 38, 135, 0.14);
-  --glass-shadow-lg: 0 16px 48px rgba(31, 38, 135, 0.2);
+  /* soft diffuse shadows — the primary depth cue on LIGHT (bluish, no hard offset).
+     On dark a drop shadow barely reads, so ELEVATION INVERTS: the rim highlight
+     carries lift and the shadow just anchors the panel — darker + plain black. */
+  --glass-shadow-sm: 0 4px 16px light-dark(rgba(31, 38, 135, 0.1), rgba(0, 0, 0, 0.34));
+  --glass-shadow: 0 8px 30px light-dark(rgba(31, 38, 135, 0.14), rgba(0, 0, 0, 0.42));
+  --glass-shadow-lg: 0 16px 48px light-dark(rgba(31, 38, 135, 0.2), rgba(0, 0, 0, 0.52));
+
+  /* skeleton shimmer sweep — a bright band; dimmed on dark so it doesn't glare
+     against the faint dark film. */
+  --glass-skeleton-sheen: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.16));
 
   /* radius — soft and rounded */
   --glass-radius-sm: 12px;
@@ -85,6 +121,21 @@
      keeps its softer 20px (Modal title, future headings). */
   --glass-size-title: 1.25rem; /* 20px */
 
+  /* spacing scale — the shared 4px ramp (Tailwind keys) materialized as tokens.
+     Values are IDENTICAL across all four families on purpose: spacing is structural
+     rhythm, not style identity. Per-family density comes from which step a component
+     reaches for, never from redefining a step. Mirrors the composition.spacing guidance. */
+  --glass-space-1: 0.25rem; /* 4 */
+  --glass-space-2: 0.5rem; /* 8 */
+  --glass-space-3: 0.75rem; /* 12 */
+  --glass-space-4: 1rem; /* 16 */
+  --glass-space-5: 1.25rem; /* 20 */
+  --glass-space-6: 1.5rem; /* 24 */
+  --glass-space-8: 2rem; /* 32 */
+  --glass-space-12: 3rem; /* 48 */
+  --glass-space-16: 4rem; /* 64 */
+  --glass-space-24: 6rem; /* 96 */
+
   /* type */
   --glass-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   /* Weight scale. Four named steps so components stop scattering magic numbers.
@@ -97,8 +148,58 @@
   --glass-font-weight-bold: 700;
   --glass-font-weight: var(--glass-font-weight-semibold); /* brand weight (alias) */
 
+  /* scrollbar — a thin, PERSISTENT, on-brand bar for this family's scroll
+     containers (Textarea today; Modal/DropdownMenu/Accordion if they overflow).
+     Setting any ::-webkit-scrollbar rule drops WebKit's auto-hide overlay for a
+     classic always-visible bar; scrollbar-width/color is the Firefox fallback.
+     Glass reads as a floating frosted pill in a persistently visible channel:
+     a translucent ink thumb over a faint frosted track, fully rounded, inset so
+     it hovers within the groove. The track is always present (not transparent)
+     so it reads as the Radix signifier that there's more to scroll. */
+  --glass-scrollbar-size: 12px;
+  --glass-scrollbar-thumb: color-mix(in srgb, var(--glass-ink) 30%, transparent);
+  --glass-scrollbar-thumb-hover: color-mix(in srgb, var(--glass-ink) 45%, transparent);
+  --glass-scrollbar-track: color-mix(in srgb, var(--glass-ink) 8%, transparent);
+  --glass-scrollbar-radius: var(--glass-radius-pill);
+  /* Page opt-in: aronia themes its OWN scroll containers only. To carry this
+     family's bar onto the whole page, add the standard properties to your root:
+       html { scrollbar-color: var(--glass-scrollbar-thumb) var(--glass-scrollbar-track); scrollbar-width: thin; }
+     Chrome 121+ and Firefox both honour these on the root; omit to keep the page
+     scrollbar native. */
+
   /* motion — glass floats/eases (it doesn't "shove" like NB) */
   --glass-transition:
     transform 160ms cubic-bezier(0.2, 0, 0, 1), box-shadow 160ms cubic-bezier(0.2, 0, 0, 1),
     background-color 160ms ease;
+}
+
+/* Dark mode — OPT-IN, three modes. aronia has no root family class (it's copied
+   into a consumer's page), so a naked `@media (prefers-color-scheme: dark)` would
+   HIJACK the developer's page on the END-USER's OS setting. Instead the developer
+   sets `data-theme` on the subtree they want themed, and `color-scheme` flips
+   which half of every `light-dark()` pair above resolves. No attribute → light,
+   zero hijack. `color-scheme` also renders native scrollbars/controls in-scheme.
+   `light-dark()` is Baseline across modern browsers since 2024. */
+[data-theme='light'] { color-scheme: light; } /* force light regardless of OS */
+[data-theme='dark']  { color-scheme: dark; }  /* force dark  regardless of OS */
+[data-theme='auto']  { color-scheme: light dark; } /* follow the OS, by opt-in */
+
+/* Glass's non-colour tail is unusually small: the frost, rim, and elevation all
+   ride the light-dark() surface/shadow pairs above, so there's no grain/overprint
+   flip to carry. The one thing light-dark() can't reach is the scrollbar: WebKit
+   resolves light-dark() inside the ::-webkit-scrollbar pseudo against the
+   SCROLLBAR's own color-scheme (normal), not the element's inherited dark one — so
+   the ink-derived thumb/track keep printing their LIGHT (dark-ink) branch on dark
+   and vanish. Force the off-white halves on the hook. */
+[data-theme='dark'] {
+  --glass-scrollbar-thumb: color-mix(in srgb, #f2f2f7 30%, transparent);
+  --glass-scrollbar-thumb-hover: color-mix(in srgb, #f2f2f7 45%, transparent);
+  --glass-scrollbar-track: color-mix(in srgb, #f2f2f7 8%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --glass-scrollbar-thumb: color-mix(in srgb, #f2f2f7 30%, transparent);
+    --glass-scrollbar-thumb-hover: color-mix(in srgb, #f2f2f7 45%, transparent);
+    --glass-scrollbar-track: color-mix(in srgb, #f2f2f7 8%, transparent);
+  }
 }

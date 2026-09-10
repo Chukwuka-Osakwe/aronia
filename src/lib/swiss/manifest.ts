@@ -13,7 +13,9 @@ import {
 	FIELD_SHAPES,
 	CHECKBOX_SHAPES,
 	TOGGLE_SHAPES,
+	DROPDOWN_SHAPES,
 	CARD_VARIANTS,
+	CARD_FOOTER_ALIGNS,
 	BADGE_VARIANTS,
 	BADGE_SHAPES,
 	ALERT_VARIANTS,
@@ -36,16 +38,29 @@ export const swiss: StyleSpec = {
 		'Limit the palette to ink, paper, and greys plus the single hazard-orange accent — reserve the accent for one primary action or emphasis per view.',
 		'Let whitespace do the work; leave generous, deliberate empty space instead of filling every region.',
 		'Set text flush-left, ragged-right; keep line lengths readable.',
-		'Separate elements with hairline 1px borders and keep surfaces flat — reserve shadow for true overlays (modal, menu) only.'
+		'Separate elements with hairline 1px borders and keep surfaces flat — reserve shadow for true overlays (modal, menu) only.',
+		'Dark mode is the same near-monochrome discipline turned inside-out — off-black stock, off-white ink, opt-in via a data-theme flag, never a second aesthetic. Off-black not pure black, off-white not pure white: the same rule both ways — near-pure contrast vibrates and reads as the generic "charcoal SaaS" drama Swiss exists to escape. Nothing else changes its logic — hierarchy still rides type weight, the single hazard-orange stays the one reserved accent (its dark ink label holds on the orange in both themes). Elevation leans HARDER on the hairline: a dark shadow is near-invisible on a dark ground, so the light 1px border does the separating. State stays colour-only, but a hover RAISES the fill↔label contrast — lift a dark-labelled fill toward the ink anchor, deepen a light-labelled one — so it never drifts to a white halo or sinks into the stock.'
 	],
 	// Anti-patterns — the things that break the language.
 	avoid: [
 		'Gradients, glows, blur, or decorative drop shadows.',
 		'More than one accent colour, or using the accent for large fills and backgrounds.',
 		'Ornamentation, overly rounded "friendly" shapes, or skeuomorphic depth.',
-		'Centred body text or justified columns.'
+		'Centred body text or justified columns.',
+		'A bespoke second dark theme — a twin token set or a separate dark stylesheet. Dark is the same tokens re-valued through the ink/paper anchors; a component needing hand-written dark CSS is a smell. And pure-black stock or pure-white ink — the never-pure rule in both directions.'
 	],
 	tokens: 'src/lib/styles/swiss.css',
+	// How to swap the face while keeping Swiss's character — a lens, not a shortlist.
+	fontGuidance: {
+		dependsOn:
+			'A neutral grotesque sans: low stroke contrast, even uniform strokes, a generous x-height and NO personality quirks — the objectivity is the whole point. Hierarchy rides weight, not colour, so it needs a distinct, usable medium (500), semibold (600) and bold (700). The shipped Helvetica system stack embodies this.',
+		breaksOn:
+			'Anything with character or warmth — humanist quirks, a geometric voice, condensed or display faces, high stroke contrast — or a face without a true medium/bold, which flattens the weight-driven hierarchy the whole family leans on.',
+		examples:
+			'Inter, Helvetica Now, Neue Haas Grotesk, Söhne, Univers, Basel Grotesk — and plenty of other neutral grotesques in this vein.',
+		watch:
+			'Swiss ships as a SYSTEM stack with no font loader — swapping to a custom face means ADDING an @font-face/webfont loader you don’t currently have (keep a real system fallback so layout doesn’t jump on load). Confirm the face gives distinct 500/600/700; the --swiss-font-weight-* ladder assumes all three read apart.'
+	},
 	// Page-level composition — per-style type + media identity; structural ramp is
 	// shared (SHARED_LAYOUT). Universal hygiene is delegated (see AGENTS.md).
 	composition: {
@@ -219,8 +234,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/input.css',
 				skins: {
-					react: 'registry/swiss/input/Input.tsx',
-					svelte: 'src/lib/swiss/Input.svelte',
+					react: ['registry/swiss/input/Input.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Input.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/input/input.html'
 				}
 			}
@@ -271,8 +286,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/textarea.css',
 				skins: {
-					react: 'registry/swiss/textarea/Textarea.tsx',
-					svelte: 'src/lib/swiss/Textarea.svelte',
+					react: ['registry/swiss/textarea/Textarea.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Textarea.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/textarea/textarea.html'
 				}
 			}
@@ -310,6 +325,13 @@ export const swiss: StyleSpec = {
 					default: false
 				},
 				{
+					name: 'size',
+					description: 'Size of the wrapped control — pushed down to it (Input/Textarea/Select).',
+					type: 'enum',
+					values: INPUT_SIZES,
+					default: 'md'
+				},
+				{
 					name: 'shape',
 					description: 'Corner style of the wrapped control — square, or a fully rounded pill.',
 					type: 'enum',
@@ -325,12 +347,12 @@ export const swiss: StyleSpec = {
 				}
 			],
 			styleClass: 'swiss-field',
-			dataAttrs: ['error', 'shape'],
+			dataAttrs: ['shape', 'size'],
 			files: {
 				style: 'src/lib/swiss/css/field.css',
 				skins: {
-					react: 'registry/swiss/field/Field.tsx',
-					svelte: 'src/lib/swiss/Field.svelte',
+					react: ['registry/swiss/field/Field.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Field.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/field/field.html'
 				}
 			}
@@ -479,8 +501,8 @@ export const swiss: StyleSpec = {
 			files: {
 				style: 'src/lib/swiss/css/select.css',
 				skins: {
-					react: 'registry/swiss/select/Select.tsx',
-					svelte: 'src/lib/swiss/Select.svelte',
+					react: ['registry/swiss/select/Select.tsx', 'registry/swiss/field/field-context.ts'],
+					svelte: ['src/lib/swiss/Select.svelte', 'src/lib/swiss/field-context.ts'],
 					html: 'registry/swiss/select/select.html'
 				}
 			}
@@ -552,6 +574,13 @@ export const swiss: StyleSpec = {
 					type: 'enum',
 					values: CARD_VARIANTS,
 					default: 'paper'
+				},
+				{
+					name: 'footerAlign',
+					description: 'How footer actions are arranged along the row.',
+					type: 'enum',
+					values: CARD_FOOTER_ALIGNS,
+					default: 'end'
 				}
 			],
 			snippets: [
@@ -560,7 +589,7 @@ export const swiss: StyleSpec = {
 				{ name: 'footer', description: 'Optional footer region, divided by a hairline rule.' }
 			],
 			styleClass: 'swiss-card',
-			dataAttrs: ['variant'],
+			dataAttrs: ['variant', 'footer-align'],
 			files: {
 				style: 'src/lib/swiss/css/card.css',
 				skins: {
@@ -697,6 +726,13 @@ export const swiss: StyleSpec = {
 					default: 'md'
 				},
 				{
+					name: 'shape',
+					description: 'Corner style of the trigger — square, or a fully rounded pill.',
+					type: 'enum',
+					values: DROPDOWN_SHAPES,
+					default: 'square'
+				},
+				{
 					name: 'label',
 					description: 'The trigger button text.',
 					type: 'string',
@@ -710,7 +746,7 @@ export const swiss: StyleSpec = {
 				}
 			],
 			styleClass: 'swiss-dropdown',
-			dataAttrs: ['size'],
+			dataAttrs: ['size', 'shape'],
 			files: {
 				style: 'src/lib/swiss/css/dropdown-menu.css',
 				skins: {

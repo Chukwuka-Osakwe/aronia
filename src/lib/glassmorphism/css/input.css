@@ -6,6 +6,11 @@
  */
 
 .glass-input {
+	/* Fill the field/container rather than the browser's ~20ch intrinsic width,
+	   so a long value scrolls instead of clipping; min-width:0 lets it shrink in
+	   flex layouts. Matches Textarea/Select, which already fill their width. */
+	width: 100%;
+	min-width: 0;
 	font-family: var(--glass-font);
 	font-weight: var(--glass-font-weight-medium);
 	color: var(--glass-ink);
@@ -34,6 +39,14 @@
 	box-shadow:
 		var(--glass-shadow-sm),
 		0 0 0 4px color-mix(in srgb, var(--glass-accent) 28%, transparent);
+}
+
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — key the danger
+   border off that SEMANTIC hook so it also works standalone (any control marked
+   aria-invalid) and in plain HTML. Higher specificity than :focus, so the danger
+   border holds even while focused. `:not(:disabled)` keeps it off a disabled field. */
+.glass-input[aria-invalid='true']:not(:disabled) {
+	border-color: var(--glass-danger-ink);
 }
 
 .glass-input:disabled {

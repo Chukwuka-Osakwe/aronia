@@ -1,0 +1,16 @@
+<!--
+  Risograph — Tabs (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./tabs.css once. WAI-ARIA tabs: mark the active tab with
+  data-active="true" + aria-selected="true" + tabindex="0" (others tabindex="-1").
+  Wire click + Arrow/Home/End in your framework to move selection & focus.
+-->
+<div class="riso-tabs">
+  <div class="riso-tabs__list" role="tablist">
+    <button type="button" role="tab" id="t-0" class="riso-tabs__tab" data-active="true" aria-selected="true" aria-controls="t-panel" tabindex="0">Overview</button>
+    <button type="button" role="tab" id="t-1" class="riso-tabs__tab" data-active="false" aria-selected="false" aria-controls="t-panel" tabindex="-1">Pricing</button>
+    <button type="button" role="tab" id="t-2" class="riso-tabs__tab" data-active="false" aria-selected="false" aria-controls="t-panel" tabindex="-1">Reviews</button>
+  </div>
+  <div class="riso-tabs__panel" role="tabpanel" id="t-panel" aria-labelledby="t-0">
+    Active panel content.
+  </div>
+</div>

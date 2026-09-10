@@ -8,7 +8,6 @@
 .nb-select {
 	position: relative;
 	display: inline-block;
-	min-width: 16rem;
 }
 .nb-select[data-disabled='true'] {
 	opacity: 0.6;
@@ -41,22 +40,32 @@
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto the native select —
+   danger border off that semantic hook (matches Input). `:not(:disabled)` keeps it
+   off a disabled field. */
+.nb-select__field[aria-invalid='true']:not(:disabled) {
+	border-color: var(--nb-danger-ink);
+}
+
 /* Shared control size scale for text + padding; a trailing rule (same
    specificity, later source order) reserves room for the chevron on the right. */
 .nb-select__field[data-size='sm'] {
 	font-size: var(--nb-size-sm-text);
 	padding: var(--nb-size-sm-pad);
+	min-width: 8rem;
 }
 .nb-select__field[data-size='md'] {
 	font-size: var(--nb-size-md-text);
 	padding: var(--nb-size-md-pad);
+	min-width: 10rem;
 }
 .nb-select__field[data-size='lg'] {
 	font-size: var(--nb-size-lg-text);
 	padding: var(--nb-size-lg-pad);
+	min-width: 12rem;
 }
 .nb-select__field[data-size] {
-	padding-right: 2.75rem;
+	padding-right: 2.75rem; /* chevron clearance, not a rhythm rung */
 }
 
 .nb-select__chevron {

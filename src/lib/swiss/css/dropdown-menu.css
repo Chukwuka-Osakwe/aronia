@@ -16,7 +16,7 @@
 .swiss-dropdown__trigger {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--swiss-space-2);
 	font-family: var(--swiss-font);
 	font-weight: var(--swiss-font-weight-medium);
 	background: var(--swiss-paper);
@@ -38,6 +38,10 @@
 .swiss-dropdown[data-size='lg'] .swiss-dropdown__trigger {
 	font-size: var(--swiss-size-lg-text);
 	padding: var(--swiss-size-lg-pad);
+}
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.swiss-dropdown[data-shape='pill'] .swiss-dropdown__trigger {
+	border-radius: var(--swiss-radius-pill);
 }
 .swiss-dropdown__trigger:hover {
 	background: var(--swiss-muted);
@@ -87,15 +91,15 @@
 }
 .swiss-dropdown[data-size='sm'] .swiss-dropdown__item {
 	font-size: var(--swiss-size-xs-text);
-	padding: 0.4rem 0.8rem;
+	padding: var(--swiss-space-2) var(--swiss-space-3);
 }
 .swiss-dropdown[data-size='md'] .swiss-dropdown__item {
 	font-size: var(--swiss-size-sm-text);
-	padding: 0.55rem 1rem;
+	padding: var(--swiss-space-2) var(--swiss-space-4);
 }
 .swiss-dropdown[data-size='lg'] .swiss-dropdown__item {
 	font-size: var(--swiss-size-md-text);
-	padding: 0.7rem 1.2rem;
+	padding: var(--swiss-space-3) var(--swiss-space-5);
 }
 .swiss-dropdown__item:hover,
 .swiss-dropdown__item:focus-visible {

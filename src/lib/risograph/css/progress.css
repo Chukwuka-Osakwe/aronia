@@ -1,0 +1,87 @@
+/* Risograph — Progress (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-progress` + `[data-*]` attributes — the
+ * framework-agnostic design language for Progress. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A determinate metric, so the fill earns the accent — one focal fluoro-pink bar
+ * in a flat paper track with an ink hairline. The bar is too thin to carry a
+ * readable grain tooth (that rides larger printed fields), so the fill stays a
+ * clean spot-ink pass. Motion is restrained: the fill eases its width (state
+ * mechanics — the value moved), the readout reveals plainly.
+ */
+
+.riso-progress {
+	display: inline-flex;
+	align-items: center;
+	max-width: 100%;
+	font-family: var(--riso-font);
+	color: var(--riso-ink);
+}
+.riso-progress__track {
+	/* Fixed width so showValue never shrinks the bar; definite (not 100%) so it
+	   renders in the shrink-to-fit stage. */
+	flex: none;
+	width: 22rem;
+	max-width: 100%;
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	background: var(--riso-paper);
+	overflow: hidden;
+}
+.riso-progress__fill {
+	height: 100%;
+	background: var(--riso-accent);
+	transition: width 200ms ease;
+}
+.riso-progress[data-size='sm'] .riso-progress__track {
+	height: 0.6rem;
+}
+.riso-progress[data-size='md'] .riso-progress__track {
+	height: 0.9rem;
+}
+.riso-progress[data-size='lg'] .riso-progress__track {
+	height: 1.25rem;
+}
+
+/* The value slot animates its WIDTH (definite lengths → reliably animatable) so
+   the inline-flex grows and the bar eases into place — a plain ease, no bounce.
+   Fixed width (fits "100%") so the readout doesn't jiggle as digits change; the
+   readout is set in the mono print-label voice, whose tabular-like fixed advance
+   keeps digits steady. */
+.riso-progress__value {
+	flex: none;
+	width: 0;
+	padding-left: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	opacity: 0;
+	font-family: var(--riso-font-mono);
+	font-weight: var(--riso-font-weight-bold);
+	transition:
+		width 220ms ease,
+		padding-left 220ms ease,
+		opacity 200ms ease;
+}
+.riso-progress[data-show='true'] .riso-progress__value {
+	width: 3.6em;
+	padding-left: 0.6em;
+	opacity: 1;
+}
+.riso-progress[data-size='sm'] .riso-progress__value {
+	font-size: var(--riso-size-sm-text);
+}
+.riso-progress[data-size='md'] .riso-progress__value {
+	font-size: var(--riso-size-md-text);
+}
+.riso-progress[data-size='lg'] .riso-progress__value {
+	font-size: var(--riso-size-lg-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.riso-progress__value,
+	.riso-progress__fill {
+		transition: none;
+	}
+}

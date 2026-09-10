@@ -1,0 +1,76 @@
+/* Risograph — Spinner (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-spinner` + `[data-*]` attributes — the
+ * framework-agnostic design language for Spinner. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * A circular ring with one SPOT-BLUE arc on a quiet paper-line ring, rotating.
+ * The workhorse spot ink, not the fluoro accent — a spinner is ambient and often
+ * ubiquitous, so the reserved accent stays reserved; but riso prints in colour,
+ * so the arc is the classic process-blue pass rather than swiss's bare ink.
+ */
+
+.riso-spinner {
+	display: inline-flex;
+}
+.riso-spinner__box {
+	box-sizing: border-box;
+	border-style: solid;
+	border-color: var(--riso-line);
+	border-top-color: var(--riso-blue);
+	border-radius: 50%;
+	/* Duration resolves public override → speed preset → default: a consumer can
+	   set --riso-spinner-duration at ANY specificity and it wins (it takes
+	   precedence in the var() chain rather than competing with the preset rules).
+	   The `speed` prop just fills the private preset. */
+	animation: riso-spin var(--riso-spinner-duration, var(--_riso-spinner-speed, 0.9s)) linear
+		infinite;
+}
+/* DARK — the fluoro finally earns its loudness on the plum stock, where the spot
+   blue reads quiet. Light keeps the reserved workhorse blue (see header). */
+[data-theme='dark'] .riso-spinner__box {
+	border-top-color: var(--riso-accent);
+}
+
+/* speed prop → private preset duration (public --riso-spinner-duration overrides) */
+.riso-spinner[data-speed='slow'] {
+	--_riso-spinner-speed: 1.6s;
+}
+.riso-spinner[data-speed='normal'] {
+	--_riso-spinner-speed: 0.9s;
+}
+.riso-spinner[data-speed='fast'] {
+	--_riso-spinner-speed: 0.5s;
+}
+
+/* size → box dimensions + ring thickness */
+.riso-spinner[data-size='sm'] .riso-spinner__box {
+	width: 1.25rem;
+	height: 1.25rem;
+	border-width: 2px;
+}
+.riso-spinner[data-size='md'] .riso-spinner__box {
+	width: 1.75rem;
+	height: 1.75rem;
+	border-width: 3px;
+}
+.riso-spinner[data-size='lg'] .riso-spinner__box {
+	width: 2.5rem;
+	height: 2.5rem;
+	border-width: 3px;
+}
+
+@keyframes riso-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Reduced-motion wins over the prop AND a consumer's --riso-spinner-duration —
+   set the longhand directly (accessibility takes priority over customisation). */
+@media (prefers-reduced-motion: reduce) {
+	.riso-spinner .riso-spinner__box {
+		animation-duration: 2.4s;
+	}
+}

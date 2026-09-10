@@ -1,0 +1,131 @@
+/* Risograph — DropdownMenu (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-dropdown` + `[data-*]` attributes — the
+ * framework-agnostic design language for DropdownMenu. Depends only on the
+ * Layer-1 tokens (styles/riso.css). Source of truth for BOTH the Svelte skin
+ * (which imports it) and the aronia registry.
+ *
+ * The trigger is the ghost-button language (paper + ink hairline, muted hover).
+ * The menu is the zero-elevation overlay: NO shadow even in the top layer — a
+ * printed paper panel whose ink hairline and grain tooth do the separating (the
+ * same bet the Modal makes, without a backdrop to help). Items are borderless;
+ * hover/focus shifts to the muted paper — colour only.
+ */
+
+.riso-dropdown {
+	display: inline-flex;
+}
+.riso-dropdown__trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--riso-space-2);
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	background: var(--riso-paper);
+	color: var(--riso-ink);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	cursor: pointer;
+	transition: var(--riso-transition);
+	/* font/padding set per size below */
+}
+/* shape — pill rounds the trigger only (the menu panel keeps its own radius). */
+.riso-dropdown[data-shape='pill'] .riso-dropdown__trigger {
+	border-radius: var(--riso-radius-pill);
+}
+.riso-dropdown[data-size='sm'] .riso-dropdown__trigger {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+}
+.riso-dropdown[data-size='md'] .riso-dropdown__trigger {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+}
+.riso-dropdown[data-size='lg'] .riso-dropdown__trigger {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+}
+.riso-dropdown__trigger:hover {
+	background: var(--riso-muted);
+}
+.riso-dropdown__trigger:focus-visible {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+.riso-dropdown__chevron {
+	width: 1em;
+	height: 1em;
+	transition: transform 150ms ease;
+}
+.riso-dropdown__chevron[data-open='true'] {
+	transform: rotate(180deg);
+}
+
+.riso-dropdown__menu {
+	/* Reset the popover UA default (centred, margin auto) and place it against
+	   the trigger with anchor positioning. */
+	margin: 0;
+	inset: auto;
+	top: calc(anchor(bottom) + 0.4rem);
+	left: anchor(left);
+	min-width: anchor-size(width);
+	position-try-fallbacks: flip-block;
+
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	padding: 0;
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	box-shadow: none; /* deliberate — the hairline + grain do the separating */
+	flex-direction: column;
+	overflow: hidden;
+}
+.riso-dropdown__menu:popover-open {
+	display: flex;
+}
+/* The paper tooth — SVG grain, multiply-blended, faint, non-interactive. */
+.riso-dropdown__menu::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
+.riso-dropdown__item {
+	text-align: left;
+	white-space: nowrap;
+	background: transparent;
+	border: none;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-regular);
+	color: var(--riso-ink);
+	cursor: pointer;
+	transition: var(--riso-transition);
+}
+.riso-dropdown[data-size='sm'] .riso-dropdown__item {
+	font-size: var(--riso-size-xs-text);
+	padding: var(--riso-space-2) var(--riso-space-3);
+}
+.riso-dropdown[data-size='md'] .riso-dropdown__item {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-space-2) var(--riso-space-4);
+}
+.riso-dropdown[data-size='lg'] .riso-dropdown__item {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-space-3) var(--riso-space-5);
+}
+.riso-dropdown__item:hover,
+.riso-dropdown__item:focus-visible {
+	outline: none;
+	background: var(--riso-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+	.riso-dropdown__chevron {
+		transition: none;
+	}
+}

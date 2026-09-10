@@ -3,7 +3,7 @@
 // arrays; the TS unions derive from them; components and manifest both import
 // here so enum drift is structurally impossible. See DESIGN.md, Entry 4.
 
-export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost', 'quiet'] as const;
+export const BUTTON_VARIANTS = ['primary', 'secondary', 'muted', 'ghost'] as const;
 export type ButtonVariant = (typeof BUTTON_VARIANTS)[number];
 
 export const BUTTON_SIZES = ['xs', 'sm', 'md', 'lg'] as const;
@@ -14,6 +14,10 @@ export type ButtonShape = (typeof BUTTON_SHAPES)[number];
 
 export const CARD_VARIANTS = ['surface', 'strong', 'primary', 'secondary'] as const;
 export type CardVariant = (typeof CARD_VARIANTS)[number];
+
+// Card footer arrangement — actions right-aligned (default), centered, left, or split.
+export const CARD_FOOTER_ALIGNS = ['end', 'center', 'start', 'between'] as const;
+export type CardFooterAlign = (typeof CARD_FOOTER_ALIGNS)[number];
 
 export const BADGE_VARIANTS = ['primary', 'secondary', 'muted', 'accent'] as const;
 export type BadgeVariant = (typeof BADGE_VARIANTS)[number];
@@ -42,6 +46,11 @@ export type CheckboxShape = (typeof CHECKBOX_SHAPES)[number];
 
 export const TOGGLE_SHAPES = ['square', 'pill'] as const;
 export type ToggleShape = (typeof TOGGLE_SHAPES)[number];
+
+// The DropdownMenu trigger is button-like, so it shares the square|pill
+// vocabulary; `pill` rounds the trigger only (the menu panel keeps its radius).
+export const DROPDOWN_SHAPES = ['square', 'pill'] as const;
+export type DropdownShape = (typeof DROPDOWN_SHAPES)[number];
 
 export const ALERT_VARIANTS = ['info', 'success', 'warning', 'error'] as const;
 export type AlertVariant = (typeof ALERT_VARIANTS)[number];

@@ -6,6 +6,11 @@
  */
 
 .nb-input {
+	/* Fill the field/container rather than the browser's ~20ch intrinsic width,
+	   so a long value scrolls instead of clipping; min-width:0 lets it shrink in
+	   flex layouts. Matches Textarea/Select, which already fill their width. */
+	width: 100%;
+	min-width: 0;
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight-medium);
 	color: var(--nb-ink);
@@ -26,6 +31,13 @@
 .nb-input[data-state='focus'] {
 	outline: none;
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
+}
+
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — key the danger
+   border off that SEMANTIC hook so it also works standalone (any control marked
+   aria-invalid) and in plain HTML. `:not(:disabled)` keeps it off a disabled field. */
+.nb-input[aria-invalid='true']:not(:disabled) {
+	border-color: var(--nb-danger-ink);
 }
 
 /* Disabled — intentional inert field: greyed background (Input has no colour

@@ -47,45 +47,41 @@
 }
 
 /* variants */
+/* primary/secondary ride CONSTANT saturated fills, so their label is pinned to
+   --nb-on-spot (dark in both themes) — the base --nb-ink would flip to off-white on
+   dark and vanish on the light fill. `muted` keeps the reflecting ink (its fill
+   inverts to a dark panel, where off-white ink is correct). */
 .nb-btn[data-variant='primary'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot);
 }
 .nb-btn[data-variant='secondary'] {
 	background: var(--nb-secondary);
+	color: var(--nb-on-spot);
 }
 .nb-btn[data-variant='muted'] {
 	background: var(--nb-muted);
 }
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (no shadow, no shove); a muted fill on hover. `muted` remains the
+   bordered, filled de-emphasis option above it. */
 .nb-btn[data-variant='ghost'] {
 	background: transparent;
+	border: none;
 	box-shadow: none;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on any
+	   inverted surface a consumer drops it on — not just the paper card. */
+	color: inherit;
 }
 .nb-btn[data-variant='ghost']:hover,
 .nb-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--nb-muted);
+	/* Muted fill on light grounds; an inverted surface overrides the var. */
+	background: var(--nb-ghost-hover-bg, var(--nb-muted));
 	transform: none;
 	box-shadow: none;
 }
 .nb-btn[data-variant='ghost']:active,
 .nb-btn[data-variant='ghost'][data-state='active'] {
-	transform: none;
-}
-
-/* quiet — like ghost but ALSO borderless: a bare text button for low-emphasis
-   spots (e.g. nav items). Transparent, no shadow, no shove; a muted fill on hover. */
-.nb-btn[data-variant='quiet'] {
-	background: transparent;
-	border: none;
-	box-shadow: none;
-}
-.nb-btn[data-variant='quiet']:hover,
-.nb-btn[data-variant='quiet'][data-state='hover'] {
-	background: var(--nb-muted);
-	transform: none;
-	box-shadow: none;
-}
-.nb-btn[data-variant='quiet']:active,
-.nb-btn[data-variant='quiet'][data-state='active'] {
 	transform: none;
 }
 

@@ -19,14 +19,14 @@
 .swiss-tabs__list {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin-bottom: 0.75rem;
+	gap: var(--swiss-space-2);
+	margin-bottom: var(--swiss-space-3);
 }
 .swiss-tabs__tab {
 	font-family: var(--swiss-font);
 	font-weight: var(--swiss-font-weight-medium);
 	font-size: var(--swiss-size-md-text);
-	padding: 0.5rem 1rem;
+	padding: var(--swiss-space-2) var(--swiss-space-4);
 	background: var(--swiss-paper);
 	color: var(--swiss-ink);
 	border: var(--swiss-border);
@@ -56,7 +56,7 @@
 	min-width: 100%;
 	border: var(--swiss-border);
 	border-radius: var(--swiss-radius);
-	padding: 1.5rem;
+	padding: var(--swiss-space-6);
 	font-family: var(--swiss-font);
 	font-weight: var(--swiss-font-weight-regular);
 	line-height: 1.5;

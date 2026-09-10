@@ -1,0 +1,19 @@
+<!--
+  Risograph — Skeleton (plain-HTML snippet, universal fallback).
+  Include ./tokens.css + ./skeleton.css once. Shape via modifier class:
+    riso-skeleton--text   : N stacked lines (make the last one short)
+    riso-skeleton--rect   : a single block (set width + height)
+    riso-skeleton--circle : a disc (width = diameter)
+-->
+<!-- Text: several lines, last one short -->
+<div class="riso-skeleton riso-skeleton--text" role="status" aria-label="Loading">
+  <span class="riso-skeleton__bar" style="width: 100%"></span>
+  <span class="riso-skeleton__bar" style="width: 100%"></span>
+  <span class="riso-skeleton__bar" style="width: 60%"></span>
+</div>
+
+<!-- Rect -->
+<span class="riso-skeleton riso-skeleton--rect" role="status" aria-label="Loading" style="width: 12rem; height: 8rem"></span>
+
+<!-- Circle -->
+<span class="riso-skeleton riso-skeleton--circle" role="status" aria-label="Loading" style="width: 3rem"></span>

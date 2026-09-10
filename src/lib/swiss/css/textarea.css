@@ -34,6 +34,12 @@
 	outline-offset: 2px;
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it off disabled. */
+.swiss-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--swiss-danger-ink);
+}
+
 /* Disabled — inert greyed field (matches Input). */
 .swiss-textarea:disabled {
 	background: var(--swiss-muted);
@@ -53,4 +59,35 @@
 .swiss-textarea[data-size='lg'] {
 	font-size: var(--swiss-size-lg-text);
 	padding: var(--swiss-size-lg-pad);
+}
+
+/* Themed scrollbar — persistent hairline-grey bar (tokens in styles/swiss.css).
+   The thumb is inset from the gutter via a track-coloured border + padding-box
+   clip, so it reads thinner than the track it rides in. */
+.swiss-textarea::-webkit-scrollbar {
+	width: var(--swiss-scrollbar-size);
+	height: var(--swiss-scrollbar-size);
+}
+.swiss-textarea::-webkit-scrollbar-track {
+	background: var(--swiss-scrollbar-track);
+}
+.swiss-textarea::-webkit-scrollbar-thumb {
+	background: var(--swiss-scrollbar-thumb);
+	border-radius: var(--swiss-scrollbar-radius);
+	border: 2px solid var(--swiss-scrollbar-track);
+	background-clip: padding-box;
+}
+.swiss-textarea::-webkit-scrollbar-thumb:hover {
+	background: var(--swiss-scrollbar-thumb-hover);
+}
+/* Firefox fallback: the standard properties (Firefox has no ::-webkit-scrollbar).
+   Gated with -moz-appearance, which Chrome/Safari DON'T support — so these never
+   reach Blink/WebKit, where a non-default scrollbar-width/color would disable the
+   persistent ::-webkit-scrollbar track above. (On macOS the OS still auto-hides
+   Firefox's overlay bar; this themes it where the platform keeps it visible.) */
+@supports (-moz-appearance: none) {
+	.swiss-textarea {
+		scrollbar-width: thin;
+		scrollbar-color: var(--swiss-scrollbar-thumb) var(--swiss-scrollbar-track);
+	}
 }

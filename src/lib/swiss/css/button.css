@@ -51,7 +51,11 @@
 }
 .swiss-btn[data-variant='secondary']:hover,
 .swiss-btn[data-variant='secondary'][data-state='hover'] {
-	background: color-mix(in srgb, var(--swiss-ink) 82%, #fff);
+	/* Lighten the ink fill toward the PAPER anchor (not a hardcoded #fff) so the
+	   shift reflects: on light it lifts the near-black fill toward white; on dark
+	   the fill is already off-white, so mixing toward the dark stock DEEPENS it —
+	   a visible hover that avoids drifting to a pure-white halo. */
+	background: color-mix(in srgb, var(--swiss-ink) 82%, var(--swiss-paper));
 }
 
 .swiss-btn[data-variant='muted'] {
@@ -59,27 +63,29 @@
 }
 .swiss-btn[data-variant='muted']:hover,
 .swiss-btn[data-variant='muted'][data-state='hover'] {
-	background: color-mix(in srgb, var(--swiss-muted) 92%, #000);
+	/* Shift toward the INK anchor (not a hardcoded #000) so it reflects: on light
+	   it darkens the pale fill; on dark the ink anchor is off-white, so the muted
+	   panel LIFTS toward it instead of receding into the stock. */
+	background: color-mix(in srgb, var(--swiss-muted) 92%, var(--swiss-ink));
 }
 
-/* ghost — transparent, but keeps the hairline border: an outline button. */
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (the hairline stays present but transparent so its footprint
+   matches the others); a muted fill on hover. `muted` remains the bordered,
+   filled de-emphasis option above it. */
 .swiss-btn[data-variant='ghost'] {
 	background: transparent;
+	border-color: transparent;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on an
+	   inverted (ink) card/modal — not just on paper. */
+	color: inherit;
 }
 .swiss-btn[data-variant='ghost']:hover,
 .swiss-btn[data-variant='ghost'][data-state='hover'] {
-	background: var(--swiss-muted);
-}
-
-/* quiet — transparent AND borderless (a bare text button, e.g. nav items). The
-   border stays present but transparent so its footprint matches the others. */
-.swiss-btn[data-variant='quiet'] {
-	background: transparent;
-	border-color: transparent;
-}
-.swiss-btn[data-variant='quiet']:hover,
-.swiss-btn[data-variant='quiet'][data-state='hover'] {
-	background: var(--swiss-muted);
+	/* Tuned muted fill on light grounds; an inverted surface overrides the var with
+	   an on-ink tint (see card.css [data-variant='ink']). Falls back to the muted
+	   shift toward the ink anchor so it reflects on the dark stage too. */
+	background: var(--swiss-ghost-hover-bg, color-mix(in srgb, var(--swiss-muted) 92%, var(--swiss-ink)));
 }
 
 /* sizes */

@@ -15,7 +15,7 @@
 .swiss-toggle {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: var(--swiss-space-2);
 	background: none;
 	border: none;
 	padding: 0;

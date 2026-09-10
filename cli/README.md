@@ -48,12 +48,16 @@ aronia add <component...> [options]    # add components; the first add adopts a 
 
 | Option | Description | Default |
 | --- | --- | --- |
-| `--style <id>` | `neo-brutalism`, `glassmorphism`, or `swiss`. Required for the first `add`; remembered after. | adopted |
+| `--style <id>` | `neo-brutalism`, `glassmorphism`, `swiss`, or `risograph`. Required for the first `add`; remembered after. | adopted |
 | `--framework <fw>` | `react`, `svelte`, or `html`. | detected, else `react` |
 | `--cwd <dir>` | Where to write the `aronia/` folder. | current dir |
 | `--registry <src>` | Registry URL or local directory. | bundled |
 
-Three design languages, 20 components each; dependencies are pulled in
+Four design languages, 20 components each; dependencies are pulled in
 automatically (e.g. `toast` also adds `alert`).
+
+**Sharing one copy across a monorepo?** Point every app at a common folder with
+`aronia add --cwd <shared-dir>` and alias it in each app's bundler config — one
+language, many apps. (Or keep a copy per app to customise independently — your call.)
 
 Full docs and source: https://github.com/Chukwuka-Osakwe/aronia

@@ -3,6 +3,7 @@
 import type { TextareaHTMLAttributes } from 'react';
 import './tokens.css';
 import './textarea.css';
+import { useFieldContext } from './field-context';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 
@@ -11,8 +12,19 @@ type Props = { size?: InputSize; rows?: number } & Omit<
 	'size'
 >;
 
-export function Textarea({ size = 'md', rows = 4, ...rest }: Props) {
-	return <textarea className="nb-textarea" data-size={size} rows={rows} {...rest} />;
+export function Textarea({ size, rows = 4, ...rest }: Props) {
+	// Inside a Field: inherit its size + wire the error a11y (same contract as Input).
+	const field = useFieldContext();
+	return (
+		<textarea
+			className="nb-textarea"
+			data-size={size ?? field?.size ?? 'md'}
+			rows={rows}
+			aria-invalid={field?.invalid || undefined}
+			aria-describedby={field?.describedById}
+			{...rest}
+		/>
+	);
 }
 
 export default Textarea;

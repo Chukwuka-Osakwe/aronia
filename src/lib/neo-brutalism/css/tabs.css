@@ -14,14 +14,14 @@
 .nb-tabs__list {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin-bottom: 0.75rem;
+	gap: var(--nb-space-2);
+	margin-bottom: var(--nb-space-3);
 }
 .nb-tabs__tab {
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight);
 	font-size: var(--nb-size-md-text);
-	padding: 0.5rem 1rem;
+	padding: var(--nb-space-2) var(--nb-space-4);
 	background: var(--nb-paper);
 	color: var(--nb-ink);
 	border: var(--nb-border);
@@ -32,6 +32,7 @@
 /* Active tab fills yellow and lifts on its shadow. */
 .nb-tabs__tab[data-active='true'] {
 	background: var(--nb-primary);
+	color: var(--nb-on-spot); /* dark label on the constant yellow fill, both themes */
 	box-shadow: var(--nb-shadow);
 }
 .nb-tabs__tab:focus-visible {
@@ -47,7 +48,7 @@
 	min-width: 100%;
 	border: var(--nb-border);
 	border-radius: var(--nb-radius);
-	padding: 1.5rem;
+	padding: var(--nb-space-6);
 	font-family: var(--nb-font);
 	font-weight: var(--nb-font-weight-regular);
 	line-height: 1.5;

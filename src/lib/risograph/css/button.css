@@ -1,0 +1,167 @@
+/* Risograph — Button (Layer 2: the style)
+ *
+ * A PRINTED colour field, not a brutalist block. No offset, no drop shadow, no
+ * black outline on fills — filled variants are flat spot-ink fields with a faint
+ * grain tooth. Depth/energy comes from OVERPRINT: hover deepens the ink toward
+ * its complementary spot colour (the way two Riso passes physically mix), never
+ * an elevation or a "shove". Filled variants carry the grain tooth.
+ */
+
+.riso-btn {
+	position: relative;
+	isolation: isolate;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	line-height: 1;
+	text-decoration: none;
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	cursor: pointer;
+	transition: var(--riso-transition);
+	white-space: nowrap;
+	user-select: none;
+	overflow: hidden;
+}
+
+/* Grain tooth over every fill — the paper texture that reads as print, not pixels. */
+.riso-btn::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0.18;
+	pointer-events: none;
+	z-index: -1;
+}
+
+.riso-btn:focus-visible,
+.riso-btn[data-state='focus'] {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+/* variants — filled fields are BORDERLESS; hover overprints toward the
+   complementary ink instead of lightening. */
+.riso-btn[data-variant='primary'] {
+	background: var(--riso-accent);
+	color: var(--riso-accent-ink);
+	border-color: transparent;
+}
+.riso-btn[data-variant='primary']:hover,
+.riso-btn[data-variant='primary'][data-state='hover'] {
+	/* fluoro pink overprinted with blue → a deeper magenta-violet. Uses the gentler
+	   accent overprint so the dark label still clears AA on the darker hover fill. */
+	background: color-mix(in srgb, var(--riso-accent) calc(100% - var(--riso-overprint-accent)), var(--riso-blue));
+}
+
+.riso-btn[data-variant='secondary'] {
+	background: var(--riso-blue-fill);
+	color: var(--riso-on-spot); /* constant blue fill → constant paper-tone text (not reflecting) */
+	border-color: transparent;
+}
+.riso-btn[data-variant='secondary']:hover,
+.riso-btn[data-variant='secondary'][data-state='hover'] {
+	/* blue overprinted with red → toward ink-violet */
+	background: color-mix(in srgb, var(--riso-blue-fill) calc(100% - var(--riso-overprint)), var(--riso-red));
+}
+
+.riso-btn[data-variant='muted'] {
+	background: var(--riso-muted);
+	border-color: transparent;
+}
+.riso-btn[data-variant='muted']:hover,
+.riso-btn[data-variant='muted'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red));
+}
+
+/* DARK — overprint flips ADDITIVE. On warm paper a hover overprints toward a
+   complementary spot ink and DARKENS (subtractive, above). On dark stock a second
+   ink pass ADDS light, so hover must INCREASE the label's contrast, not muddy down
+   (muddying reads as the button receding into the ground). Shared amount:
+   `--riso-overprint-lift`.
+     · primary (DARK label on fluoro) + muted (light label on a DARK fill w/ head-
+       room) → lift toward the paper-tone ink (`--riso-ink` → paper on dark).
+     · secondary is the EXCEPTION: light label on a MID blue with little contrast
+       headroom (~5.2:1 at rest), so lifting would drop it below AA (measured 3.4).
+       It DEEPENS toward the stock (`--riso-paper` → stock on dark) instead —
+       still "more ink", and it RAISES the label's contrast. (see contrast-audit)
+   Ghost brightens via its `--riso-ghost-hover-bg` token (re-valued in riso.css). */
+[data-theme='dark'] .riso-btn[data-variant='primary']:hover,
+[data-theme='dark'] .riso-btn[data-variant='primary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-accent), var(--riso-ink) var(--riso-overprint-lift));
+}
+[data-theme='dark'] .riso-btn[data-variant='secondary']:hover,
+[data-theme='dark'] .riso-btn[data-variant='secondary'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-blue-fill), var(--riso-paper) var(--riso-overprint-lift));
+}
+[data-theme='dark'] .riso-btn[data-variant='muted']:hover,
+[data-theme='dark'] .riso-btn[data-variant='muted'][data-state='hover'] {
+	background: color-mix(in srgb, var(--riso-muted), var(--riso-ink) var(--riso-overprint-lift));
+}
+
+/* ghost — the lowest-emphasis rung: a bare text button. Transparent AND
+   borderless (the ink hairline stays present but transparent so its footprint
+   matches the others); a muted fill on hover. `muted` remains the filled
+   de-emphasis option above it. */
+.riso-btn[data-variant='ghost'] {
+	background: transparent;
+	border-color: transparent;
+	/* Follow the surface's text colour, so the bare-text rung stays legible on an
+	   inverted (ink) card/modal — not just on paper. */
+	color: inherit;
+}
+.riso-btn[data-variant='ghost']:hover,
+.riso-btn[data-variant='ghost'][data-state='hover'] {
+	/* Tuned red-overprint fill on light grounds; an inverted surface overrides the
+	   var with an on-ink tint (see card.css [data-variant='ink']). */
+	background: var(--riso-ghost-hover-bg, color-mix(in srgb, var(--riso-muted) 88%, var(--riso-red)));
+}
+
+/* sizes */
+.riso-btn[data-size='xs'] {
+	font-size: var(--riso-size-xs-text);
+	padding: var(--riso-size-xs-pad);
+}
+.riso-btn[data-size='sm'] {
+	font-size: var(--riso-size-sm-text);
+	padding: var(--riso-size-sm-pad);
+}
+.riso-btn[data-size='md'] {
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-size-md-pad);
+}
+.riso-btn[data-size='lg'] {
+	font-size: var(--riso-size-lg-text);
+	padding: var(--riso-size-lg-pad);
+}
+
+/* shape */
+.riso-btn[data-shape='pill'] {
+	border-radius: var(--riso-radius-pill);
+}
+
+/* disabled — inert, flat, textureless. */
+.riso-btn:disabled,
+.riso-btn[aria-disabled='true'] {
+	background: var(--riso-muted);
+	color: var(--riso-ink-soft);
+	border-color: var(--riso-line);
+	cursor: not-allowed;
+}
+.riso-btn:disabled::after,
+.riso-btn[aria-disabled='true']::after {
+	opacity: 0;
+}
+
+.riso-btn__icon {
+	display: inline-flex;
+	align-items: center;
+}

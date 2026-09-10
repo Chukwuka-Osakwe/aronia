@@ -33,6 +33,12 @@
 	box-shadow: var(--nb-shadow), 0 0 0 3px var(--nb-accent);
 }
 
+/* Invalid: a Field with `error` set wires `aria-invalid` onto us — danger border
+   off that semantic hook (matches Input). `:not(:disabled)` keeps it off disabled. */
+.nb-textarea[aria-invalid='true']:not(:disabled) {
+	border-color: var(--nb-danger-ink);
+}
+
 /* Disabled — inert greyed field (matches Input). */
 .nb-textarea:disabled {
 	background: var(--nb-muted);
@@ -51,4 +57,35 @@
 .nb-textarea[data-size='lg'] {
 	font-size: var(--nb-size-lg-text);
 	padding: var(--nb-size-lg-pad);
+}
+
+/* Themed scrollbar — persistent chunky ink bar (tokens in styles/neo-brutalism.css).
+   Hard-edged: a solid ink thumb, 0 corner, no inset; the track is boxed off the
+   field by a hairline ink rule on its inline-start edge. */
+.nb-textarea::-webkit-scrollbar {
+	width: var(--nb-scrollbar-size);
+	height: var(--nb-scrollbar-size);
+}
+.nb-textarea::-webkit-scrollbar-track {
+	background: var(--nb-scrollbar-track);
+	/* Hairline ink rule on the inline-start edge via an INSET shadow, not a border:
+	   a real border on ::-webkit-scrollbar-track distorts Blink's thumb geometry
+	   (the thumb mis-positions/teleports as you scroll). A shadow paints the same
+	   rule without changing the thumb's travel box. */
+	box-shadow: inset var(--nb-border-width) 0 0 0 var(--nb-scrollbar-thumb);
+}
+.nb-textarea::-webkit-scrollbar-thumb {
+	background: var(--nb-scrollbar-thumb);
+	border-radius: var(--nb-scrollbar-radius);
+}
+/* Firefox fallback: the standard properties (Firefox has no ::-webkit-scrollbar).
+   Gated with -moz-appearance, which Chrome/Safari DON'T support — so these never
+   reach Blink/WebKit, where a non-default scrollbar-width/color would disable the
+   persistent ::-webkit-scrollbar track above. (On macOS the OS still auto-hides
+   Firefox's overlay bar; this themes it where the platform keeps it visible.) */
+@supports (-moz-appearance: none) {
+	.nb-textarea {
+		scrollbar-width: thin;
+		scrollbar-color: var(--nb-scrollbar-thumb) var(--nb-scrollbar-track);
+	}
 }

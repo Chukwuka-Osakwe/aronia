@@ -19,7 +19,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
 	line-height: 1;
-	padding: 0.25rem 0.5rem;
+	padding: var(--swiss-space-1) var(--swiss-space-2);
 	color: var(--swiss-ink);
 	background: var(--swiss-paper);
 	border: var(--swiss-border);

@@ -1,0 +1,67 @@
+/* Risograph — Field (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-field` + `[data-*]` attributes — the
+ * framework-agnostic design language for Field. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * The label is the Riso PRINT-LABEL voice: uppercase, letter-spaced Space Mono —
+ * the eyebrow/caption treatment shared with Badge. Below the control, a quiet
+ * smaller help line, or a spot-red error message.
+ */
+
+.riso-field {
+	/* Fill the container (block-level) so the wrapped control stretches to the
+	   available width; a value longer than that scrolls like any single-line
+	   input, instead of hard-capping at the input's default ~20ch and clipping. */
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	gap: var(--riso-space-2);
+	font-family: var(--riso-font);
+	color: var(--riso-ink);
+}
+.riso-field__label {
+	font-family: var(--riso-font-mono);
+	font-size: var(--riso-size-xs-text); /* 12px */
+	font-weight: var(--riso-font-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+.riso-field__req {
+	color: var(--riso-danger-ink);
+}
+/* Help is subordinated by SIZE + weight, not opacity — full soft-ink at 12px/400
+   below the mono label reads as secondary while staying above WCAG AA. */
+.riso-field__msg {
+	font-size: var(--riso-size-xs-text); /* 12px */
+	font-weight: var(--riso-font-weight-regular);
+	color: var(--riso-ink-soft);
+}
+.riso-field__msg--error {
+	color: var(--riso-danger-ink);
+	font-weight: var(--riso-font-weight-medium);
+}
+
+/* shape — pill rounds the wrapped control (Field has no box of its own). */
+.riso-field[data-shape='pill'] .riso-input {
+	border-radius: var(--riso-radius-pill);
+}
+/* Pill rounding insets the control's visual text start, so the label above and
+   help/error below — which otherwise align to the square box edge — read as
+   shifted left of the text. Indent them into the text band by the control's
+   horizontal padding. Field pushes its `size` down to the control (context), so
+   the inset tracks `data-size` and lines up exactly at every size — matching the
+   inline value of --riso-size-{sm,md,lg}-pad. */
+.riso-field[data-shape='pill'] .riso-field__label,
+.riso-field[data-shape='pill'] .riso-field__msg {
+	padding-inline: 0.875rem; /* md (default) */
+}
+.riso-field[data-shape='pill'][data-size='sm'] .riso-field__label,
+.riso-field[data-shape='pill'][data-size='sm'] .riso-field__msg {
+	padding-inline: 0.75rem;
+}
+.riso-field[data-shape='pill'][data-size='lg'] .riso-field__label,
+.riso-field[data-shape='pill'][data-size='lg'] .riso-field__msg {
+	padding-inline: 1rem;
+}

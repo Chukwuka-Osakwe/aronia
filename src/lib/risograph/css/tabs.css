@@ -1,0 +1,83 @@
+/* Risograph — Tabs (Layer 2: the style)
+ *
+ * Global, unscoped rules keyed on `.riso-tabs` + `[data-*]` attributes — the
+ * framework-agnostic design language for Tabs. Depends only on the Layer-1
+ * tokens (styles/riso.css). Source of truth for BOTH the Svelte skin (which
+ * imports it) and the aronia registry.
+ *
+ * Tabs as PRINTED LABELS, not outlined boxes: inactive tabs are bare type on
+ * the paper (the quiet-button language), hover takes the muted-paper fill, and
+ * the active tab is a borderless plum-INK printed field with paper-tone text —
+ * the same "selected = ink" language as Checkbox/Radio, with no hard frame
+ * anywhere (that would be the neo/swiss tell). The panel is a printed paper
+ * card with a faint grain tooth.
+ */
+
+/* Shrink-wrap to the tab row; the panel fills that width (below) so its right
+   edge lines up with the last tab. */
+.riso-tabs {
+	width: fit-content;
+	max-width: 100%;
+}
+.riso-tabs__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--riso-space-2);
+	margin-bottom: var(--riso-space-3);
+}
+.riso-tabs__tab {
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-medium);
+	font-size: var(--riso-size-md-text);
+	padding: var(--riso-space-2) var(--riso-space-4);
+	background: transparent;
+	color: var(--riso-ink);
+	border: none;
+	border-radius: var(--riso-radius);
+	cursor: pointer;
+	transition: var(--riso-transition);
+}
+.riso-tabs__tab:hover {
+	background: var(--riso-muted);
+}
+/* Active tab: a borderless printed ink field + paper-tone text. */
+.riso-tabs__tab[data-active='true'] {
+	background: var(--riso-ink);
+	color: var(--riso-on-ink);
+}
+.riso-tabs__tab:focus-visible {
+	outline: 2px solid var(--riso-accent);
+	outline-offset: 2px;
+}
+
+.riso-tabs__panel {
+	position: relative;
+	isolation: isolate; /* contain the grain's blend mode */
+	/* width:0 + min-width:100% => the panel never widens the set (so the tab row
+	   defines the width) but always fills it, keeping its right edge flush with
+	   the last tab and its content wrapping instead of resizing the box. */
+	width: 0;
+	min-width: 100%;
+	border: var(--riso-border);
+	border-radius: var(--riso-radius);
+	padding: var(--riso-space-6);
+	font-family: var(--riso-font);
+	font-weight: var(--riso-font-weight-regular);
+	line-height: 1.5;
+	color: var(--riso-ink);
+	background: var(--riso-paper);
+	min-height: 4rem;
+	overflow: hidden;
+}
+/* The paper tooth on the panel — the card treatment. */
+.riso-tabs__panel::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: var(--riso-grain);
+	background-size: 90px 90px;
+	mix-blend-mode: var(--riso-grain-blend);
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: -1;
+}
