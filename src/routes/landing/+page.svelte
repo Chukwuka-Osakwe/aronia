@@ -21,7 +21,7 @@
 
 	// Proof = real before/after rebuilds, strongest first, family-agnostic. These are
 	// placeholders for the user's real testing candidates (Riso leads).
-	const proof = [
+	const proof: { site: string; look: string; after?: string }[] = [
 		{ site: 'Real project A', look: 'Risograph' },
 		{ site: 'Real project B', look: 'Neo-Brutalism' },
 		{ site: 'Real project C', look: 'Glassmorphism' }
@@ -83,6 +83,12 @@
 		motionPhase = 'before';
 		setTimeout(() => (motionPhase = 'after'), 1100);
 	}
+
+	// Proof before/after (MOBILE ONLY) — each pair is one frame that defaults to the
+	// AFTER (the payoff); a segmented Before/After control below it switches which pane
+	// shows, reusing the hero's crossfade primitive. Desktop shows both panes side-by-
+	// side and hides the control, so this per-pair phase only drives the mobile layout.
+	let proofPhase = $state<('before' | 'after')[]>(proof.map(() => 'after' as 'before' | 'after'));
 </script>
 
 <div class="wire" class:show-grid={grid}>
@@ -128,7 +134,7 @@
 		</section>
 
 		<!-- ── 2 · PROBLEM (Why?) — hold up the generic mirror ─────────── -->
-		<section class="beat problem">
+		<section class="beat split">
 			<div class="col">
 				<h2>Your app works. It just looks like everyone else's.</h2>
 				<p class="body">
@@ -144,24 +150,43 @@
 		</section>
 
 		<!-- ── 3 · PROOF ───────────────────────────────────────────────── -->
-		<section class="beat">
+		<section class="beat split">
 			<div class="col">
-				<h2>Same app. One of them had a design language.</h2>
+				<h2>Having a point of view makes a world of difference.</h2>
 				<p class="body">
 					Every one of these is a real project an AI agent built — first on its own, then again
-					with aronia. Nothing else changed. That's the difference a point of view makes.
+					with aronia. Nothing else changed but the results are different, that's the difference a
+					point of view makes.
 				</p>
 			</div>
 			<div class="proof-list">
-				{#each proof as p}
-					<figure class="ba">
-						<div class="ba-pane">
-							<span class="ba-tag">Before</span>
-							<span class="ph-label">[ {p.site} — generic ]</span>
+				{#each proof as p, i}
+					<figure class="ba" data-phase={proofPhase[i]}>
+						<div class="ba-frame">
+							<div class="ba-pane ba-before">
+								<span class="ba-tag">Before</span>
+								<span class="ph-label">[ {p.site} — generic ]</span>
+							</div>
+							<div class="ba-pane ba-after">
+								<span class="ba-tag">After — {p.look}</span>
+								{#if p.after}
+									<img class="ba-shot" src={p.after} alt="{p.site} rebuilt with aronia" />
+								{:else}
+									<span class="ph-label">[ {p.site} — aronia ]</span>
+								{/if}
+							</div>
 						</div>
-						<div class="ba-pane">
-							<span class="ba-tag">After — {p.look}</span>
-							<span class="ph-label">[ {p.site} — aronia ]</span>
+						<div class="ba-seg" role="group" aria-label="Show the before or after">
+							<button
+								class="ba-seg-btn"
+								type="button"
+								aria-pressed={proofPhase[i] === 'before'}
+								onclick={() => (proofPhase[i] = 'before')}>Before aronia</button>
+							<button
+								class="ba-seg-btn"
+								type="button"
+								aria-pressed={proofPhase[i] === 'after'}
+								onclick={() => (proofPhase[i] = 'after')}>After aronia</button>
 						</div>
 					</figure>
 				{/each}
@@ -286,6 +311,9 @@
 		   would otherwise clip this long page, so the wireframe scrolls internally. */
 		height: 100vh;
 		overflow-y: auto;
+		/* The proof frames break out to full-viewport width; clip (not scroll) any
+		   bleed past the edges so no horizontal scrollbar appears. */
+		overflow-x: clip;
 	}
 
 	.wire :global(*) {
@@ -475,10 +503,10 @@
 		margin-inline: auto;
 	}
 
-	/* §2 Problem — stacked headline over subheadline on mobile (base). At ≥768 the two
-	   split apart onto the section's left/right text-inset guides (see the min-width
-	   block below). The col spans the full content width either way. */
-	.problem .col {
+	/* Split header (§2 Problem + §3 Proof) — headline / subheadline stagger. Stacked
+	   full-width on mobile (base); at ≥768 the two split onto the section's left/right
+	   text-inset guides (see the min-width block). The col spans the full width. */
+	.split .col {
 		max-width: none;
 	}
 
@@ -526,11 +554,13 @@
 	}
 
 	/* ── Before/after (the proof spine) ───────────────────────────────
-	   Two placeholder panes side by side, each tagged Before / After. */
+	   Each pair is a <figure>. MOBILE (base): one frame (the two panes crossfade)
+	   stacked over the flip button. DESKTOP: the panes go side-by-side (see min-width
+	   block) and the button is hidden. */
 	.ba {
-		margin: var(--u6) 0 0;
-		display: grid;
-		grid-template-columns: 1fr;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
 		gap: var(--u2);
 	}
 	.ba-pane {
@@ -564,6 +594,13 @@
 		inset: 0;
 		margin: 0;
 		min-height: 320px;
+	}
+	/* ── Before/after crossfade primitive — SHARED by the hero motion and the proof
+	   tap-flip. Two stacked panes, opacity toggled by `data-phase` on the container;
+	   the default state is set by the container's initial attribute (hero = before,
+	   proof = after). */
+	.ba-before,
+	.ba-after {
 		transition: opacity 600ms ease;
 	}
 	.ba-before {
@@ -572,10 +609,10 @@
 	.ba-after {
 		opacity: 0;
 	}
-	.ba-motion[data-phase='after'] .ba-before {
+	[data-phase='after'] .ba-before {
 		opacity: 0;
 	}
-	.ba-motion[data-phase='after'] .ba-after {
+	[data-phase='after'] .ba-after {
 		opacity: 1;
 	}
 	.ba-replay {
@@ -600,7 +637,8 @@
 		color: var(--ink-3);
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.ba-motion .ba-pane {
+		.ba-before,
+		.ba-after {
 			transition: none;
 		}
 	}
@@ -618,13 +656,62 @@
 		padding: 2px 6px;
 	}
 	.proof-list {
+		/* DIAL — the shared before/after frame ratio. One knob for every proof frame;
+		   retune once real screenshots land and the natural shape settles (sample of
+		   one right now = a Slow Miles hero at ~1.83:1, contained into this). */
+		--proof-ratio: 600 / 386;
 		margin-top: var(--u6);
 		display: flex;
 		flex-direction: column;
 		gap: var(--u4);
 	}
-	.proof-list .ba {
-		margin-top: 0;
+	/* Mobile (base): one frame per pair carries the 1.55:1 shape; the two panes stack
+	   absolutely inside it and crossfade (shared primitive), toggled by the button. */
+	.proof-list .ba-frame {
+		position: relative;
+		aspect-ratio: var(--proof-ratio);
+	}
+	.proof-list .ba-pane {
+		position: absolute;
+		inset: 0;
+		min-height: 0;
+	}
+	/* A real screenshot fills the frame edge-to-edge (drop the placeholder padding)
+	   and letterboxes to fit — nothing cropped. */
+	.proof-list .ba-pane:has(img) {
+		padding: 0;
+	}
+	/* The signifier sits BELOW the frame (mobile only) — a segmented Before/After
+	   control (two real buttons). The active segment inverts (fill), never bolds —
+	   state via colour/contrast. It advertises both states even before you tap. */
+	.ba-seg {
+		align-self: flex-end;
+		display: inline-flex;
+		border: 1px solid var(--ink);
+	}
+	.ba-seg-btn {
+		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+		font-size: 13px;
+		line-height: 24px;
+		padding: var(--u1) var(--u2);
+		border: 0;
+		border-radius: 0;
+		background: var(--paper);
+		color: var(--ink);
+		cursor: pointer;
+	}
+	.ba-seg-btn + .ba-seg-btn {
+		border-left: 1px solid var(--ink);
+	}
+	.ba-seg-btn[aria-pressed='true'] {
+		background: var(--ink);
+		color: var(--paper);
+	}
+	.ba-shot {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 
 	/* Section 2 — the static generic-app mirror (not before/after; that's hero+proof). */
@@ -833,14 +920,14 @@
 			grid-template-columns: 1fr 1fr;
 		}
 
-		/* §2 Problem — headline pinned to the left guide, subheadline to the right,
+		/* Split header — headline pinned to the left guide, subheadline to the right,
 		   each capped at half the content width; justify flushes the sub's full lines
 		   onto the right guide (last line ragged). Stacked below this seam. */
-		.problem h2 {
+		.split h2 {
 			max-width: 50%;
 			text-align: left;
 		}
-		.problem .body {
+		.split .body {
 			max-width: 50%;
 			margin-left: auto;
 			text-align: justify;
@@ -864,6 +951,41 @@
 		.lead {
 			font-size: 20px;
 			line-height: 32px; /* 4 × 8 */
+		}
+
+		/* §3 Proof — frames keep the 1.55:1 browser shape and go two-up. The pair is FLUID
+		   and full-bleed: it fills the viewport minus a 48px edge gutter, BREAKING THE GRID
+		   past the 1080 container and centering on the viewport, scaling with the window
+		   (aspect ratio locked, never clips). A 1440px ceiling on the pair tames ultra-wide
+		   monitors only — it freezes at a ~1536px viewport (frames top out ~704px), so
+		   normal laptops still scale. The heading above stays on the container grid. */
+		.proof-list {
+			width: 100vw;
+			margin-left: 50%;
+			transform: translateX(-50%);
+		}
+		.proof-list .ba {
+			width: min(1440px, 100vw - 96px);
+			margin-inline: auto;
+		}
+		/* Desktop: the pair goes side-by-side (grid), both panes visible — no flip. */
+		.proof-list .ba-frame {
+			aspect-ratio: auto;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: var(--u4);
+		}
+		.proof-list .ba-pane {
+			position: relative;
+			inset: auto;
+			aspect-ratio: var(--proof-ratio);
+		}
+		.proof-list .ba-before,
+		.proof-list .ba-after {
+			opacity: 1;
+		}
+		.ba-seg {
+			display: none;
 		}
 	}
 </style>
