@@ -12,6 +12,11 @@
 	// right rail scrolls). Other pages scroll the content pane normally.
 	const fullBleed = $derived($page.route.id === '/[style=noDot]/[component=noDot]');
 
+	// The marketing landing page is its own world — it owns the full viewport with
+	// no docs chrome (sidebar/shell). There's no layout below the root to escape to
+	// via `@`, so the root renders bare for it. It still self-scopes all its styles.
+	const bare = $derived($page.route.id === '/landing');
+
 	// The sidebar is scoped to ONE style ("library") at a time: the active route's
 	// style is expanded (its components listed); every other style collapses to a
 	// single title that links into it. So a glass route shows glass components, not
@@ -48,6 +53,9 @@
 	const ActiveToaster = $derived(activeStyle ? registry[activeStyle]?.toast : undefined);
 </script>
 
+{#if bare}
+	{@render children()}
+{:else}
 <div class="shell">
 	<aside class="sidebar">
 		<a class="brand" href="/">
@@ -132,6 +140,7 @@
 		{@render children()}
 	</main>
 </div>
+{/if}
 
 {#if ActiveToaster}<ActiveToaster />{/if}
 
