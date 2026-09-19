@@ -11,12 +11,16 @@
 	// How it works · FAQs · Footer. No eyebrows. Before/after is the visual spine
 	// (hero + proof). Type is baseline-locked (no clamp).
 
-	// The four looks — shown in the "pick a look" step of How it works.
+	// The four looks — cycled through the single rotating slot in the "pick a look"
+	// step of How it works. `bar` is a WIREFRAME stand-in colour (roughly each
+	// family's vibe) so the looks read as distinct while the slot rotates; real
+	// specimens replace the colour blocks at hi-fi. The slot is count-agnostic: it
+	// shows the ACT of choosing one, not the whole catalog, so it holds at 4 or 20.
 	const looks = [
-		{ name: 'Swiss', line: 'Clean and grown-up. Calm, sharp, nothing wasted.' },
-		{ name: 'Neo-Brutalism', line: 'Loud and fearless. Thick lines, hard edges, impossible to ignore.' },
-		{ name: 'Glassmorphism', line: 'Sleek and frosted. Soft, modern, a little futuristic.' },
-		{ name: 'Risograph', line: 'Warm and handmade. Grainy, printed, full of character.' }
+		{ name: 'Swiss', line: 'Clean and grown-up. Calm, sharp, nothing wasted.', bar: '#f24405' },
+		{ name: 'Neo-Brutalism', line: 'Loud and fearless. Thick lines, hard edges, impossible to ignore.', bar: '#ffd000' },
+		{ name: 'Glassmorphism', line: 'Sleek and frosted. Soft, modern, a little futuristic.', bar: '#4da3ff' },
+		{ name: 'Risograph', line: 'Warm and handmade. Grainy, printed, full of character.', bar: '#e8536e' }
 	];
 
 	// Proof = real before/after rebuilds, strongest first, family-agnostic. These are
@@ -66,22 +70,52 @@
 	let motionPhase = $state<'before' | 'after'>('before');
 	let reducedMotion = $state(false);
 
+	// Which look the rotating "pick a look" slot is currently showing.
+	let lookIndex = $state(0);
+	// Auto-rotation timer, hoisted so a manual pick can cancel it.
+	let rotTimer: ReturnType<typeof setInterval> | undefined;
+
 	onMount(() => {
 		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 		if (mq.matches) {
 			reducedMotion = true;
 			motionPhase = 'after'; // reduced motion → skip the animation, land on the good state
-			return;
+			return; // …and don't auto-rotate; the dots are the manual control instead
 		}
 		// Hold on "before" (establish the pain), then settle on "after".
 		const t = setTimeout(() => (motionPhase = 'after'), 3000);
-		return () => clearTimeout(t);
+		// Cycle the look slot so "pick a look" reads as choosing from many, not a grid.
+		// Matches the hero's 3s hold so the two motions feel unified.
+		rotTimer = setInterval(() => (lookIndex = (lookIndex + 1) % looks.length), 3000);
+		return () => {
+			clearTimeout(t);
+			clearInterval(rotTimer);
+		};
 	});
+
+	// Manual pick from the dots. Hands control to the reader: jump to the look and
+	// stop auto-advancing so it won't yank them onward. Also the sole navigation for
+	// reduced-motion users (who never had an interval running).
+	function selectLook(i: number) {
+		lookIndex = i;
+		clearInterval(rotTimer);
+		rotTimer = undefined;
+	}
 
 	function replayMotion() {
 		if (reducedMotion) return;
 		motionPhase = 'before';
 		setTimeout(() => (motionPhase = 'after'), 1100);
+	}
+
+	// Copy the setup command from step 1 so a reader can grab it and run right away.
+	let copied = $state(false);
+	let copyTimer: ReturnType<typeof setTimeout> | undefined;
+	function copyInit() {
+		navigator.clipboard?.writeText('npx aronia init');
+		copied = true;
+		clearTimeout(copyTimer);
+		copyTimer = setTimeout(() => (copied = false), 1500);
 	}
 
 	// Proof before/after (MOBILE ONLY) — each pair is one frame that defaults to the
@@ -194,57 +228,154 @@
 		</section>
 
 		<!-- ── 4 · HOW IT WORKS (How?) ─────────────────────────────────── -->
-		<section class="beat">
-			<span class="beat-tag">04 · How it works — How</span>
+		<section class="beat split">
 			<div class="col">
 				<h2>Three steps. No code.</h2>
 				<p class="body">
-					You won't touch a line of code. One command sets it up; after that you just talk to
-					your agent in plain English.
+					All it takes is one command to set up aronia. After that, you just talk to your agent
+					in your own words.
 				</p>
 			</div>
 			<ol class="steps">
 				<li class="step">
-					<span class="step-n">1</span>
-					<div class="step-body">
+					<div class="step-head">
+						<span class="step-n">01</span>
 						<h3 class="step-h">Run one command</h3>
-						<code class="cmd cmd-block">npx aronia init</code>
-						<p class="micro">Sets everything up in your project. Takes seconds.</p>
 					</div>
+					<!-- Same prompt-box shell as step 03: command up top, a toolbar below with a
+					     terminal glyph (decorative) and a real copy button in the primary slot. -->
+					<div class="prompt-box">
+						<p class="prompt-text prompt-mono">npx aronia init</p>
+						<div class="prompt-bar">
+							<span class="prompt-btn" aria-hidden="true">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"><path d="M4 6l5 6-5 6M13 18h7" /></svg>
+							</span>
+							<button
+								class="prompt-primary"
+								type="button"
+								onclick={copyInit}
+								aria-label={copied ? 'Copied' : 'Copy the command'}>
+								{#if copied}
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+								{:else}
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										aria-hidden="true"><rect x="8" y="8" width="12" height="12" /><path
+											d="M4 16V4h12" /></svg>
+								{/if}
+							</button>
+						</div>
+					</div>
+					<p class="micro">
+						This command sets up aronia in your project in seconds, and it works with whatever
+						agent you use for coding.
+					</p>
 				</li>
 				<li class="step">
-					<span class="step-n">2</span>
-					<div class="step-body">
+					<div class="step-head">
+						<span class="step-n">02</span>
 						<h3 class="step-h">Pick a look</h3>
-						<div class="looks">
-							{#each looks as look}
-								<figure class="visual look">
-									<span class="ph-label">[ specimen: {look.name} ]</span>
-									<figcaption>
-										<strong>{look.name}</strong>
-										<span>{look.line}</span>
-									</figcaption>
-								</figure>
+					</div>
+					<!-- Single rotating slot — represents the ACT of choosing one look, not
+					     the whole catalog, so it holds at 4 looks or 20. The colour bar +
+					     caption cycle through `looks`; the dot row shows position/count. -->
+					<div class="look-rotator">
+						<figure class="look-slot">
+							<div class="look-bar" style="background: {looks[lookIndex].bar}"></div>
+							<figcaption>
+								<strong>{looks[lookIndex].name}</strong>
+								<span>{looks[lookIndex].line}</span>
+							</figcaption>
+						</figure>
+						<div class="look-dots">
+							{#each looks as look, i}
+								<button
+									class="look-dot"
+									class:on={i === lookIndex}
+									type="button"
+									aria-label={`Show ${look.name}`}
+									aria-pressed={i === lookIndex}
+									onclick={() => selectLook(i)}></button>
 							{/each}
 						</div>
+						<p class="micro">
+							aronia lets you choose from a variety of styles for building your project. Pick
+							whichever one you like best.
+						</p>
+						<!-- Points at the intended /gallery route — the page doesn't exist yet, so
+						     this 404s until it's built (see landing-page plan). -->
+						<a class="gallery-link" href="/gallery">
+							Explore all the styles in more depth in the gallery →
+						</a>
 					</div>
 				</li>
 				<li class="step">
-					<span class="step-n">3</span>
-					<div class="step-body">
+					<div class="step-head">
+						<span class="step-n">03</span>
 						<h3 class="step-h">Tell your agent</h3>
-						<div class="chat-line">
-							<span class="chat-you">You</span>
-							<p>"Build my landing page with aronia — Risograph style."</p>
-						</div>
-						<p class="micro">
-							It reads the look and builds every screen to match. Screen five looks like screen
-							one.
-						</p>
 					</div>
+					<!-- Loosely a ChatGPT-style prompt box: message up top, a decorative
+					     toolbar below (+ · mic · send). Square, no "You"/"Auto" chrome. -->
+					<div class="prompt-box">
+						<p class="prompt-text">Build my landing page with aronia's risograph style.</p>
+						<div class="prompt-bar" aria-hidden="true">
+							<span class="prompt-btn">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"><path d="M12 5v14M5 12h14" /></svg>
+							</span>
+							<span class="prompt-actions">
+								<span class="prompt-btn">
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										><rect x="9" y="3" width="6" height="11" rx="3" /><path
+											d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+								</span>
+								<span class="prompt-primary">
+									<svg
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+								</span>
+							</span>
+						</div>
+					</div>
+					<p class="micro">
+						Once you've picked a style, just tell your agent what you want it to build in that
+						style. That's it.
+					</p>
 				</li>
 			</ol>
-			<p class="micro closing">No CSS, no design skills, no idea what a hex code is required.</p>
 		</section>
 
 		<!-- ── 5 · FAQs ────────────────────────────────────────────────── -->
@@ -747,113 +878,217 @@
 		text-align: center;
 	}
 
-	/* ── How it works — steps ─────────────────────────────────────── */
+	/* ── How it works — steps ─────────────────────────────────────────
+	   A hairline-ruled numbered list (rhymes with the FAQ list below): each step
+	   is a top-ruled row (bottom rule on the last), the zero-padded index sits in
+	   a left gutter as plain muted mono — NOT a boxed chip — and the heading +
+	   its content share one indented column. */
 	.steps {
 		list-style: none;
 		margin: var(--u6) 0 0;
 		padding: 0;
-		max-width: 760px;
 		display: flex;
 		flex-direction: column;
-		gap: var(--u6);
 	}
+	/* Each step is a centered vertical stack of frames: [number + heading] on one
+	   line, then the block(s) beneath — every frame centers on the section axis,
+	   the widest frame setting the effective width. */
 	.step {
 		display: flex;
+		flex-direction: column;
+		align-items: center;
 		gap: var(--u3);
-		align-items: flex-start;
+		padding: var(--u8) 0;
+		border-top: 1px solid var(--line);
+	}
+	.step:last-child {
+		border-bottom: 1px solid var(--line);
+	}
+	/* Number + heading = one frame; the index rides on the heading baseline. */
+	.step-head {
+		display: flex;
+		align-items: baseline;
+		gap: var(--u2);
 	}
 	.step-n {
 		flex: none;
-		width: 40px;
-		height: 40px;
-		border: 1px solid var(--ink);
-		border-radius: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 18px;
-		line-height: 1;
-	}
-	.step-body {
-		flex: 1;
-		min-width: 0;
+		font-size: 24px; /* match the heading */
+		line-height: 32px; /* 4 × 8 — same as .step-h */
+		color: var(--ink-3);
 	}
 	.step-h {
 		font-size: 24px;
 		line-height: 32px; /* 4 × 8 */
 		font-weight: 700;
-		margin: 0 0 var(--u2);
-	}
-	.closing {
-		margin-top: var(--u6);
-	}
-
-	/* Look specimens (in step 2) — 2×2 grid. */
-	.looks {
-		margin-top: var(--u2);
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: var(--u3);
-	}
-	.visual {
-		border: 1px solid var(--line);
-		border-radius: 0;
-		background: repeating-linear-gradient(
-			-45deg,
-			var(--paper),
-			var(--paper) 10px,
-			#f6f6f6 10px,
-			#f6f6f6 20px
-		);
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: var(--u2);
-		padding: var(--u4);
-		min-height: 200px;
 		margin: 0;
 	}
-	.look figcaption {
+	/* Step-1's caption is a top-level frame (centered); the rotator's own caption is
+	   a block internal (stays left) because it lives inside .look-rotator. */
+	.step > .micro {
+		margin-top: 0;
+		text-align: center;
+	}
+	/* Look rotator (step 2) — ONE slot, count-agnostic. A colour bar (wireframe
+	   specimen stand-in) + caption cycle through the looks; the colour tweens on
+	   change so the rotation reads as a smooth shift. Sized to the content column,
+	   never a grid, so 4 looks and 20 looks share the exact same footprint. */
+	/* Pinned to a fixed width (not shrink-to-content) so the card doesn't resize as
+	   different-length look captions rotate through. Full-bleed within the step on
+	   narrow screens. */
+	.look-rotator {
+		width: min(32rem, 100%);
+	}
+	.look-slot {
+		margin: 0;
+		border: 1px solid var(--line);
+		border-radius: 0;
+		overflow: hidden;
+	}
+	.look-bar {
+		height: 160px;
+		transition: background-color 500ms ease;
+	}
+	.look-slot figcaption {
 		display: flex;
 		flex-direction: column;
 		gap: var(--u1);
-		text-align: left;
+		padding: var(--u3);
+		border-top: 1px solid var(--line);
 	}
-	.look figcaption strong {
+	.look-slot figcaption strong {
 		font-size: 18px;
 		line-height: 24px;
 		color: var(--ink);
 	}
-	.look figcaption span {
+	.look-slot figcaption span {
 		font-size: 14px;
 		line-height: 24px;
 		color: var(--ink-2);
 	}
-
-	/* Plain-English chat line (step 3). */
-	.chat-line {
+	/* Position/count row — one square per look, current one filled. Scales as a
+	   thin row whether there are 4 or 20; state via fill, not size. */
+	.look-dots {
 		display: flex;
-		gap: var(--u2);
-		align-items: baseline;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-top: var(--u2);
+	}
+	/* The rotator's own caption centers under the card (the card's name/description
+	   stay left as block internals). */
+	.look-rotator .micro {
+		text-align: center;
+	}
+	/* Quiet link to the (future) gallery — subordinate to the page's one CTA. */
+	.gallery-link {
+		display: block;
+		margin-top: var(--u1);
+		text-align: center;
+		font-size: 14px;
+		line-height: 24px; /* 3 × 8 */
+		color: var(--ink);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.gallery-link:hover {
+		color: var(--ink-2);
+	}
+	/* The visible marker stays an 8px square, but the button is a 28px hit surface
+	   (padding around the mark) so it's a comfortable tap/click target — well past
+	   the 24px WCAG minimum. */
+	.look-dot {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		background: transparent;
+		cursor: pointer;
+	}
+	.look-dot::before {
+		content: '';
+		width: 8px;
+		height: 8px;
+		border: 1px solid var(--ink-3);
+		background: transparent;
+		transition: background-color 300ms ease;
+	}
+	.look-dot:hover::before {
+		border-color: var(--ink);
+	}
+	.look-dot.on::before {
+		background: var(--ink);
+		border-color: var(--ink);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.look-bar,
+		.look-dot::before {
+			transition: none;
+		}
+	}
+
+	/* Plain-English prompt box (step 3) — loosely a ChatGPT composer: message on top,
+	   a decorative +/mic/send toolbar below. Square, no "You"/"Auto" chrome. */
+	.prompt-box {
+		width: min(32rem, 100%);
 		padding: var(--u3);
 		border: 1px solid var(--line);
 		border-radius: 0;
-		background: var(--fill);
+		background: var(--paper);
+		display: flex;
+		flex-direction: column;
+		gap: var(--u4);
+		text-align: left;
 	}
-	.chat-you {
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 12px;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--ink-3);
-	}
-	.chat-line p {
+	.prompt-text {
 		margin: 0;
 		font-size: 16px;
 		line-height: 24px; /* 3 × 8 */
 		color: var(--ink);
+	}
+	/* Step 1's command reads as monospace inside the same box. */
+	.prompt-mono {
+		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+		font-size: 15px;
+	}
+	.prompt-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.prompt-actions {
+		display: flex;
+		align-items: center;
+		gap: var(--u2);
+	}
+	.prompt-btn,
+	.prompt-primary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 0;
+	}
+	.prompt-btn {
+		border: 1px solid var(--line);
+		color: var(--ink-2);
+	}
+	.prompt-primary {
+		border: 1px solid var(--ink);
+		background: var(--ink);
+		color: var(--paper);
+	}
+	/* When the primary slot is a real button (step 1's copy), make it interactive. */
+	button.prompt-primary {
+		cursor: pointer;
+	}
+	button.prompt-primary:hover {
+		background: var(--ink-2);
+		border-color: var(--ink-2);
 	}
 
 	/* ── FAQs ─────────────────────────────────────────────────────── */
@@ -915,8 +1150,7 @@
 		}
 
 		/* Multi-part rows go side-by-side. */
-		.ba,
-		.looks {
+		.ba {
 			grid-template-columns: 1fr 1fr;
 		}
 
