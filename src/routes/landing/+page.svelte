@@ -1239,9 +1239,14 @@
 		.beat {
 			padding: var(--u2) var(--u4);
 		}
+		/* Section rhythm opens up past the major unit at desktop widths — 120px
+		   (15 × 8, still on-grid), deliberately decoupled from the hero's top space
+		   below so the two can differ. */
 		.beat + .beat {
-			margin-top: var(--major);
+			margin-top: 120px;
 		}
+		/* Hero keeps its top breathing room at the major unit (96px), not the wider
+		   inter-section gap. */
 		.hero {
 			padding-top: var(--major);
 		}
