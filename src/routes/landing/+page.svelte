@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	// Brand faces (Aronia design board): Gluten for display, SUSE for text/UI.
+	// Both variable (wght 100–900); fontsource registers them as
+	// 'Gluten Variable' / 'SUSE Variable'.
+	import '@fontsource-variable/gluten';
+	import '@fontsource-variable/suse';
+
 	// Landing-page WIREFRAME — deliberately black-and-white. We're judging layout,
 	// hierarchy, and vertical rhythm only; palette + display type get locked later
 	// on separate specimens. Everything sits on an 8px baseline: 8px minor unit,
@@ -73,7 +79,7 @@
 
 	// Wireframe grid overlay — 8px baseline + 96px major lines + container/text-column
 	// guides. Toggle to check everything actually lands on the rhythm.
-	let grid = $state(true);
+	let grid = $state(false);
 
 	// STUBBED hero motion — crude before→after box-flip to test the BEHAVIOUR/timing
 	// only (auto-play once, rest on after; replay control; reduced-motion fallback).
@@ -81,6 +87,38 @@
 	// hi-fi pass with real pixels — see the plan doc.
 	let motionPhase = $state<'before' | 'after'>('before');
 	let reducedMotion = $state(false);
+
+	// Section-heading word-by-word reveal, applied with `use:revealWords`. Splits the
+	// heading into word spans (reading-order 80ms stagger, heavy ease) that hold muted
+	// and fade to full once ~30% of the heading scrolls into view — fired once by an
+	// IntersectionObserver. Skipped entirely under reduced motion (heading stays static).
+	function revealWords(node: HTMLElement) {
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+		const words = (node.textContent ?? '').split(/\s+/).filter(Boolean);
+		node.textContent = '';
+		words.forEach((word, i) => {
+			const span = document.createElement('span');
+			span.className = 'word';
+			span.style.transitionDelay = `${i * 80}ms`;
+			span.textContent = word;
+			node.appendChild(span);
+			if (i < words.length - 1) node.appendChild(document.createTextNode(' '));
+		});
+		node.classList.add('reveal-words');
+
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting) {
+					node.classList.add('revealed');
+					io.disconnect(); // once
+				}
+			},
+			{ threshold: 0.3 }
+		);
+		io.observe(node);
+		return { destroy: () => io.disconnect() };
+	}
 
 	// Which look the rotating "pick a look" slot is currently showing.
 	let lookIndex = $state(0);
@@ -182,7 +220,7 @@
 		<!-- ── 2 · PROBLEM (Why?) — hold up the generic mirror ─────────── -->
 		<section class="beat split">
 			<div class="col">
-				<h2>Your app works. It just looks like everyone else's.</h2>
+				<h2 use:revealWords>Your app works. It just looks like everyone else's.</h2>
 				<p class="body">
 					And that's not on you. AI doesn't have a point of view so when you ask it to design
 					something it reaches for the most common look in its training data and your website
@@ -198,7 +236,7 @@
 		<!-- ── 3 · PROOF ───────────────────────────────────────────────── -->
 		<section class="beat split">
 			<div class="col">
-				<h2>Having a point of view makes a world of difference.</h2>
+				<h2 use:revealWords>Having a point of view makes a world of difference.</h2>
 				<p class="body">
 					Every one of these is a real project an AI agent built — first on its own, then again
 					with aronia. Nothing else changed but the results are different, that's the difference a
@@ -242,7 +280,7 @@
 		<!-- ── 4 · HOW IT WORKS (How?) ─────────────────────────────────── -->
 		<section class="beat split">
 			<div class="col">
-				<h2>Three steps. No code.</h2>
+				<h2 use:revealWords>Three steps. No code.</h2>
 				<p class="body">
 					All it takes is one command to set up aronia. After that, you just talk to your agent
 					in your own words.
@@ -392,7 +430,7 @@
 
 		<!-- ── 5 · FAQs ────────────────────────────────────────────────── -->
 		<section class="beat">
-			<h2>Frequently Asked Questions</h2>
+			<h2 use:revealWords>Frequently Asked Questions</h2>
 			<!-- Accordion via native <details>/<summary>: keyboard + screen-reader
 			     support and the reduced-motion story come for free, no JS state.
 			     All closed by default — the list is scannable, tap to open one.
@@ -411,24 +449,60 @@
 			</div>
 		</section>
 
-		<!-- ── 6 · FOOTER ──────────────────────────────────────────────── -->
-		<section class="beat cta">
-			<span class="beat-tag">06 · Footer</span>
-			<div class="col">
-				<h2 class="display-sm">Make your next app look like yours.</h2>
-				<code class="cmd cmd-block copyable">npx aronia init</code>
-				<div class="cmd-row">
-					<button class="btn btn-primary" type="button">Copy command</button>
-					<button class="btn btn-ghost" type="button">Read the guide</button>
-				</div>
-			</div>
-			<footer class="foot">
-				<span>Free and open</span>
-				<span>Works with whatever you're already building in</span>
-				<span>The code lives in your project — tweak anything</span>
-			</footer>
-		</section>
 	</div>
+
+	<!-- ── 6 · FOOTER — full-bleed layer, revealed as the page scrolls off it (≥768).
+	     Lives OUTSIDE .wire-inner and sits behind it (lower z); .wire-inner is opaque
+	     and slides up to uncover it. The glow fills the whole section. Desktop-only
+	     reveal — on mobile the footer just flows normally. See the reveal rules below. -->
+	<footer class="site-footer">
+		<div class="site-footer-inner">
+			<!-- Sign-off: the page's one final CTA, over the section glow. -->
+			<div class="signoff">
+				<h2 class="display-sm" use:revealWords>Make yours look like a choice.</h2>
+				<p class="signoff-sub">
+					Point your agent at aronia and keep building. Same afternoon, completely different
+					app — one that looks like you meant it.
+				</p>
+				<a class="btn btn-primary" href="/guide">Get started</a>
+			</div>
+
+			<!-- Footer body: brand + the single outbound link. This is a self-contained
+			     landing page, so there are no nav columns — GitHub is the one door out
+			     (the repo README fans out to install, CLI, changelog, license). -->
+			<div class="foot-body">
+				<div class="foot-brand">
+					<span class="foot-mark">aronia</span>
+					<p class="foot-tagline">
+						A design language for coding agents. Copied into your repo, editable, and yours
+						to keep.
+					</p>
+				</div>
+				<a
+					class="foot-gh"
+					href="https://github.com/Chukwuka-Osakwe/aronia"
+					target="_blank"
+					rel="noopener"
+					aria-label="aronia on GitHub"
+				>
+					<svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" fill="currentColor">
+						<path
+							d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
+						/>
+					</svg>
+				</a>
+			</div>
+
+			<!-- Legal: attribution + colophon; the source link is the second honest door out. -->
+			<div class="foot-legal">
+				<span
+					>© 2026 aronia ·
+					<a href="https://github.com/Chukwuka-Osakwe/aronia">MIT-licensed source</a></span
+				>
+				<span>Built for agents. Usable by humans. With love from Chukwuka.</span>
+			</div>
+		</div>
+	</footer>
 </div>
 
 <style>
@@ -436,15 +510,27 @@
 	   Grayscale only. 8px baseline; --u* are 8px multiples, --major = 96px.
 	   Neutral system stack deliberately signals "type not chosen yet." */
 	.wire {
-		--ink: #111;
-		--ink-2: #555;
-		--ink-3: #888;
-		--line: #ccc;
-		--fill: #ededed;
-		--paper: #fff;
-		/* Page field — a warm near-white; easier on the eyes than pure white. Surfaces
-		   (panes, cards, chrome) stay --paper so they read as distinct boxes on top. */
-		--bg: oklch(96.5% 0.006 92);
+		/* ── Brand palette (Aronia board, dark-canonical) ──────────────
+		   Derived from the aronia berry: near-black ground, cream flesh,
+		   the berry's electric purple as the single accent, deep navy as a
+		   support ground. Exact values read off the dark hero specimen. */
+		--night: #090507; /* page ground */
+		--cream: #eadbb8; /* primary text + primary-CTA fill */
+		--muted: #b8b0a0; /* secondary warm-gray text on dark */
+		--berry: #9b36d1; /* the one accent */
+		--navy: #0c1137; /* secondary/support ground */
+
+		/* Semantic layer — every section reads through these, so the page
+		   flips ground/ink by repointing HERE, not by touching selectors.
+		   Neutrals below the two named text colours are derived from cream
+		   over night so hairlines/surfaces stay in the same warm family. */
+		--ink: var(--cream); /* primary text */
+		--ink-2: var(--muted); /* secondary text */
+		--ink-3: color-mix(in oklab, var(--cream) 45%, var(--night)); /* faint text */
+		--line: color-mix(in oklab, var(--cream) 18%, var(--night)); /* hairlines on dark */
+		--fill: color-mix(in oklab, var(--cream) 12%, var(--night)); /* inset fill */
+		--paper: color-mix(in oklab, var(--cream) 7%, var(--night)); /* lifted surface box */
+		--bg: var(--night); /* page field */
 
 		--u1: 8px;
 		--u2: 16px;
@@ -477,7 +563,13 @@
 		--fs-label: 12px;
 		--lh-label: 24px; /* 3 × 8 */
 
-		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		/* ── Type stack (Aronia board) ────────────────────────────────
+		   Gluten (rounded display) for headlines; SUSE for text + UI.
+		   Both variable faces, registered by fontsource. */
+		--font-display: 'Gluten Variable', system-ui, sans-serif;
+		--font-body: 'SUSE Variable', system-ui, sans-serif;
+
+		font-family: var(--font-body);
 		color: var(--ink);
 		background: var(--bg);
 		-webkit-font-smoothing: antialiased;
@@ -499,6 +591,11 @@
 	   distinct from the wireframe's own gray hairlines. Click-through. */
 	.wire-inner {
 		position: relative;
+		/* Opaque layer that covers the footer until scrolled off it (see the footer
+		   reveal in the ≥768 block). z-index lifts it above the fixed footer. */
+		z-index: 1;
+		background: var(--bg);
+		padding-bottom: var(--major);
 	}
 	.grid-overlay {
 		position: absolute;
@@ -590,18 +687,6 @@
 		margin-top: var(--u8);
 	}
 
-	/* Wireframe chrome: a section index marker, clearly not final content. */
-	.beat-tag {
-		position: absolute;
-		top: var(--u3);
-		left: var(--u4);
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		letter-spacing: 0.04em;
-		color: var(--ink-3);
-		text-transform: uppercase;
-	}
-
 	/* Text column — cold-email measure (~62ch). */
 	.col {
 		max-width: 62ch;
@@ -613,20 +698,40 @@
 	   min-width block). Type stays on-baseline at every width instead of drifting
 	   between clamp endpoints. */
 	.display {
+		font-family: var(--font-display);
 		font-size: var(--fs-display);
 		line-height: var(--lh-display);
 		letter-spacing: -0.02em;
-		font-weight: 800;
+		font-weight: 700;
+		/* The berry accent's home: the hero headline (board specimen). */
+		color: var(--berry);
 		margin: 0 0 var(--u4);
 	}
+	/* Section-heading word-by-word reveal (see the revealWords action). Words hold at
+	   low opacity, then fade to full in reading order (per-word transition-delay, set
+	   inline) once the heading scrolls ~30% into view. The heavy ease gives the "settle
+	   into place" feel rather than a flat linear fade. Reduced motion never adds the
+	   .reveal-words class, so headings stay static full-colour text. */
+	/* The .word spans and the reveal-words/revealed classes are injected by the action
+	   at runtime, so they carry no Svelte scope hash — anchor to the real .wire root
+	   (which IS in the markup) and mark the dynamic descendants :global. */
+	.wire :global(.reveal-words .word) {
+		opacity: 0.3;
+		transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1);
+	}
+	.wire :global(.reveal-words.revealed .word) {
+		opacity: 1;
+	}
 	.display-sm {
+		font-family: var(--font-display);
 		font-size: var(--fs-title);
 		line-height: var(--lh-title);
 		letter-spacing: -0.02em;
-		font-weight: 800;
+		font-weight: 700;
 		margin: 0 0 var(--u4);
 	}
 	h2 {
+		font-family: var(--font-display);
 		font-size: var(--fs-heading);
 		line-height: var(--lh-heading);
 		letter-spacing: -0.01em;
@@ -692,23 +797,6 @@
 		gap: var(--u2);
 		margin-top: var(--u4);
 	}
-	.cmd {
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-body);
-		line-height: var(--lh-body);
-		padding: var(--u2) var(--u3);
-		border: 1px solid var(--line);
-		border-radius: 0;
-		background: var(--fill);
-		color: var(--ink);
-	}
-	.cmd-block {
-		display: inline-block;
-		margin-top: var(--u2);
-	}
-	.copyable {
-		position: relative;
-	}
 	.btn {
 		font: inherit;
 		font-size: var(--fs-body);
@@ -717,14 +805,17 @@
 		border-radius: 0;
 		cursor: pointer;
 		border: 1px solid var(--ink);
+		/* Robust for both <button> and <a> (the footer CTA is a link). */
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none;
 	}
 	.btn-primary {
-		background: var(--ink);
-		color: var(--paper);
-	}
-	.btn-ghost {
-		background: transparent;
-		color: var(--ink);
+		/* Inverted CTA (Aronia board): cream fill, near-black text. */
+		background: var(--cream);
+		color: var(--night);
+		border-color: var(--cream);
 	}
 
 	/* ── Before/after (the proof spine) ───────────────────────────────
@@ -1212,22 +1303,102 @@
 		}
 	}
 
-	/* ── Footer ───────────────────────────────────────────────────── */
-	.cta {
-		text-align: left;
+	/* ── Footer (full-bleed reveal layer) ─────────────────────────────
+	   The footer sits behind .wire-inner and is uncovered as the page scrolls
+	   off it (desktop only; see the ≥768 block). The warm glow (a bespoke radial
+	   bloom from the Aronia board) fills the whole section and rises from the
+	   bottom, so it "fills in" as more is revealed; only the dark end is anchored
+	   to our ground token. */
+	.site-footer {
+		background: radial-gradient(
+			ellipse 120% 115% at 50% 138%,
+			oklab(89.5% 0.002 0.049) 0%,
+			oklab(73.5% 0.01 0.081) 12%,
+			oklab(46.2% 0.01 0.058) 28%,
+			oklab(22.7% 0.009 0.025) 50%,
+			oklab(15.5% 0.006 0.011) 74%,
+			var(--night) 100%
+		);
 	}
-	.foot {
+	.site-footer-inner {
+		max-width: 1080px;
+		margin: 0 auto;
+		padding: var(--u8) var(--u3);
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
+	}
+
+	/* Sign-off — the page's one final CTA, sitting over the section glow. */
+	.signoff {
+		max-width: 720px;
+	}
+	.signoff .display-sm {
+		max-width: 16ch;
+		margin-bottom: var(--u3);
+	}
+	.signoff-sub {
+		max-width: 42ch;
+		margin: 0 0 var(--u6);
+		font-size: var(--fs-lead);
+		line-height: var(--lh-lead);
+		color: var(--ink-2);
+	}
+
+	/* Footer body — brand block + the single outbound link (GitHub). */
+	.foot-body {
+		display: flex;
+		flex-direction: column;
 		gap: var(--u4);
+		margin-top: var(--u8);
+	}
+	.foot-brand {
+		max-width: 42ch;
+	}
+	.foot-mark {
+		font-family: var(--font-display);
+		font-size: var(--fs-feature);
+		line-height: var(--lh-feature);
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		color: var(--berry);
+	}
+	.foot-tagline {
+		margin: var(--u1) 0 0;
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
+		color: var(--ink-3);
+	}
+	.foot-gh {
+		display: inline-flex;
+		flex: none;
+		color: var(--ink-3);
+		transition: color 200ms ease;
+	}
+	.foot-gh:hover {
+		color: var(--ink);
+	}
+
+	/* Legal — attribution + colophon on a hairline. */
+	.foot-legal {
+		display: flex;
+		flex-direction: column;
+		gap: var(--u1);
 		margin-top: var(--u8);
 		padding-top: var(--u4);
 		border-top: 1px solid var(--line);
 	}
-	.foot span {
-		font-size: var(--fs-label);
-		line-height: var(--lh-label);
+	.foot-legal span {
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
 		color: var(--ink-3);
+	}
+	.foot-legal a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+	.foot-legal a:hover {
+		color: var(--ink);
 	}
 
 	/* ── Wider-screen enhancement (mobile-first base is above) ─────────
@@ -1319,6 +1490,40 @@
 		}
 		.ba-seg {
 			display: none;
+		}
+
+		/* ── Footer reveal ────────────────────────────────────────────
+		   The footer is a FIXED 70vh band pinned to the bottom, behind the opaque
+		   .wire-inner (z-index 1 vs 0). .wire-inner reserves a matching 70vh of scroll
+		   space, so scrolling the end slides the page up and off the footer to uncover
+		   it — 70% of a viewport of travel, not a whole one. Fixed is viewport-relative,
+		   which is what we want inside .wire's own scroll container; vh tracks resizes. */
+		.wire-inner {
+			margin-bottom: 70vh;
+		}
+		.site-footer {
+			position: fixed;
+			inset: auto 0 0 0;
+			height: 70vh;
+			z-index: 0;
+		}
+		.site-footer-inner {
+			height: 100%;
+			padding-block: var(--u8);
+			padding-inline: var(--u4);
+		}
+		/* Sign-off holds the top of the band; brand + legal ride the bottom. */
+		.foot-body {
+			margin-top: auto;
+			flex-direction: row;
+			align-items: flex-start;
+			justify-content: space-between;
+		}
+		.foot-legal {
+			flex-direction: row;
+			align-items: center;
+			justify-content: space-between;
+			gap: var(--u4);
 		}
 	}
 </style>
