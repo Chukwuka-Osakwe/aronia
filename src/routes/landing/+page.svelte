@@ -454,6 +454,29 @@
 		--u8: 64px;
 		--major: 96px;
 
+		/* ── Type scale ───────────────────────────────────────────────
+		   One standardised, baseline-locked scale (fs + matching lh pairs).
+		   Every line-height is an 8px multiple so line boxes tile the grid;
+		   sizes are fixed (no clamp). Mobile-first: these ARE the phone
+		   values — the four responsive steps (display/title/heading/lead)
+		   bump up at the 768 seam by redefining their tokens (see below). */
+		--fs-display: 40px;
+		--lh-display: 48px; /* 6 × 8 */
+		--fs-title: 32px;
+		--lh-title: 40px; /* 5 × 8 */
+		--fs-heading: 28px;
+		--lh-heading: 32px; /* 4 × 8 */
+		--fs-feature: 24px;
+		--lh-feature: 32px; /* 4 × 8 */
+		--fs-lead: 18px;
+		--lh-lead: 24px; /* 3 × 8 */
+		--fs-body: 16px;
+		--lh-body: 24px; /* 3 × 8 */
+		--fs-small: 14px;
+		--lh-small: 24px; /* 3 × 8 */
+		--fs-label: 12px;
+		--lh-label: 24px; /* 3 × 8 */
+
 		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 		color: var(--ink);
 		background: var(--bg);
@@ -543,7 +566,7 @@
 		right: 12px;
 		z-index: 20;
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 12px;
+		font-size: var(--fs-label);
 		padding: 6px 10px;
 		border: 1px solid var(--ink);
 		border-radius: 0;
@@ -573,7 +596,7 @@
 		top: var(--u3);
 		left: var(--u4);
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 11px;
+		font-size: var(--fs-label);
 		letter-spacing: 0.04em;
 		color: var(--ink-3);
 		text-transform: uppercase;
@@ -590,22 +613,22 @@
 	   min-width block). Type stays on-baseline at every width instead of drifting
 	   between clamp endpoints. */
 	.display {
-		font-size: 40px;
-		line-height: 48px; /* 6 × 8 */
+		font-size: var(--fs-display);
+		line-height: var(--lh-display);
 		letter-spacing: -0.02em;
 		font-weight: 800;
 		margin: 0 0 var(--u4);
 	}
 	.display-sm {
-		font-size: 32px;
-		line-height: 40px; /* 5 × 8 */
+		font-size: var(--fs-title);
+		line-height: var(--lh-title);
 		letter-spacing: -0.02em;
 		font-weight: 800;
 		margin: 0 0 var(--u4);
 	}
 	h2 {
-		font-size: 28px;
-		line-height: 32px; /* 4 × 8 */
+		font-size: var(--fs-heading);
+		line-height: var(--lh-heading);
 		letter-spacing: -0.01em;
 		font-weight: 700;
 		margin: 0 0 var(--u3);
@@ -618,20 +641,20 @@
 	}
 
 	.lead {
-		font-size: 18px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-lead);
+		line-height: var(--lh-lead);
 		color: var(--ink);
 		margin: 0 0 var(--u4);
 	}
 	.body {
-		font-size: 16px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		color: var(--ink-2);
 		margin: 0;
 	}
 	.micro {
-		font-size: 14px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
 		color: var(--ink-3);
 		margin: var(--u3) 0 0;
 	}
@@ -671,8 +694,8 @@
 	}
 	.cmd {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 15px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		padding: var(--u2) var(--u3);
 		border: 1px solid var(--line);
 		border-radius: 0;
@@ -688,7 +711,7 @@
 	}
 	.btn {
 		font: inherit;
-		font-size: 15px;
+		font-size: var(--fs-body);
 		font-weight: 600;
 		padding: var(--u2) var(--u3);
 		border-radius: 0;
@@ -772,7 +795,7 @@
 		right: var(--u2);
 		z-index: 2;
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 12px;
+		font-size: var(--fs-label);
 		padding: 4px 8px;
 		border: 1px solid var(--ink);
 		border-radius: 0;
@@ -783,8 +806,8 @@
 	.stub-note {
 		margin-top: var(--u1);
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 11px;
-		line-height: 24px;
+		font-size: var(--fs-label);
+		line-height: var(--lh-label);
 		color: var(--ink-3);
 	}
 	@media (prefers-reduced-motion: reduce) {
@@ -798,7 +821,7 @@
 		top: var(--u2);
 		left: var(--u2);
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 12px;
+		font-size: var(--fs-label);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: var(--ink-3);
@@ -842,8 +865,8 @@
 	}
 	.ba-seg-btn {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 13px;
-		line-height: 24px;
+		font-size: var(--fs-label);
+		line-height: var(--lh-label);
 		padding: var(--u1) var(--u2);
 		border: 0;
 		border-radius: 0;
@@ -885,15 +908,15 @@
 		padding: var(--u6) var(--u4);
 	}
 	.generic-visual figcaption {
-		font-size: 14px;
-		line-height: 24px;
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
 		color: var(--ink-2);
 	}
 
 	/* Placeholder label inside any wireframe box. */
 	.ph-label {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 13px;
+		font-size: var(--fs-label);
 		color: var(--ink-3);
 		text-align: center;
 	}
@@ -933,13 +956,13 @@
 	.step-n {
 		flex: none;
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 24px; /* match the heading */
-		line-height: 32px; /* 4 × 8 — same as .step-h */
+		font-size: var(--fs-feature); /* match the heading */
+		line-height: var(--lh-feature); /* same as .step-h */
 		color: var(--ink-3);
 	}
 	.step-h {
-		font-size: 24px;
-		line-height: 32px; /* 4 × 8 */
+		font-size: var(--fs-feature);
+		line-height: var(--lh-feature);
 		font-weight: 700;
 		margin: 0;
 	}
@@ -977,13 +1000,13 @@
 		border-top: 1px solid var(--line);
 	}
 	.look-slot figcaption strong {
-		font-size: 18px;
-		line-height: 24px;
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		color: var(--ink);
 	}
 	.look-slot figcaption span {
-		font-size: 14px;
-		line-height: 24px;
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
 		color: var(--ink-2);
 	}
 	/* Position/count row — one square per look, current one filled. Scales as a
@@ -1004,8 +1027,8 @@
 		display: block;
 		margin-top: var(--u1);
 		text-align: center;
-		font-size: 14px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-small);
+		line-height: var(--lh-small);
 		color: var(--ink);
 		text-decoration: underline;
 		text-underline-offset: 3px;
@@ -1065,14 +1088,14 @@
 	}
 	.prompt-text {
 		margin: 0;
-		font-size: 16px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		color: var(--ink);
 	}
 	/* Step 1's command reads as monospace inside the same box. */
 	.prompt-mono {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: 15px;
+		font-size: var(--fs-body);
 	}
 	.prompt-bar {
 		display: flex;
@@ -1134,8 +1157,8 @@
 		gap: var(--u2);
 		padding: var(--u3) 0;
 		cursor: pointer;
-		font-size: 16px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		font-weight: 600;
 		color: var(--ink);
 		/* Kill the native disclosure triangle (we draw our own +/−). */
@@ -1179,8 +1202,8 @@
 		/* Rows span the full container, but keep the answer on a readable measure. */
 		max-width: 62ch;
 		padding: 0 0 var(--u3);
-		font-size: 16px;
-		line-height: 24px; /* 3 × 8 */
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
 		color: var(--ink-2);
 	}
 	@media (prefers-reduced-motion: reduce) {
@@ -1202,8 +1225,8 @@
 		border-top: 1px solid var(--line);
 	}
 	.foot span {
-		font-size: 13px;
-		line-height: 24px;
+		font-size: var(--fs-label);
+		line-height: var(--lh-label);
 		color: var(--ink-3);
 	}
 
@@ -1242,23 +1265,20 @@
 			text-align-last: left;
 		}
 
-		/* Type steps up to the display sizes — each still baseline-locked (8px-multiple
-		   line-heights), a discrete step, not a fluid ramp. */
-		.display {
-			font-size: 64px;
-			line-height: 72px; /* 9 × 8 */
-		}
-		.display-sm {
-			font-size: 48px;
-			line-height: 56px; /* 7 × 8 */
-		}
-		h2 {
-			font-size: 40px;
-			line-height: 48px; /* 6 × 8 */
-		}
-		.lead {
-			font-size: 20px;
-			line-height: 32px; /* 4 × 8 */
+		/* Type steps up: the four responsive steps bump to their wide values by
+		   redefining their tokens on the root — each still baseline-locked (8px-multiple
+		   line-heights), a discrete step, not a fluid ramp. The token consumers below
+		   (.display, .display-sm, h2, .lead) inherit the new values, no per-selector
+		   overrides needed. */
+		.wire {
+			--fs-display: 64px;
+			--lh-display: 72px; /* 9 × 8 */
+			--fs-title: 48px;
+			--lh-title: 56px; /* 7 × 8 */
+			--fs-heading: 40px;
+			--lh-heading: 48px; /* 6 × 8 */
+			--fs-lead: 20px;
+			--lh-lead: 32px; /* 4 × 8 */
 		}
 
 		/* §3 Proof — frames keep the 1.55:1 browser shape and go two-up. The pair is FLUID
