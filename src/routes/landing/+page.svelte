@@ -37,12 +37,20 @@
 			a: 'No. aronia sets up with one command, and from there you just tell your agent what to build in plain English. You never have to open the code unless you want to.'
 		},
 		{
+			q: 'Do I need to know design to use this?',
+			a: "No — that's the point. You pick the look, aronia writes the rules, and your agent follows them. You just describe what you want built."
+		},
+		{
 			q: 'What am I actually installing?',
 			a: "Real, editable code — copied straight into your project. Not a plugin, not a black box you rent. It's yours to keep and change."
 		},
 		{
-			q: "Does it work with what I'm building in?",
+			q: "Does it work with any framework I'm building with?",
 			a: 'Yes — any framework your agent already uses: React, Svelte, plain HTML, whatever. You don’t switch anything.'
+		},
+		{
+			q: 'Does it work with any AI coder?',
+			a: 'Yes — any tool that can read a simple reference file: Cursor, Windsurf, v0, ChatGPT, Claude and others.'
 		},
 		{ q: 'Is it free?', a: 'Yes. Free and open.' },
 		{
@@ -56,6 +64,10 @@
 		{
 			q: 'Which look should I pick?',
 			a: "Whichever feels like you. And you can always try another — it's one command."
+		},
+		{
+			q: 'What if none of the looks fit my project?',
+			a: 'You can mix rules between looks, or use one as a starting point and edit it. More looks are on the way.'
 		}
 	];
 
@@ -380,17 +392,22 @@
 
 		<!-- ── 5 · FAQs ────────────────────────────────────────────────── -->
 		<section class="beat">
-			<span class="beat-tag">05 · FAQs</span>
-			<div class="col">
-				<h2>Questions</h2>
-				<dl class="faqs">
-					{#each faqs as f}
-						<div class="faq">
-							<dt>{f.q}</dt>
-							<dd>{f.a}</dd>
-						</div>
-					{/each}
-				</dl>
+			<h2>Frequently Asked Questions</h2>
+			<!-- Accordion via native <details>/<summary>: keyboard + screen-reader
+			     support and the reduced-motion story come for free, no JS state.
+			     All closed by default — the list is scannable, tap to open one.
+			     Rows span the full container so the chevron sits at the far edge. -->
+			<div class="faqs">
+				{#each faqs as f}
+					<details class="faq">
+						<summary class="faq-q">
+							<span>{f.q}</span>
+							<!-- Chevron: points down closed, rotates to point up on open. -->
+							<span class="faq-icon" aria-hidden="true"></span>
+						</summary>
+						<p class="faq-a">{f.a}</p>
+					</details>
+				{/each}
 			</div>
 		</section>
 
@@ -425,6 +442,9 @@
 		--line: #ccc;
 		--fill: #ededed;
 		--paper: #fff;
+		/* Page field — a warm near-white; easier on the eyes than pure white. Surfaces
+		   (panes, cards, chrome) stay --paper so they read as distinct boxes on top. */
+		--bg: oklch(96.5% 0.006 92);
 
 		--u1: 8px;
 		--u2: 16px;
@@ -436,7 +456,7 @@
 
 		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
 		color: var(--ink);
-		background: var(--paper);
+		background: var(--bg);
 		-webkit-font-smoothing: antialiased;
 		/* Own scroll container: the docs' global `html { overflow: hidden }` (desktop)
 		   would otherwise clip this long page, so the wireframe scrolls internally. */
@@ -1091,28 +1111,82 @@
 		border-color: var(--ink-2);
 	}
 
-	/* ── FAQs ─────────────────────────────────────────────────────── */
+	/* ── FAQs ───────────────────────────────────────────────────────
+	   A hairline-ruled disclosure list (rhymes with the steps list): each row is
+	   a native <details> with a top rule (bottom rule on the last). The <summary>
+	   is the clickable question; the answer expands beneath. Padding lives on the
+	   summary (top+bottom) and answer (bottom) so both the closed and open rows
+	   land on the 8px grid. */
 	.faqs {
 		margin: var(--u6) 0 0;
 	}
 	.faq {
-		padding: var(--u3) 0;
 		border-top: 1px solid var(--line);
 	}
 	.faq:last-child {
 		border-bottom: 1px solid var(--line);
 	}
-	.faq dt {
-		font-size: 18px;
+	.faq-q {
+		display: flex;
+		/* Pin the icon to the first line (not the middle of a wrapped question). */
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: var(--u2);
+		padding: var(--u3) 0;
+		cursor: pointer;
+		font-size: 16px;
 		line-height: 24px; /* 3 × 8 */
 		font-weight: 600;
-		margin: 0 0 var(--u1);
+		color: var(--ink);
+		/* Kill the native disclosure triangle (we draw our own +/−). */
+		list-style: none;
 	}
-	.faq dd {
+	.faq-q::-webkit-details-marker {
+		display: none;
+	}
+	.faq-q:focus-visible {
+		outline: 2px solid var(--ink);
+		outline-offset: 2px;
+	}
+	/* Chevron: an 8px square showing only its bottom + right borders, rotated 45°
+	   so it points down (closed). On open it rotates to 225° and points up. */
+	.faq-icon {
+		position: relative;
+		flex: none;
+		width: 16px;
+		height: 16px;
+		/* Optically center on the 24px first line: (24 − 16) / 2. */
+		margin-top: 4px;
+	}
+	.faq-icon::before {
+		content: '';
+		position: absolute;
+		top: 3px;
+		left: 4px;
+		width: 8px;
+		height: 8px;
+		border-right: 1.5px solid var(--ink-2);
+		border-bottom: 1.5px solid var(--ink-2);
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition: transform 200ms ease;
+	}
+	.faq[open] .faq-icon::before {
+		transform: rotate(225deg);
+	}
+	.faq-a {
 		margin: 0;
+		/* Rows span the full container, but keep the answer on a readable measure. */
+		max-width: 62ch;
+		padding: 0 0 var(--u3);
 		font-size: 16px;
 		line-height: 24px; /* 3 × 8 */
 		color: var(--ink-2);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.faq-icon::before {
+			transition: none;
+		}
 	}
 
 	/* ── Footer ───────────────────────────────────────────────────── */
