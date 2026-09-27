@@ -120,6 +120,40 @@
 		return { destroy: () => io.disconnect() };
 	}
 
+	// Footer reveal runway. The footer is a fixed, content-height band uncovered as
+	// the page scrolls off it (desktop). The scroll runway — .wire-inner's bottom
+	// margin — must equal the footer's rendered height so it reveals exactly and no
+	// further. Measure the footer and publish it as --footer-reveal; a ResizeObserver
+	// keeps it in sync when the band reflows (e.g. the sign-off headline rewrapping).
+	//
+	// Also forward wheel scrolling to .wire: because the footer is position:fixed its
+	// scroll chain is the viewport (overflow:hidden), so a wheel over the revealed
+	// footer can't scroll the page. Translating deltas onto .wire lets the reader
+	// scroll from anywhere — including over the footer's links, which a pointer-events
+	// hack would have disabled. deltaMode is normalised so line/page-mode mice match.
+	function footerReveal(node: HTMLElement) {
+		const wire = node.closest('.wire') as HTMLElement | null;
+		if (!wire) return;
+		const sync = () => wire.style.setProperty('--footer-reveal', `${node.offsetHeight}px`);
+		sync();
+		const ro = new ResizeObserver(sync);
+		ro.observe(node);
+
+		const onWheel = (e: WheelEvent) => {
+			const step = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? wire.clientHeight : 1;
+			wire.scrollTop += e.deltaY * step;
+			e.preventDefault();
+		};
+		node.addEventListener('wheel', onWheel, { passive: false });
+
+		return {
+			destroy: () => {
+				ro.disconnect();
+				node.removeEventListener('wheel', onWheel);
+			}
+		};
+	}
+
 	// Which look the rotating "pick a look" slot is currently showing.
 	let lookIndex = $state(0);
 	// Auto-rotation timer, hoisted so a manual pick can cancel it.
@@ -429,7 +463,7 @@
 		</section>
 
 		<!-- ── 5 · FAQs ────────────────────────────────────────────────── -->
-		<section class="beat">
+		<section class="beat faq-section">
 			<h2 use:revealWords>Frequently Asked Questions</h2>
 			<!-- Accordion via native <details>/<summary>: keyboard + screen-reader
 			     support and the reduced-motion story come for free, no JS state.
@@ -455,16 +489,12 @@
 	     Lives OUTSIDE .wire-inner and sits behind it (lower z); .wire-inner is opaque
 	     and slides up to uncover it. The glow fills the whole section. Desktop-only
 	     reveal — on mobile the footer just flows normally. See the reveal rules below. -->
-	<footer class="site-footer">
+	<footer class="site-footer" use:footerReveal>
 		<div class="site-footer-inner">
 			<!-- Sign-off: the page's one final CTA, over the section glow. -->
 			<div class="signoff">
-				<h2 class="display-sm" use:revealWords>Make yours look like a choice.</h2>
-				<p class="signoff-sub">
-					Point your agent at aronia and keep building. Same afternoon, completely different
-					app — one that looks like you meant it.
-				</p>
-				<a class="btn btn-primary" href="/guide">Get started</a>
+				<h2 class="display-sm" use:revealWords>Make your next design look like a choice.</h2>
+				<a class="btn btn-primary" href="/guide">Use aronia now</a>
 			</div>
 
 			<!-- Footer body: brand + the single outbound link. This is a self-contained
@@ -473,32 +503,32 @@
 			<div class="foot-body">
 				<div class="foot-brand">
 					<span class="foot-mark">aronia</span>
-					<p class="foot-tagline">
-						A design language for coding agents. Copied into your repo, editable, and yours
-						to keep.
-					</p>
+					<p class="foot-tagline">A design language for coding agents.</p>
 				</div>
-				<a
-					class="foot-gh"
-					href="https://github.com/Chukwuka-Osakwe/aronia"
-					target="_blank"
-					rel="noopener"
-					aria-label="aronia on GitHub"
-				>
-					<svg viewBox="0 0 16 16" width="26" height="26" aria-hidden="true" fill="currentColor">
-						<path
-							d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
-						/>
-					</svg>
-				</a>
 			</div>
 
-			<!-- Legal: attribution + colophon; the source link is the second honest door out. -->
+			<!-- Legal: GitHub + attribution on the left, colophon on the right; the
+			     source link is the second honest door out. -->
 			<div class="foot-legal">
-				<span
-					>© 2026 aronia ·
-					<a href="https://github.com/Chukwuka-Osakwe/aronia">MIT-licensed source</a></span
-				>
+				<span class="foot-legal-left">
+					<a
+						class="foot-gh"
+						href="https://github.com/Chukwuka-Osakwe/aronia"
+						target="_blank"
+						rel="noopener"
+						aria-label="aronia on GitHub"
+					>
+						<svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" fill="currentColor">
+							<path
+								d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"
+							/>
+						</svg>
+					</a>
+					<span
+						>© 2026 aronia ·
+						<a href="https://github.com/Chukwuka-Osakwe/aronia">MIT-licensed source</a></span
+					>
+				</span>
 				<span>Built for agents. Usable by humans. With love from Chukwuka.</span>
 			</div>
 		</div>
@@ -536,6 +566,7 @@
 		--u2: 16px;
 		--u3: 24px;
 		--u4: 32px;
+		--u5: 40px;
 		--u6: 48px;
 		--u8: 64px;
 		--major: 96px;
@@ -595,7 +626,6 @@
 		   reveal in the ≥768 block). z-index lifts it above the fixed footer. */
 		z-index: 1;
 		background: var(--bg);
-		padding-bottom: var(--major);
 	}
 	.grid-overlay {
 		position: absolute;
@@ -672,19 +702,18 @@
 		cursor: pointer;
 	}
 
-	/* Section = one idea, separated by the major unit. */
+	/* Section = one idea. Uniform u8 top/bottom padding on every section (the hero
+	   drops its top — see .beat.hero). */
 	.beat {
 		position: relative;
 		max-width: 1080px;
 		margin: 0 auto;
-		padding: var(--u2) var(--u3);
+		padding: var(--u8) var(--u3);
 	}
-	/* Inter-section spacing lives on ONE margin between sections, not additive
-	   top+bottom paddings. Sections carry no vertical padding, so each heading sits
-	   at its section's top — flush on the section-local grid's first major line —
-	   and this margin is honest, ungridded whitespace between blocks. */
+	/* Between-section spacing is fully padding-based now: each section's u8 top/bottom
+	   padding is the only gap source (adjacent sections give 128px), so no margin. */
 	.beat + .beat {
-		margin-top: var(--u8);
+		margin-top: 0;
 	}
 
 	/* Text column — cold-email measure (~62ch). */
@@ -766,8 +795,11 @@
 
 	/* Hero is the first section: its top space is page-top breathing room (padding),
 	   not an inter-section margin. A smaller step on mobile; a full major unit at ≥768. */
-	.hero {
-		padding-top: var(--u8);
+	/* Hero is the first section — a slim u4 (32px) up top instead of the shared u8,
+	   so it sits close to the page top; full u8 on the bottom. Two-class selector so
+	   it outranks the desktop `.beat` padding shorthand regardless of source order. */
+	.beat.hero {
+		padding-top: var(--u4);
 	}
 	/* Hero text is centered and wider than the default column so the headline lands
 	   as a clean two lines (via the <br />) rather than wrapping in the 62ch measure.
@@ -1225,6 +1257,26 @@
 		border-color: var(--ink-2);
 	}
 
+	/* FAQ band — inverted from the dark page: a full-bleed CREAM ground with dark
+	   text. Everything inside reads through the semantic tokens, so the band flips by
+	   repointing them locally (night-over-cream neutrals) — no FAQ selector is touched.
+	   box-shadow paints the cream past the 1080 container to the viewport edges;
+	   clip-path keeps that bleed horizontal only. Vertical padding is the shared u8. */
+	.faq-section {
+		--ink: var(--night);
+		--ink-2: color-mix(in oklab, var(--night) 70%, var(--cream));
+		--ink-3: color-mix(in oklab, var(--night) 45%, var(--cream));
+		--line: color-mix(in oklab, var(--night) 18%, var(--cream));
+		/* Re-resolve the inherited text colour in this inverted scope. The root sets
+		   `color: var(--ink)` which already computed to cream; the heading inherits that
+		   value and never re-reads --ink, so without this it'd stay cream. Elements that
+		   declare their own token colour (.faq-q/.faq-a) already flip on their own. */
+		color: var(--ink);
+		background: var(--cream);
+		box-shadow: 0 0 0 100vw var(--cream);
+		clip-path: inset(0 -100vw);
+	}
+
 	/* ── FAQs ───────────────────────────────────────────────────────
 	   A hairline-ruled disclosure list (rhymes with the steps list): each row is
 	   a native <details> with a top rule (bottom rule on the last). The <summary>
@@ -1305,46 +1357,64 @@
 
 	/* ── Footer (full-bleed reveal layer) ─────────────────────────────
 	   The footer sits behind .wire-inner and is uncovered as the page scrolls
-	   off it (desktop only; see the ≥768 block). The warm glow (a bespoke radial
-	   bloom from the Aronia board) fills the whole section and rises from the
-	   bottom, so it "fills in" as more is revealed; only the dark end is anchored
-	   to our ground token. */
+	   off it (desktop only; see the ≥768 block). The warm glow is the "Sign-off
+	   band" radial bloom copied verbatim from the Aronia board (node 6U-0): a
+	   lower-right ellipse interpolated in oklab, so it "fills in" as more of the
+	   footer is revealed. Values are 1:1 with Paper — do not hand-tune. */
 	.site-footer {
 		background: radial-gradient(
-			ellipse 120% 115% at 50% 138%,
+			ellipse 145% 155% at 82% 128% in oklab,
 			oklab(89.5% 0.002 0.049) 0%,
-			oklab(73.5% 0.01 0.081) 12%,
-			oklab(46.2% 0.01 0.058) 28%,
-			oklab(22.7% 0.009 0.025) 50%,
-			oklab(15.5% 0.006 0.011) 74%,
-			var(--night) 100%
+			oklab(73.5% 0.010 0.081) 11%,
+			oklab(46.2% 0.010 0.058) 26%,
+			oklab(22.7% 0.009 0.025) 48%,
+			oklab(15.5% 0.006 0.011) 72%,
+			oklab(12.3% 0.010 -0.003) 100%
 		);
 	}
 	.site-footer-inner {
+		position: relative;
 		max-width: 1080px;
 		margin: 0 auto;
 		padding: var(--u8) var(--u3);
 		display: flex;
 		flex-direction: column;
 	}
+	/* Same 8/96 baseline overlay as the beats, extended onto the footer so its
+	   content stack can be read against the grid (violet chrome, click-through). */
+	.show-grid .site-footer-inner::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 5;
+		background-image:
+			repeating-linear-gradient(
+				to bottom,
+				rgba(99, 62, 191, 0.14) 0,
+				rgba(99, 62, 191, 0.14) 1px,
+				transparent 1px,
+				transparent 8px
+			),
+			repeating-linear-gradient(
+				to bottom,
+				rgba(99, 62, 191, 0.42) 0,
+				rgba(99, 62, 191, 0.42) 2px,
+				transparent 2px,
+				transparent 96px
+			);
+	}
 
 	/* Sign-off — the page's one final CTA, sitting over the section glow. */
 	.signoff {
-		max-width: 720px;
+		max-width: none;
 	}
+	/* Gap down from the headline to the button is the standard headline→body u3. */
 	.signoff .display-sm {
-		max-width: 16ch;
 		margin-bottom: var(--u3);
 	}
-	.signoff-sub {
-		max-width: 42ch;
-		margin: 0 0 var(--u6);
-		font-size: var(--fs-lead);
-		line-height: var(--lh-lead);
-		color: var(--ink-2);
-	}
-
-	/* Footer body — brand block + the single outbound link (GitHub). */
+	/* Footer body — brand block + the single outbound link (GitHub). u8 gap above it
+	   is the single source of truth (no desktop override), matching the page-wide u8. */
 	.foot-body {
 		display: flex;
 		flex-direction: column;
@@ -1378,7 +1448,8 @@
 		color: var(--ink);
 	}
 
-	/* Legal — attribution + colophon on a hairline. */
+	/* Legal — attribution + colophon on a hairline. u8 gap above it is the single
+	   source of truth (no desktop override), matching the page-wide u8. */
 	.foot-legal {
 		display: flex;
 		flex-direction: column;
@@ -1397,6 +1468,16 @@
 		text-decoration: underline;
 		text-underline-offset: 2px;
 	}
+	/* GitHub icon + attribution grouped on the left so space-between keeps them
+	   together against the colophon, and the icon sits centered on the text line. */
+	.foot-legal-left {
+		display: flex;
+		align-items: center;
+		gap: var(--u2);
+	}
+	.foot-legal-left .foot-gh {
+		text-decoration: none;
+	}
 	.foot-legal a:hover {
 		color: var(--ink);
 	}
@@ -1408,20 +1489,8 @@
 	   content strains, not declared up front. */
 	@media (min-width: 768px) {
 		.beat {
-			padding: var(--u2) var(--u4);
+			padding: var(--u8) var(--u4);
 		}
-		/* Section rhythm opens up past the major unit at desktop widths — 120px
-		   (15 × 8, still on-grid), deliberately decoupled from the hero's top space
-		   below so the two can differ. */
-		.beat + .beat {
-			margin-top: 120px;
-		}
-		/* Hero keeps its top breathing room at the major unit (96px), not the wider
-		   inter-section gap. */
-		.hero {
-			padding-top: var(--major);
-		}
-
 		/* Multi-part rows go side-by-side. */
 		.ba {
 			grid-template-columns: 1fr 1fr;
@@ -1498,27 +1567,49 @@
 		   space, so scrolling the end slides the page up and off the footer to uncover
 		   it — 70% of a viewport of travel, not a whole one. Fixed is viewport-relative,
 		   which is what we want inside .wire's own scroll container; vh tracks resizes. */
+		.wire {
+			/* The reveal runway (.wire-inner margin-bottom below) must equal the footer's
+			   rendered height, so the page scrolls off it exactly. The footer now hugs its
+			   content (no fixed band), so its height is measured at runtime and published
+			   here by use:footerReveal; this is only the pre-hydration fallback. */
+			--footer-reveal: 34rem;
+		}
 		.wire-inner {
-			margin-bottom: 70vh;
+			margin-bottom: var(--footer-reveal);
+			/* Rounded lifted edge: round the bottom corners of the opaque page layer so
+			   it reads as a panel peeling up off the footer as it scrolls. overflow:clip
+			   trims the children to the rounded box so the FAQ's full-bleed navy (a
+			   box-shadow with square corners) can't fill the corner notch back in — the
+			   warm footer shows through the round instead. */
+			border-bottom-left-radius: var(--u2);
+			border-bottom-right-radius: var(--u2);
+			overflow: clip;
 		}
 		.site-footer {
 			position: fixed;
 			inset: auto 0 0 0;
-			height: 70vh;
 			z-index: 0;
 		}
 		.site-footer-inner {
-			height: 100%;
 			padding-block: var(--u8);
 			padding-inline: var(--u4);
 		}
-		/* Sign-off holds the top of the band; brand + legal ride the bottom. */
+		/* The two footer blocks stagger like a section header: the sign-off keeps its
+		   natural width on the left guide, the brand pins to the right guide (right
+		   half, pushed right), with u6 between them — matching the brand→legal gap. */
 		.foot-body {
-			margin-top: auto;
-			flex-direction: row;
-			align-items: flex-start;
-			justify-content: space-between;
+			width: 50%;
+			margin-left: auto;
 		}
+		/* Brand hugs the tagline's width and pins to the right guide (align-self), so
+		   its right edge snaps to the guide while the wordmark left-aligns to the
+		   tagline's start below it. */
+		.foot-brand {
+			align-self: flex-end;
+			text-align: left;
+		}
+		/* Legal hairline goes to a row here; the u8 gap above it comes from the base
+		   rule (single source), since the band hugs content with no free space to absorb. */
 		.foot-legal {
 			flex-direction: row;
 			align-items: center;
