@@ -15,7 +15,8 @@
 	// The marketing landing page is its own world — it owns the full viewport with
 	// no docs chrome (sidebar/shell). There's no layout below the root to escape to
 	// via `@`, so the root renders bare for it. It still self-scopes all its styles.
-	const bare = $derived($page.route.id === '/landing');
+	// Sub-routes under /landing (e.g. the specimen capture sheet) render bare too.
+	const bare = $derived($page.route.id?.startsWith('/landing') ?? false);
 
 	// The sidebar is scoped to ONE style ("library") at a time: the active route's
 	// style is expanded (its components listed); every other style collapses to a
