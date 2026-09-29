@@ -7,6 +7,9 @@
 	import '@fontsource-variable/gluten';
 	import '@fontsource-variable/suse';
 
+	// The rotator specimens render each family's real Card — pull them from the registry.
+	import { registry } from '../registry.js';
+
 	// Landing-page WIREFRAME — deliberately black-and-white. We're judging layout,
 	// hierarchy, and vertical rhythm only; palette + display type get locked later
 	// on separate specimens. Everything sits on an 8px baseline: 8px minor unit,
@@ -18,15 +21,15 @@
 	// (hero + proof). Type is baseline-locked (no clamp).
 
 	// The four looks — cycled through the single rotating slot in the "pick a look"
-	// step of How it works. `bar` is a WIREFRAME stand-in colour (roughly each
-	// family's vibe) so the looks read as distinct while the slot rotates; real
-	// specimens replace the colour blocks at hi-fi. The slot is count-agnostic: it
-	// shows the ACT of choosing one, not the whole catalog, so it holds at 4 or 20.
+	// step of How it works. Each renders as the SAME aronia Card restyled per family
+	// (see the specimen sheet at /landing/specimens) so the LOOK is the only variable;
+	// `id` keys into the component registry. The slot is count-agnostic: it shows the
+	// ACT of choosing one, not the whole catalog, so it holds at 4 or 20.
 	const looks = [
-		{ name: 'Swiss', line: 'Clean and grown-up. Calm, sharp, nothing wasted.', bar: '#f24405' },
-		{ name: 'Neo-Brutalism', line: 'Loud and fearless. Thick lines, hard edges, impossible to ignore.', bar: '#ffd000' },
-		{ name: 'Glassmorphism', line: 'Sleek and frosted. Soft, modern, a little futuristic.', bar: '#4da3ff' },
-		{ name: 'Risograph', line: 'Warm and handmade. Grainy, printed, full of character.', bar: '#e8536e' }
+		{ id: 'swiss', name: 'Swiss', line: 'Clean and grown-up. Calm, sharp, nothing wasted.' },
+		{ id: 'neo-brutalism', name: 'Neo-Brutalism', line: 'Loud and fearless. Thick lines, hard edges, impossible to ignore.' },
+		{ id: 'glassmorphism', name: 'Glassmorphism', line: 'Sleek and frosted. Soft, modern, a little futuristic.' },
+		{ id: 'risograph', name: 'Risograph', line: 'Warm and handmade. Grainy, printed, full of character.' }
 	];
 
 	// Proof = real before/after rebuilds, strongest first, family-agnostic. These are
@@ -154,10 +157,19 @@
 		};
 	}
 
-	// Which look the rotating "pick a look" slot is currently showing.
+	// Which look the rotating "pick a look" slot is currently showing, and the one it just
+	// left — the slide needs both: the outgoing pane exits left while the incoming enters
+	// from the right (see the .look-stage transforms).
 	let lookIndex = $state(0);
+	let prevIndex = $state(-1);
 	// Auto-rotation timer, hoisted so a manual pick can cancel it.
 	let rotTimer: ReturnType<typeof setInterval> | undefined;
+
+	// Advance the slot, remembering where we came from so the exiting pane knows to leave.
+	function rotateTo(i: number) {
+		prevIndex = lookIndex;
+		lookIndex = i;
+	}
 
 	onMount(() => {
 		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -170,7 +182,7 @@
 		const t = setTimeout(() => (motionPhase = 'after'), 3000);
 		// Cycle the look slot so "pick a look" reads as choosing from many, not a grid.
 		// Matches the hero's 3s hold so the two motions feel unified.
-		rotTimer = setInterval(() => (lookIndex = (lookIndex + 1) % looks.length), 3000);
+		rotTimer = setInterval(() => rotateTo((lookIndex + 1) % looks.length), 3000);
 		return () => {
 			clearTimeout(t);
 			clearInterval(rotTimer);
@@ -181,7 +193,7 @@
 	// stop auto-advancing so it won't yank them onward. Also the sole navigation for
 	// reduced-motion users (who never had an interval running).
 	function selectLook(i: number) {
-		lookIndex = i;
+		rotateTo(i);
 		clearInterval(rotTimer);
 		rotTimer = undefined;
 	}
@@ -312,7 +324,7 @@
 		</section>
 
 		<!-- ── 4 · HOW IT WORKS (How?) ─────────────────────────────────── -->
-		<section class="beat split">
+		<section class="beat split how">
 			<div class="col">
 				<h2 use:revealWords>Three steps. No code.</h2>
 				<p class="body">
@@ -379,11 +391,40 @@
 						<h3 class="step-h">Pick a look</h3>
 					</div>
 					<!-- Single rotating slot — represents the ACT of choosing one look, not
-					     the whole catalog, so it holds at 4 looks or 20. The colour bar +
-					     caption cycle through `looks`; the dot row shows position/count. -->
+					     the whole catalog, so it holds at 4 looks or 20. Each look renders as
+					     the SAME Card restyled per family (the crossfading stack below); the
+					     caption + dot row track which one is showing. -->
 					<div class="look-rotator">
 						<figure class="look-slot">
-							<div class="look-bar" style="background: {looks[lookIndex].bar}"></div>
+							<div class="look-stack">
+								{#each looks as look, i (look.id)}
+									{@const Card = registry[look.id].card}
+									{@const Button = registry[look.id].button}
+									{@const Badge = registry[look.id].badge}
+									<div
+										class="look-stage"
+										data-style={look.id}
+										data-pos={i === lookIndex ? 'current' : i === prevIndex ? 'prev' : 'next'}
+										aria-hidden={i !== lookIndex}
+									>
+										<Card>
+											{#snippet header()}
+												<div class="spec-head">
+													<span class="spec-title">This week</span>
+													<Badge variant="accent">New</Badge>
+												</div>
+											{/snippet}
+											<p class="spec-body">
+												A calm home for the week — plan it, keep what matters, let the rest go.
+											</p>
+											{#snippet footer()}
+												<Button variant="ghost">Later</Button>
+												<Button variant="primary">Open</Button>
+											{/snippet}
+										</Card>
+									</div>
+								{/each}
+							</div>
 							<figcaption>
 								<strong>{looks[lookIndex].name}</strong>
 								<span>{looks[lookIndex].line}</span>
@@ -1044,6 +1085,25 @@
 		text-align: center;
 	}
 
+	/* ── How it works — ledger frame ──────────────────────────────────
+	   Two rule sets on different widths: the VERTICAL rules ride the 1080 content-column edges
+	   and wrap ONLY the steps list (they live on .steps — so they skip the heading AND the space
+	   below the last divider); the HORIZONTAL step dividers span the full VIEWPORT width (centred
+	   100vw pseudo-rules on each .step), running out past the verticals to the screen edges. The
+	   beat's inline padding is dropped so .steps spans the full 1080 and its verticals land on the
+	   edge; the readable gutter lives on the heading + step content instead. */
+	.beat.how {
+		padding-inline: 0;
+	}
+	.how > .col {
+		padding-inline: var(--u3);
+	}
+	/* Verticals: contained to the steps block, on the 1080 content-column edges. */
+	.how > .steps {
+		border-left: 1px solid var(--line);
+		border-right: 1px solid var(--line);
+	}
+
 	/* ── How it works — steps ─────────────────────────────────────────
 	   A hairline-ruled numbered list (rhymes with the FAQ list below): each step
 	   is a top-ruled row (bottom rule on the last), the zero-padded index sits in
@@ -1060,15 +1120,31 @@
 	   line, then the block(s) beneath — every frame centers on the section axis,
 	   the widest frame setting the effective width. */
 	.step {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--u3);
-		padding: var(--u8) 0;
+		/* Inline padding keeps content off the vertical rules. */
+		padding: var(--u8) var(--u3);
+	}
+	/* Step dividers span the full VIEWPORT width (centred 100vw pseudo-rules), running out past
+	   the contained vertical rules to the screen edges. Top rule on every step; the last step
+	   also caps with a bottom rule. */
+	.step::before,
+	.step:last-child::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100vw;
 		border-top: 1px solid var(--line);
 	}
-	.step:last-child {
-		border-bottom: 1px solid var(--line);
+	.step::before {
+		top: 0;
+	}
+	.step:last-child::after {
+		bottom: 0;
 	}
 	/* Number + heading = one frame; the index rides on the heading baseline. */
 	.step-head {
@@ -1111,9 +1187,91 @@
 		border-radius: 0;
 		overflow: hidden;
 	}
-	.look-bar {
-		height: 160px;
-		transition: background-color 500ms ease;
+	/* The specimen stack: the four family cards share ONE grid cell (all at grid-area 1/1),
+	   so the slot always sizes to the tallest card and never reflows on swap. They slide
+	   horizontally — current on stage, previous exiting left, the rest parked off the right
+	   — a carousel where the incoming look always enters from the right. */
+	.look-stack {
+		display: grid;
+		/* Clip the off-stage panes as they slide in/out. */
+		overflow: hidden;
+	}
+	.look-stage {
+		grid-area: 1 / 1;
+		/* Light so each family's light-dark() tokens resolve to their bright grounds,
+		   regardless of page/OS theme — these are little colour windows on the dark page. */
+		color-scheme: light;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--u5);
+		/* SLIDE (Figma "move in") + fade: incoming enters from the right, outgoing exits left.
+		   Both panes carry their own full-bleed ground, so a pure slide butts two grounds
+		   against a hard seam mid-transition — the fade blends them through each other
+		   instead. Opacity runs a touch quicker than the slide so the old ground clears
+		   before the card fully leaves. easeInOutQuart: symmetric slow → fast → slow, no
+		   overshoot, with slow ends. Travel is a short 60% "peek", not a full card width. */
+		transition:
+			transform 500ms cubic-bezier(0.76, 0, 0.24, 1),
+			opacity 350ms ease;
+	}
+	/* current = on stage; prev = fading out to the left; next = parked off the right (hidden).
+	   Only current is opaque; prev/next fade to 0 so grounds never hard-clash. */
+	.look-stage[data-pos='current'] {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	.look-stage[data-pos='prev'] {
+		transform: translateX(-60%);
+		opacity: 0;
+		pointer-events: none;
+	}
+	.look-stage[data-pos='next'] {
+		transform: translateX(60%);
+		opacity: 0;
+		pointer-events: none;
+	}
+	.look-stage :global(.swiss-card),
+	.look-stage :global(.nb-card),
+	.look-stage :global(.glass-card),
+	.look-stage :global(.riso-card) {
+		width: min(360px, 100%);
+	}
+	/* Card content (shared across all four) — title + accent badge in the header, one body
+	   line, ghost + primary buttons in the footer. */
+	.spec-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--u2);
+	}
+	.spec-title {
+		font-size: 1.15rem;
+		font-weight: 700;
+	}
+	.spec-body {
+		margin: 0;
+	}
+	/* Per-family grounds (mirror /landing/specimens): Swiss + Neo have no ground of their
+	   own → a clean neutral; Glass gets the vivid gradient so the frost has colour to
+	   refract; Riso gets warm printed paper carrying strong grain (its load-bearing tell). */
+	.look-stage[data-style='swiss'] {
+		background: #f1f1f3;
+	}
+	.look-stage[data-style='neo-brutalism'] {
+		background: #ecebe4;
+	}
+	.look-stage[data-style='glassmorphism'] {
+		background:
+			radial-gradient(120% 120% at 0% 0%, #a78bfa 0%, transparent 55%),
+			radial-gradient(120% 120% at 100% 100%, #7dd3fc 0%, transparent 55%),
+			linear-gradient(135deg, #c4b5fd, #f0abfc);
+	}
+	.look-stage[data-style='risograph'] {
+		background-color: #ecdcbe;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+		background-size: 90px 90px;
+		background-blend-mode: multiply;
 	}
 	.look-slot figcaption {
 		display: flex;
@@ -1190,7 +1348,7 @@
 		border-color: var(--ink);
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.look-bar,
+		.look-stage,
 		.look-dot::before {
 			transition: none;
 		}
@@ -1490,6 +1648,12 @@
 	@media (min-width: 768px) {
 		.beat {
 			padding: var(--u8) var(--u4);
+		}
+		/* Framed §4: the edge rules ride the 1080 content-column guide; the inner content gets
+		   the wider gutter here while the step dividers keep spanning the full framed width. */
+		.how > .col,
+		.step {
+			padding-inline: var(--u4);
 		}
 		/* Multi-part rows go side-by-side. */
 		.ba {
