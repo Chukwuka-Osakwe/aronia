@@ -7,6 +7,11 @@
 	import '@fontsource-variable/gluten';
 	import '@fontsource-variable/suse';
 
+	// Inter — loaded ONLY for the §2 "generic app" mirror. It's the single most
+	// AI-default typeface, so the mockup reads instantly as "everyone else's app."
+	// The brand itself never uses it (that's Gluten + SUSE above).
+	import '@fontsource-variable/inter';
+
 	// The rotator specimens render each family's real Card — pull them from the registry.
 	import { registry } from '../registry.js';
 
@@ -273,8 +278,44 @@
 					ends up looking like everyone else's.
 				</p>
 			</div>
+			<!-- The generic-app mirror: the platonic AI-default look — Inter, gray/slate,
+			     rounded corners, a black shadcn-style button. A light window on the dark
+			     page (its own colour world, not the brand tokens). Deliberately breaks the
+			     page's border-radius:0 house rule — that contrast is the whole point.
+			     Purely illustrative, so it's aria-hidden; the copy above carries the point. -->
 			<figure class="generic-visual">
-				<span class="ph-label">[ generic AI app — gray / rounded / Inter ]</span>
+				<div class="mockup" aria-hidden="true">
+					<div class="mockup-bar">
+						<span class="mockup-dots"><i></i><i></i><i></i></span>
+						<span class="mockup-url">myapp.com</span>
+					</div>
+					<div class="mockup-app">
+						<header class="mock-nav">
+							<span class="mock-brand">
+								<span class="mock-logo"></span>
+								<span class="mock-word">Acme</span>
+							</span>
+							<nav class="mock-links">
+								<span>Features</span>
+								<span>Pricing</span>
+								<span>About</span>
+							</nav>
+							<span class="mock-cta">Sign up</span>
+						</header>
+						<div class="mock-hero">
+							<span class="mock-badge">✨ Introducing Acme 2.0</span>
+							<h3 class="mock-title">Build better products, faster.</h3>
+							<p class="mock-sub">
+								The all-in-one platform for modern teams to ship faster and scale with
+								confidence.
+							</p>
+							<div class="mock-actions">
+								<span class="mock-btn mock-btn-primary">Get started</span>
+								<span class="mock-btn mock-btn-ghost">Learn more</span>
+							</div>
+						</div>
+					</div>
+				</div>
 				<figcaption>Recognize it? It's probably your app.</figcaption>
 			</figure>
 		</section>
@@ -1052,29 +1093,169 @@
 		object-fit: contain;
 	}
 
-	/* Section 2 — the static generic-app mirror (not before/after; that's hero+proof). */
+	/* Section 2 — the static generic-app mirror (not before/after; that's hero+proof).
+	   The mockup is its OWN colour world (Inter, slate palette, rounded), a light window
+	   on the dark page — so it reads as "everyone else's app." Base = phone; the hero
+	   type + nav links scale up at the 768 seam (see the min-width block). */
 	.generic-visual {
 		margin: var(--u6) 0 0;
-		border: 1px solid var(--line);
-		background: repeating-linear-gradient(
-			-45deg,
-			var(--paper),
-			var(--paper) 10px,
-			#f6f6f6 10px,
-			#f6f6f6 20px
-		);
-		min-height: 320px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: var(--u2);
-		padding: var(--u6) var(--u4);
 	}
 	.generic-visual figcaption {
+		margin-top: var(--u3);
 		font-size: var(--fs-small);
 		line-height: var(--lh-small);
 		color: var(--ink-2);
+		text-align: center;
+	}
+	.mockup {
+		/* Local palette — deliberately the AI-default slate ramp, NOT the brand tokens. */
+		--m-bg: #f8fafc; /* slate-50 app ground */
+		--m-surface: #ffffff;
+		--m-ink: #0f172a; /* slate-900 */
+		--m-muted: #64748b; /* slate-500 */
+		--m-line: #e2e8f0; /* slate-200 */
+		/* The obligatory indigo→violet gradient — the real AI-default tell (headlines,
+		   buttons, logo marks, hero glow all reach for it). Distinct from the brand berry. */
+		--m-grad: linear-gradient(135deg, #6366f1, #8b5cf6);
+		font-family: 'Inter Variable', system-ui, sans-serif;
+		color: var(--m-ink);
+		text-align: left;
+		background: var(--m-surface);
+		border: 1px solid var(--m-line);
+		/* Square — the mock honours the page's border-radius:0 house rule; the gradients
+		   carry the "generic AI" read instead of rounded corners. */
+		border-radius: 0;
+		overflow: hidden;
+		box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.55);
+	}
+	/* Browser chrome — traffic lights + a fake URL pill sell "this is a real site." */
+	.mockup-bar {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 10px 14px;
+		background: #f1f5f9; /* slate-100 */
+		border-bottom: 1px solid var(--m-line);
+	}
+	.mockup-dots {
+		display: inline-flex;
+		gap: 6px;
+		flex: none;
+	}
+	.mockup-dots i {
+		width: 10px;
+		height: 10px;
+		background: #cbd5e1; /* slate-300 */
+	}
+	.mockup-url {
+		flex: 1;
+		max-width: 240px;
+		font-size: 12px;
+		color: var(--m-muted);
+		background: var(--m-surface);
+		border: 1px solid var(--m-line);
+		padding: 3px 10px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	.mockup-app {
+		/* Soft violet glow blooming from the top-centre over the slate ground — the
+		   generic "gradient hero" wash. */
+		background:
+			radial-gradient(90% 70% at 50% -8%, rgba(124, 58, 237, 0.16), transparent 62%),
+			var(--m-bg);
+		padding: 20px;
+	}
+	/* Generic top nav: logo + wordmark, centre links (hidden on phone), a rounded CTA. */
+	.mock-nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		padding-bottom: 8px;
+	}
+	.mock-brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.mock-logo {
+		width: 24px;
+		height: 24px;
+		background: var(--m-grad);
+	}
+	.mock-word {
+		font-size: 15px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+	.mock-links {
+		display: none;
+		gap: 24px;
+		font-size: 14px;
+		color: var(--m-muted);
+	}
+	.mock-cta {
+		flex: none;
+		font-size: 13px;
+		font-weight: 500;
+		color: #fff;
+		background: var(--m-grad);
+		padding: 7px 14px;
+	}
+	/* Centered generic hero: pill badge → heading → muted sub → two rounded buttons. */
+	.mock-hero {
+		text-align: center;
+		padding: 28px 8px 32px;
+	}
+	.mock-badge {
+		display: inline-block;
+		font-size: 12px;
+		color: var(--m-muted);
+		background: var(--m-surface);
+		border: 1px solid var(--m-line);
+		padding: 5px 12px;
+		margin-bottom: 16px;
+	}
+	.mock-title {
+		margin: 0 0 12px;
+		font-size: 26px;
+		line-height: 1.15;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		/* Gradient headline text — the single most AI-default flourish. */
+		background: var(--m-grad);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	.mock-sub {
+		margin: 0 auto 20px;
+		max-width: 42ch;
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--m-muted);
+	}
+	.mock-actions {
+		display: inline-flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 10px;
+	}
+	.mock-btn {
+		font-size: 13px;
+		font-weight: 500;
+		padding: 9px 16px;
+	}
+	.mock-btn-primary {
+		background: var(--m-grad);
+		color: #fff;
+	}
+	.mock-btn-ghost {
+		background: var(--m-surface);
+		color: var(--m-ink);
+		border: 1px solid var(--m-line);
 	}
 
 	/* Placeholder label inside any wireframe box. */
@@ -1672,6 +1853,25 @@
 			margin-left: auto;
 			text-align: justify;
 			text-align-last: left;
+		}
+
+		/* §2 mirror: give the mock more room, reveal the centre nav links, and let the
+		   generic hero headline grow into the larger frame — still Inter/slate/rounded. */
+		.mockup-app {
+			padding: 28px 32px 40px;
+		}
+		.mock-links {
+			display: inline-flex;
+		}
+		.mock-hero {
+			padding: 40px 8px 48px;
+		}
+		.mock-title {
+			font-size: 40px;
+		}
+		.mock-sub {
+			font-size: 16px;
+			margin-bottom: 24px;
 		}
 
 		/* Type steps up: the four responsive steps bump to their wide values by
