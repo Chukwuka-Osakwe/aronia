@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { dev } from '$app/environment';
 
 	// Brand faces (Aronia design board): Gluten for display, SUSE for text/UI.
 	// Both variable (wght 100–900); fontsource registers them as
@@ -91,15 +90,6 @@
 			a: 'You can mix rules between looks, or use one as a starting point and edit it. More looks are on the way.'
 		}
 	];
-
-	// Wireframe grid overlay — 8px baseline + 96px major lines + container/text-column
-	// guides. Toggle to check everything actually lands on the rhythm.
-	let grid = $state(false);
-
-	// DEV-ONLY: live-tune the section (.beat) top/bottom padding to settle on a value.
-	// Bound to --u15 on .wire (the token every section's vertical padding reads). Default
-	// 120 = the committed value; the slider + readout only render under `dev`.
-	let padV = $state(120);
 
 	// STUBBED hero motion — crude before→after box-flip to test the BEHAVIOUR/timing
 	// only (auto-play once, rest on after; replay control; reduced-motion fallback).
@@ -237,24 +227,8 @@
 	let proofMode = $state<'dark' | 'light'>('light');
 </script>
 
-<div class="wire" class:show-grid={grid} style="--u15: {padV}px">
-	<button class="grid-toggle" type="button" onclick={() => (grid = !grid)}>
-		grid: {grid ? 'on' : 'off'}
-	</button>
-	{#if dev}
-		<label class="pad-slider">
-			<span>section pad {padV}px</span>
-			<input type="range" min="32" max="160" step="4" bind:value={padV} />
-		</label>
-	{/if}
-
+<div class="wire">
 	<div class="wire-inner">
-		<!-- Grid overlay: 8/96 baseline + container/text-column guides. Sits on top,
-		     click-through, only painted when `.show-grid`. -->
-		<div class="grid-overlay" aria-hidden="true">
-			<div class="col-guide"><div class="col-guide-inner"></div></div>
-		</div>
-
 		<!-- ── 1 · HERO (What?) ────────────────────────────────────────── -->
 		<section class="beat hero">
 			<div class="col">
@@ -736,108 +710,12 @@
 		box-sizing: border-box;
 	}
 
-	/* ── Grid overlay ─────────────────────────────────────────────────
-	   Painted only under `.show-grid`. Violet so it reads as chrome,
-	   distinct from the wireframe's own gray hairlines. Click-through. */
 	.wire-inner {
 		position: relative;
 		/* Opaque layer that covers the footer until scrolled off it (see the footer
 		   reveal in the ≥768 block). z-index lifts it above the fixed footer. */
 		z-index: 1;
 		background: var(--bg);
-	}
-	.grid-overlay {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		z-index: 5;
-		display: none;
-	}
-	.show-grid .grid-overlay {
-		display: block;
-	}
-	/* Horizontal 8/96 rhythm, painted PER SECTION rather than as one continuous
-	   global ruler. Each `.beat` is position:relative with no border, so the ::before
-	   (inset:0 → the padding box, whose top edge is the section's own top) restarts
-	   the grid at each section. That means every section's `padding-top: var(--major)`
-	   lands its heading on that section's first major line — a single global ruler
-	   drifted because section heights aren't 96px multiples. 8px baseline (light) +
-	   96px major (stronger); semi-transparent, drawn over content, click-through. */
-	.show-grid .beat::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		z-index: 5;
-		background-image:
-			repeating-linear-gradient(
-				to bottom,
-				rgba(99, 62, 191, 0.14) 0,
-				rgba(99, 62, 191, 0.14) 1px,
-				transparent 1px,
-				transparent 8px
-			),
-			repeating-linear-gradient(
-				to bottom,
-				rgba(99, 62, 191, 0.42) 0,
-				rgba(99, 62, 191, 0.42) 2px,
-				transparent 2px,
-				transparent 96px
-			);
-	}
-	/* Vertical guides: the 1080px container edges (solid) + the 32px text-column
-	   inset where copy actually starts (dashed). */
-	.col-guide {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 1080px;
-		max-width: 100%;
-		border-left: 1px solid rgba(99, 62, 191, 0.4);
-		border-right: 1px solid rgba(99, 62, 191, 0.4);
-	}
-	.col-guide-inner {
-		height: 100%;
-		margin: 0 32px;
-		border-left: 1px dashed rgba(99, 62, 191, 0.3);
-		border-right: 1px dashed rgba(99, 62, 191, 0.3);
-	}
-
-	/* Toggle control — fixed, wireframe chrome. */
-	.grid-toggle {
-		position: fixed;
-		top: 12px;
-		right: 12px;
-		z-index: 20;
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		padding: 6px 10px;
-		border: 1px solid var(--ink);
-		border-radius: 0;
-		background: var(--paper);
-		color: var(--ink);
-		cursor: pointer;
-	}
-	/* DEV-ONLY section-padding tuner — sits under the grid toggle, same chrome. */
-	.pad-slider {
-		position: fixed;
-		top: 44px;
-		right: 12px;
-		z-index: 20;
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		padding: 6px 10px;
-		border: 1px solid var(--ink);
-		background: var(--paper);
-		color: var(--ink);
-	}
-	.pad-slider input {
-		cursor: pointer;
 	}
 
 	/* Section = one idea. Uniform u15 (120px) top/bottom padding on every section (the hero
@@ -1797,31 +1675,6 @@
 		display: flex;
 		flex-direction: column;
 	}
-	/* Same 8/96 baseline overlay as the beats, extended onto the footer so its
-	   content stack can be read against the grid (violet chrome, click-through). */
-	.show-grid .site-footer-inner::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-		z-index: 5;
-		background-image:
-			repeating-linear-gradient(
-				to bottom,
-				rgba(99, 62, 191, 0.14) 0,
-				rgba(99, 62, 191, 0.14) 1px,
-				transparent 1px,
-				transparent 8px
-			),
-			repeating-linear-gradient(
-				to bottom,
-				rgba(99, 62, 191, 0.42) 0,
-				rgba(99, 62, 191, 0.42) 2px,
-				transparent 2px,
-				transparent 96px
-			);
-	}
-
 	/* Sign-off — the page's one final CTA, sitting over the section glow. */
 	.signoff {
 		max-width: none;
