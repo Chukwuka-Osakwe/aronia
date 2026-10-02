@@ -286,7 +286,7 @@
 		</section>
 
 		<!-- ── 2 · PROBLEM (Why?) — hold up the generic mirror ─────────── -->
-		<section class="beat split">
+		<section class="beat split cream">
 			<div class="col">
 				<h2 use:revealWords>Your app works. It just looks like everyone else's.</h2>
 				<p class="body">
@@ -338,7 +338,7 @@
 		</section>
 
 		<!-- ── 3 · PROOF — multi-screen coherence (one app, one look) ──── -->
-		<section class="beat split proof-section">
+		<section class="beat split">
 			<div class="col">
 				<h2 use:revealWords>One point of view, every screen.</h2>
 				<p class="body">
@@ -382,7 +382,7 @@
 		</section>
 
 		<!-- ── 4 · HOW IT WORKS (How?) ─────────────────────────────────── -->
-		<section class="beat split how">
+		<section class="beat split how cream">
 			<div class="col">
 				<h2 use:revealWords>Three steps. No code.</h2>
 				<p class="body">
@@ -562,7 +562,7 @@
 		</section>
 
 		<!-- ── 5 · FAQs ────────────────────────────────────────────────── -->
-		<section class="beat faq-section">
+		<section class="beat">
 			<h2 use:revealWords>Frequently Asked Questions</h2>
 			<!-- Accordion via native <details>/<summary>: keyboard + screen-reader
 			     support and the reduced-motion story come for free, no JS state.
@@ -661,6 +661,13 @@
 		--paper: color-mix(in oklab, var(--cream) 7%, var(--night)); /* lifted surface box */
 		--bg: var(--night); /* page field */
 
+		/* Overscroll-peek anchors. The page is its own scroll container, so a rubber-band
+		   past EITHER end reveals .wire's background. The split-gradient peek below reads these
+		   so the top tracks the page's top ground and the bottom tracks the footer sweep —
+		   --footer-peek also feeds the footer's own tail stop so the two can't drift. */
+		--peek-top: var(--night); /* top-of-page ground (dark hero) + top overscroll peek */
+		--footer-peek: oklab(32% 0.079 0.043); /* footer sweep tail + bottom overscroll peek */
+
 		--u1: 8px;
 		--u2: 16px;
 		--u3: 24px;
@@ -702,11 +709,19 @@
 
 		font-family: var(--font-body);
 		color: var(--ink);
-		/* The scroll container's own background shows only on rubber-band OVERSCROLL, in the
-		   gap the fixed footer reveal opens beneath the FAQ. A warm dark rust so that peek
-		   reads as part of the sweep footer, not a cold black. .wire-inner keeps --night as
-		   the actual page ground. */
-		background: #4f0c07;
+		/* The scroll container's own background shows only on rubber-band OVERSCROLL — both
+		   ends: the gap the fixed footer reveal opens beneath the FAQ, AND above the hero.
+		   A single colour can't serve both once the hero and footer differ, so this is a
+		   two-stop split pinned to the viewport: hero ground up top, footer sweep tail down
+		   below. .wire is exactly 100vh and the default `scroll` attachment pins the gradient
+		   to this box (content scrolls over it), so the hard seam sits on the viewport midline
+		   — never visible, since content covers it — and each overscroll strip reveals only
+		   its matching half. .wire-inner keeps --night as the actual page ground. */
+		background: linear-gradient(
+			to bottom,
+			var(--peek-top) 0 50%,
+			var(--footer-peek) 50% 100%
+		);
 		-webkit-font-smoothing: antialiased;
 		/* Own scroll container: the docs' global `html { overflow: hidden }` (desktop)
 		   would otherwise clip this long page, so the wireframe scrolls internally. */
@@ -924,26 +939,10 @@
 	.beat.hero {
 		padding-top: var(--u4);
 	}
-	/* Full-bleed warm dark rust behind the hero (#4f0c07 — same as the overscroll peek) —
-	   clearly lifted off the --night page ground. Dark-canonical, so the default tokens apply
-	   (cream text, cream CTA) — no inversion. Spans the viewport (section box capped at 1080),
-	   clipped to the hero's height; painted on ::after (::before is the grid overlay) at
-	   z-index 0, content lifted above. */
-	.beat.hero::after {
-		content: '';
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 50%;
-		width: 100vw;
-		transform: translateX(-50%);
-		z-index: 0;
-		background: #4f0c07;
-	}
-	.beat.hero > * {
-		position: relative;
-		z-index: 1;
-	}
+	/* Hero rides the default --night page ground (dark-canonical: cream text + cream CTA, no
+	   inversion) — it's the first of the alternating dark bands, so it needs no ground paint;
+	   .wire-inner's --night shows through. The top overscroll peek (--peek-top) tracks this
+	   same --night, so a hard-scroll above the hero stays seamless. */
 	/* Hero text is centered and wider than the default column so the headline lands
 	   as a clean two lines (via the <br />) rather than wrapping in the 62ch measure.
 	   The sub stays on a narrower centered measure for readability. */
@@ -1092,23 +1091,26 @@
 	   One app (Setlist), four real screens stacked, all sharing one Risograph look. A
 	   Light/Dark segmented toggle swaps every screen's src at once. MOBILE (base): screens
 	   stack one per row; the toggle sits above, right-aligned. */
-	/* §3 is INVERTED to a plain cream (#eadbb8) ground (like the FAQ band): the semantic
-	   text/line tokens flip dark, and --paper becomes the cream so the toggle's invert-active
-	   state stays legible. `color: var(--ink)` re-resolves the inherited (cream) text colour
-	   in this scope — the root set it once to cream and the heading never re-reads --ink. */
-	.beat.proof-section {
+	/* ── Cream band modifier (the alternating light grounds) ──────────
+	   Inverts the dark page to a full-bleed CREAM ground with dark text. Everything inside
+	   reads through the semantic tokens, so a section flips by adding `cream` — no inner
+	   selector changes. --paper is a LIFTED light cream (not the ground itself) so surfaces
+	   like §4's .prompt-box still lift off the band, while staying legible as text sitting on
+	   an --ink (night) fill. `color: var(--ink)` re-resolves the inherited (cream) text colour
+	   in this scope — the root set it once to cream and headings never re-read --ink. */
+	.beat.cream {
 		--ink: var(--night);
-		--ink-2: color-mix(in oklab, var(--night) 70%, #eadbb8);
-		--ink-3: color-mix(in oklab, var(--night) 45%, #eadbb8);
-		--line: color-mix(in oklab, var(--night) 18%, #eadbb8);
-		--paper: #eadbb8;
+		--ink-2: color-mix(in oklab, var(--night) 70%, var(--cream));
+		--ink-3: color-mix(in oklab, var(--night) 45%, var(--cream));
+		--line: color-mix(in oklab, var(--night) 18%, var(--cream));
+		--paper: color-mix(in oklab, var(--cream) 80%, white);
 		color: var(--ink);
 	}
 	/* The cream ground spans the full VIEWPORT width (the section box is capped at 1080)
 	   while staying clipped to this section's height — a full-bleed band, not a column-width
 	   panel. Painted on ::after (::before is the grid overlay) at z-index 0: above
 	   .wire-inner's bg, below the content. 100vw + left:50% + translateX(-50%) full-bleeds it. */
-	.beat.proof-section::after {
+	.beat.cream::after {
 		content: '';
 		position: absolute;
 		top: 0;
@@ -1117,10 +1119,10 @@
 		width: 100vw;
 		transform: translateX(-50%);
 		z-index: 0;
-		background: #eadbb8;
+		background: var(--cream);
 	}
-	/* Content rides above the full-bleed bloom. */
-	.beat.proof-section > * {
+	/* Content rides above the full-bleed band. */
+	.beat.cream > * {
 		position: relative;
 		z-index: 1;
 	}
@@ -1687,25 +1689,8 @@
 		border-color: var(--ink-2);
 	}
 
-	/* FAQ band — inverted from the dark page: a full-bleed CREAM ground with dark
-	   text. Everything inside reads through the semantic tokens, so the band flips by
-	   repointing them locally (night-over-cream neutrals) — no FAQ selector is touched.
-	   box-shadow paints the cream past the 1080 container to the viewport edges;
-	   clip-path keeps that bleed horizontal only. Vertical padding is the shared u8. */
-	.faq-section {
-		--ink: var(--night);
-		--ink-2: color-mix(in oklab, var(--night) 70%, var(--cream));
-		--ink-3: color-mix(in oklab, var(--night) 45%, var(--cream));
-		--line: color-mix(in oklab, var(--night) 18%, var(--cream));
-		/* Re-resolve the inherited text colour in this inverted scope. The root sets
-		   `color: var(--ink)` which already computed to cream; the heading inherits that
-		   value and never re-reads --ink, so without this it'd stay cream. Elements that
-		   declare their own token colour (.faq-q/.faq-a) already flip on their own. */
-		color: var(--ink);
-		background: var(--cream);
-		box-shadow: 0 0 0 100vw var(--cream);
-		clip-path: inset(0 -100vw);
-	}
+	/* FAQ rides the default --night page ground (last of the alternating dark bands) — no
+	   inversion, the semantic tokens stay dark and the .wire-inner --night shows through. */
 
 	/* ── FAQs ───────────────────────────────────────────────────────
 	   A hairline-ruled disclosure list (rhymes with the steps list): each row is
@@ -1801,7 +1786,7 @@
 			oklab(48% 0.105 0.088) 35.39%,
 			oklab(34.6% 0.102 0.057) 53.7%,
 			oklab(28.1% 0.086 0.048) 72%,
-			oklab(32% 0.079 0.043) 100%
+			var(--footer-peek) 100%
 		);
 	}
 	.site-footer-inner {
