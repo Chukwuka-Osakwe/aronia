@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { dev } from '$app/environment';
 
 	// Brand faces (Aronia design board): Gluten for display, SUSE for text/UI.
 	// Both variable (wght 100–900); fontsource registers them as
@@ -37,12 +38,18 @@
 		{ id: 'risograph', name: 'Risograph', line: 'Warm and handmade. Grainy, printed, full of character.' }
 	];
 
-	// Proof = real before/after rebuilds, strongest first, family-agnostic. These are
-	// placeholders for the user's real testing candidates (Riso leads).
-	const proof: { site: string; look: string; after?: string }[] = [
-		{ site: 'Real project A', look: 'Risograph' },
-		{ site: 'Real project B', look: 'Neo-Brutalism' },
-		{ site: 'Real project C', look: 'Glassmorphism' }
+	// Proof = multi-screen COHERENCE (pivoted off before/after 2026-09-30). One real app —
+	// Setlist, a gig finder — built screen by screen with aronia's Risograph style. Four
+	// DIFFERENT screens that still read as one world: that's the thing AI can't fake (the
+	// FAQ promise "every new screen still fits"), which a single before/after structurally
+	// can't show. The dark/light toggle flips all four at once, so "dark mode is free" rides
+	// the same proof. (Retired before/after: the AI "before" looked too good, and there's
+	// only ONE true before = §2's generic mirror, with every aronia style an "after".)
+	const screens = [
+		{ id: 'discover', label: 'Discover' },
+		{ id: 'artists', label: 'Artists' },
+		{ id: 'gig', label: 'Gig detail' },
+		{ id: 'shows', label: 'My shows' }
 	];
 
 	const faqs = [
@@ -88,6 +95,11 @@
 	// Wireframe grid overlay — 8px baseline + 96px major lines + container/text-column
 	// guides. Toggle to check everything actually lands on the rhythm.
 	let grid = $state(false);
+
+	// DEV-ONLY: live-tune the section (.beat) top/bottom padding to settle on a value.
+	// Bound to --u15 on .wire (the token every section's vertical padding reads). Default
+	// 120 = the committed value; the slider + readout only render under `dev`.
+	let padV = $state(120);
 
 	// STUBBED hero motion — crude before→after box-flip to test the BEHAVIOUR/timing
 	// only (auto-play once, rest on after; replay control; reduced-motion fallback).
@@ -219,17 +231,22 @@
 		copyTimer = setTimeout(() => (copied = false), 1500);
 	}
 
-	// Proof before/after (MOBILE ONLY) — each pair is one frame that defaults to the
-	// AFTER (the payoff); a segmented Before/After control below it switches which pane
-	// shows, reusing the hero's crossfade primitive. Desktop shows both panes side-by-
-	// side and hides the control, so this per-pair phase only drives the mobile layout.
-	let proofPhase = $state<('before' | 'after')[]>(proof.map(() => 'after' as 'before' | 'after'));
+	// Proof mode — the Light/Dark segmented toggle swaps the src of all four screens at
+	// once. LIGHT leads (default): the bright screens pop as cards against the dark page.
+	// Flipping them together turns "dark mode is free/coherent" into part of the proof.
+	let proofMode = $state<'dark' | 'light'>('light');
 </script>
 
-<div class="wire" class:show-grid={grid}>
+<div class="wire" class:show-grid={grid} style="--u15: {padV}px">
 	<button class="grid-toggle" type="button" onclick={() => (grid = !grid)}>
 		grid: {grid ? 'on' : 'off'}
 	</button>
+	{#if dev}
+		<label class="pad-slider">
+			<span>section pad {padV}px</span>
+			<input type="range" min="32" max="160" step="4" bind:value={padV} />
+		</label>
+	{/if}
 
 	<div class="wire-inner">
 		<!-- Grid overlay: 8/96 baseline + container/text-column guides. Sits on top,
@@ -320,47 +337,47 @@
 			</figure>
 		</section>
 
-		<!-- ── 3 · PROOF ───────────────────────────────────────────────── -->
-		<section class="beat split">
+		<!-- ── 3 · PROOF — multi-screen coherence (one app, one look) ──── -->
+		<section class="beat split proof-section">
 			<div class="col">
-				<h2 use:revealWords>Having a point of view makes a world of difference.</h2>
+				<h2 use:revealWords>One point of view, every screen.</h2>
 				<p class="body">
-					Every one of these is a real project an AI agent built — first on its own, then again
-					with aronia. Nothing else changed but the results are different, that's the difference a
-					point of view makes.
+					This is all one app — a gig finder, built one screen at a time with aronia's Risograph
+					look. Each screen is different, but they clearly belong together. That consistency is
+					the part AI can't fake. Flip it to dark and it still holds.
 				</p>
 			</div>
-			<div class="proof-list">
-				{#each proof as p, i}
-					<figure class="ba" data-phase={proofPhase[i]}>
-						<div class="ba-frame">
-							<div class="ba-pane ba-before">
-								<span class="ba-tag">Before</span>
-								<span class="ph-label">[ {p.site} — generic ]</span>
-							</div>
-							<div class="ba-pane ba-after">
-								<span class="ba-tag">After — {p.look}</span>
-								{#if p.after}
-									<img class="ba-shot" src={p.after} alt="{p.site} rebuilt with aronia" />
-								{:else}
-									<span class="ph-label">[ {p.site} — aronia ]</span>
-								{/if}
-							</div>
-						</div>
-						<div class="ba-seg" role="group" aria-label="Show the before or after">
-							<button
-								class="ba-seg-btn"
-								type="button"
-								aria-pressed={proofPhase[i] === 'before'}
-								onclick={() => (proofPhase[i] = 'before')}>Before aronia</button>
-							<button
-								class="ba-seg-btn"
-								type="button"
-								aria-pressed={proofPhase[i] === 'after'}
-								onclick={() => (proofPhase[i] = 'after')}>After aronia</button>
-						</div>
-					</figure>
-				{/each}
+			<div class="proof">
+				<div class="mode-bar">
+					<div
+						class="mode-toggle"
+						role="group"
+						aria-label="Preview Setlist in light or dark mode">
+						<button
+							class="mode-btn"
+							type="button"
+							aria-pressed={proofMode === 'light'}
+							onclick={() => (proofMode = 'light')}>Light</button>
+						<button
+							class="mode-btn"
+							type="button"
+							aria-pressed={proofMode === 'dark'}
+							onclick={() => (proofMode = 'dark')}>Dark</button>
+					</div>
+				</div>
+				<div class="screens">
+					{#each screens as s}
+						<figure class="screen">
+							<img
+								class="screen-shot"
+								src="/landing/setlist/{s.id}-{proofMode}.webp"
+								alt="Setlist app — {s.label} screen in {proofMode} mode"
+								width="2000"
+								height="1096" />
+							<figcaption class="screen-cap">{s.label}</figcaption>
+						</figure>
+					{/each}
+				</div>
 			</div>
 		</section>
 
@@ -651,6 +668,7 @@
 		--u5: 40px;
 		--u6: 48px;
 		--u8: 64px;
+		--u15: 120px;
 		--major: 96px;
 
 		/* ── Type scale ───────────────────────────────────────────────
@@ -684,7 +702,11 @@
 
 		font-family: var(--font-body);
 		color: var(--ink);
-		background: var(--bg);
+		/* The scroll container's own background shows only on rubber-band OVERSCROLL, in the
+		   gap the fixed footer reveal opens beneath the FAQ. A warm dark rust so that peek
+		   reads as part of the sweep footer, not a cold black. .wire-inner keeps --night as
+		   the actual page ground. */
+		background: #4f0c07;
 		-webkit-font-smoothing: antialiased;
 		/* Own scroll container: the docs' global `html { overflow: hidden }` (desktop)
 		   would otherwise clip this long page, so the wireframe scrolls internally. */
@@ -783,17 +805,36 @@
 		color: var(--ink);
 		cursor: pointer;
 	}
+	/* DEV-ONLY section-padding tuner — sits under the grid toggle, same chrome. */
+	.pad-slider {
+		position: fixed;
+		top: 44px;
+		right: 12px;
+		z-index: 20;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+		font-size: var(--fs-label);
+		padding: 6px 10px;
+		border: 1px solid var(--ink);
+		background: var(--paper);
+		color: var(--ink);
+	}
+	.pad-slider input {
+		cursor: pointer;
+	}
 
-	/* Section = one idea. Uniform u8 top/bottom padding on every section (the hero
+	/* Section = one idea. Uniform u15 (120px) top/bottom padding on every section (the hero
 	   drops its top — see .beat.hero). */
 	.beat {
 		position: relative;
 		max-width: 1080px;
 		margin: 0 auto;
-		padding: var(--u8) var(--u3);
+		padding: var(--u15) var(--u3);
 	}
-	/* Between-section spacing is fully padding-based now: each section's u8 top/bottom
-	   padding is the only gap source (adjacent sections give 128px), so no margin. */
+	/* Between-section spacing is fully padding-based now: each section's u10 top/bottom
+	   padding is the only gap source (adjacent sections give 240px), so no margin. */
 	.beat + .beat {
 		margin-top: 0;
 	}
@@ -877,11 +918,31 @@
 
 	/* Hero is the first section: its top space is page-top breathing room (padding),
 	   not an inter-section margin. A smaller step on mobile; a full major unit at ≥768. */
-	/* Hero is the first section — a slim u4 (32px) up top instead of the shared u8,
+	/* Hero is the first section — a slim u4 (32px) up top instead of the shared u15,
 	   so it sits close to the page top; full u8 on the bottom. Two-class selector so
 	   it outranks the desktop `.beat` padding shorthand regardless of source order. */
 	.beat.hero {
 		padding-top: var(--u4);
+	}
+	/* Full-bleed warm dark rust behind the hero (#4f0c07 — same as the overscroll peek) —
+	   clearly lifted off the --night page ground. Dark-canonical, so the default tokens apply
+	   (cream text, cream CTA) — no inversion. Spans the viewport (section box capped at 1080),
+	   clipped to the hero's height; painted on ::after (::before is the grid overlay) at
+	   z-index 0, content lifted above. */
+	.beat.hero::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		width: 100vw;
+		transform: translateX(-50%);
+		z-index: 0;
+		background: #4f0c07;
+	}
+	.beat.hero > * {
+		position: relative;
+		z-index: 1;
 	}
 	/* Hero text is centered and wider than the default column so the headline lands
 	   as a clean two lines (via the <br />) rather than wrapping in the 62ch measure.
@@ -932,16 +993,9 @@
 		border-color: var(--cream);
 	}
 
-	/* ── Before/after (the proof spine) ───────────────────────────────
-	   Each pair is a <figure>. MOBILE (base): one frame (the two panes crossfade)
-	   stacked over the flip button. DESKTOP: the panes go side-by-side (see min-width
-	   block) and the button is hidden. */
-	.ba {
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		gap: var(--u2);
-	}
+	/* ── Hero before/after motion — the hero's stubbed crossfade still uses these
+	   (.ba-pane / .ba-before / .ba-after / .ba-tag / .ph-label). The §3 proof no longer
+	   does: it pivoted to multi-screen coherence (see .proof below). */
 	.ba-pane {
 		position: relative;
 		min-height: 240px;
@@ -1034,63 +1088,100 @@
 		border: 1px solid var(--line);
 		padding: 2px 6px;
 	}
-	.proof-list {
-		/* DIAL — the shared before/after frame ratio. One knob for every proof frame;
-		   retune once real screenshots land and the natural shape settles (sample of
-		   one right now = a Slow Miles hero at ~1.83:1, contained into this). */
-		--proof-ratio: 600 / 386;
-		margin-top: var(--u6);
-		display: flex;
-		flex-direction: column;
-		gap: var(--u4);
+	/* ── §3 Proof — multi-screen coherence ────────────────────────────
+	   One app (Setlist), four real screens stacked, all sharing one Risograph look. A
+	   Light/Dark segmented toggle swaps every screen's src at once. MOBILE (base): screens
+	   stack one per row; the toggle sits above, right-aligned. */
+	/* §3 is INVERTED to a plain cream (#eadbb8) ground (like the FAQ band): the semantic
+	   text/line tokens flip dark, and --paper becomes the cream so the toggle's invert-active
+	   state stays legible. `color: var(--ink)` re-resolves the inherited (cream) text colour
+	   in this scope — the root set it once to cream and the heading never re-reads --ink. */
+	.beat.proof-section {
+		--ink: var(--night);
+		--ink-2: color-mix(in oklab, var(--night) 70%, #eadbb8);
+		--ink-3: color-mix(in oklab, var(--night) 45%, #eadbb8);
+		--line: color-mix(in oklab, var(--night) 18%, #eadbb8);
+		--paper: #eadbb8;
+		color: var(--ink);
 	}
-	/* Mobile (base): one frame per pair carries the 1.55:1 shape; the two panes stack
-	   absolutely inside it and crossfade (shared primitive), toggled by the button. */
-	.proof-list .ba-frame {
-		position: relative;
-		aspect-ratio: var(--proof-ratio);
-	}
-	.proof-list .ba-pane {
+	/* The cream ground spans the full VIEWPORT width (the section box is capped at 1080)
+	   while staying clipped to this section's height — a full-bleed band, not a column-width
+	   panel. Painted on ::after (::before is the grid overlay) at z-index 0: above
+	   .wire-inner's bg, below the content. 100vw + left:50% + translateX(-50%) full-bleeds it. */
+	.beat.proof-section::after {
+		content: '';
 		position: absolute;
-		inset: 0;
-		min-height: 0;
+		top: 0;
+		bottom: 0;
+		left: 50%;
+		width: 100vw;
+		transform: translateX(-50%);
+		z-index: 0;
+		background: #eadbb8;
 	}
-	/* A real screenshot fills the frame edge-to-edge (drop the placeholder padding)
-	   and letterboxes to fit — nothing cropped. */
-	.proof-list .ba-pane:has(img) {
-		padding: 0;
+	/* Content rides above the full-bleed bloom. */
+	.beat.proof-section > * {
+		position: relative;
+		z-index: 1;
 	}
-	/* The signifier sits BELOW the frame (mobile only) — a segmented Before/After
-	   control (two real buttons). The active segment inverts (fill), never bolds —
-	   state via colour/contrast. It advertises both states even before you tap. */
-	.ba-seg {
-		align-self: flex-end;
+	.proof {
+		margin-top: var(--u6);
+	}
+	/* The toggle rides the section's right guide (echoes the staggered sub above it). */
+	.mode-bar {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: var(--u4);
+	}
+	/* Segmented control — active segment INVERTS (fill), never bolds: state via
+	   colour/contrast, and it advertises both modes before you tap. */
+	.mode-toggle {
 		display: inline-flex;
-		border: 1px solid var(--ink);
+		border: 1px solid var(--line);
 	}
-	.ba-seg-btn {
+	.mode-btn {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
 		font-size: var(--fs-label);
 		line-height: var(--lh-label);
-		padding: var(--u1) var(--u2);
+		padding: var(--u1) var(--u3);
 		border: 0;
 		border-radius: 0;
-		background: var(--paper);
-		color: var(--ink);
+		background: transparent;
+		color: var(--ink-2);
 		cursor: pointer;
 	}
-	.ba-seg-btn + .ba-seg-btn {
-		border-left: 1px solid var(--ink);
+	.mode-btn + .mode-btn {
+		border-left: 1px solid var(--line);
 	}
-	.ba-seg-btn[aria-pressed='true'] {
+	.mode-btn[aria-pressed='true'] {
 		background: var(--ink);
 		color: var(--paper);
 	}
-	.ba-shot {
+	.screens {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--u4);
+	}
+	.screen {
+		margin: 0;
+	}
+	.screen-shot {
 		display: block;
 		width: 100%;
-		height: 100%;
-		object-fit: contain;
+		height: auto;
+		/* Neutral gray frame (not the warm --line hairline) — a soft "framed screenshot"
+		   treatment like the portfolio reference. */
+		border: 4px solid #8c8c8c;
+		border-radius: 0;
+	}
+	.screen-cap {
+		margin-top: var(--u2);
+		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+		font-size: var(--fs-label);
+		line-height: var(--lh-label);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--ink-3);
 	}
 
 	/* Section 2 — the static generic-app mirror (not before/after; that's hero+proof).
@@ -1699,16 +1790,18 @@
 	   off it (desktop only; see the ≥768 block). The warm glow is the "Sign-off
 	   band" radial bloom copied verbatim from the Aronia board (node 6U-0): a
 	   lower-right ellipse interpolated in oklab, so it "fills in" as more of the
-	   footer is revealed. Values are 1:1 with Paper — do not hand-tune. */
+	   footer is revealed. Values are 1:1 with Paper — do not hand-tune. Uses the
+	   "new sweep 1" variant: saturated RUST peak that stays warm all the way down (no
+	   near-black tail — the whole band glows rust). */
 	.site-footer {
 		background: radial-gradient(
 			ellipse 145% 155% at 82% 128% in oklab,
-			oklab(89.5% 0.002 0.049) 0%,
-			oklab(73.5% 0.010 0.081) 11%,
-			oklab(46.2% 0.010 0.058) 26%,
-			oklab(22.7% 0.009 0.025) 48%,
-			oklab(15.5% 0.006 0.011) 72%,
-			oklab(12.3% 0.010 -0.003) 100%
+			oklab(65.9% 0.136 0.114) 0%,
+			oklab(47.3% 0.098 0.082) 20.21%,
+			oklab(48% 0.105 0.088) 35.39%,
+			oklab(34.6% 0.102 0.057) 53.7%,
+			oklab(28.1% 0.086 0.048) 72%,
+			oklab(32% 0.079 0.043) 100%
 		);
 	}
 	.site-footer-inner {
@@ -1828,7 +1921,7 @@
 	   content strains, not declared up front. */
 	@media (min-width: 768px) {
 		.beat {
-			padding: var(--u8) var(--u4);
+			padding: var(--u15) var(--u4);
 		}
 		/* Framed §4: the edge rules ride the 1080 content-column guide; the inner content gets
 		   the wider gutter here while the step dividers keep spanning the full framed width. */
@@ -1836,11 +1929,6 @@
 		.step {
 			padding-inline: var(--u4);
 		}
-		/* Multi-part rows go side-by-side. */
-		.ba {
-			grid-template-columns: 1fr 1fr;
-		}
-
 		/* Split header — headline pinned to the left guide, subheadline to the right,
 		   each capped at half the content width; justify flushes the sub's full lines
 		   onto the right guide (last line ragged). Stacked below this seam. */
@@ -1890,39 +1978,12 @@
 			--lh-lead: 32px; /* 4 × 8 */
 		}
 
-		/* §3 Proof — frames keep the 1.55:1 browser shape and go two-up. The pair is FLUID
-		   and full-bleed: it fills the viewport minus a 48px edge gutter, BREAKING THE GRID
-		   past the 1080 container and centering on the viewport, scaling with the window
-		   (aspect ratio locked, never clips). A 1440px ceiling on the pair tames ultra-wide
-		   monitors only — it freezes at a ~1536px viewport (frames top out ~704px), so
-		   normal laptops still scale. The heading above stays on the container grid. */
-		.proof-list {
-			width: 100vw;
-			margin-left: 50%;
-			transform: translateX(-50%);
-		}
-		.proof-list .ba {
-			width: min(1440px, 100vw - 96px);
-			margin-inline: auto;
-		}
-		/* Desktop: the pair goes side-by-side (grid), both panes visible — no flip. */
-		.proof-list .ba-frame {
-			aspect-ratio: auto;
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: var(--u4);
-		}
-		.proof-list .ba-pane {
-			position: relative;
-			inset: auto;
-			aspect-ratio: var(--proof-ratio);
-		}
-		.proof-list .ba-before,
-		.proof-list .ba-after {
-			opacity: 1;
-		}
-		.ba-seg {
-			display: none;
+		/* §3 Proof — the four screens stay STACKED one-per-row at desktop too (not 2×2):
+		   full-width on the 1080 content grid keeps each screen large enough to read the
+		   riso detail that does the convincing (mono tags, duotone, the glitch wordmark),
+		   reading like a scroll-through of one coherent app. The cost is a tall section. */
+		.screens {
+			gap: var(--u6);
 		}
 
 		/* ── Footer reveal ────────────────────────────────────────────
