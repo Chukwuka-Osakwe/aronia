@@ -128,7 +128,9 @@
 	// heading into word spans (reading-order 80ms stagger, heavy ease) that hold muted
 	// and fade to full once ~30% of the heading scrolls into view — fired once by an
 	// IntersectionObserver. Skipped entirely under reduced motion (heading stays static).
-	function revealWords(node: HTMLElement) {
+	// startDelay (ms) offsets the whole stagger — used to sequence the hero sub after the
+	// headline; 0 (the default) for every scroll-triggered section heading.
+	function revealWords(node: HTMLElement, startDelay = 0) {
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
 		const words = (node.textContent ?? '').split(/\s+/).filter(Boolean);
@@ -136,7 +138,7 @@
 		words.forEach((word, i) => {
 			const span = document.createElement('span');
 			span.className = 'word';
-			span.style.transitionDelay = `${i * 80}ms`;
+			span.style.transitionDelay = `${startDelay + i * 80}ms`;
 			span.textContent = word;
 			node.appendChild(span);
 			if (i < words.length - 1) node.appendChild(document.createTextNode(' '));
@@ -236,6 +238,17 @@
 		copyTimer = setTimeout(() => (copied = false), 1500);
 	}
 
+	// Both CTAs scroll to §4 ("Three steps. No code."). The page scrolls inside .wire (a
+	// custom overflow container), so a bare hash link won't move it — scrollIntoView walks to
+	// the real scrollable ancestor. Honour reduced motion with an instant jump.
+	function goToSteps(e: Event) {
+		e.preventDefault();
+		const target = document.getElementById('steps');
+		if (!target) return;
+		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+	}
+
 	// Proof mode — the Light/Dark segmented toggle swaps the src of all four screens at
 	// once. LIGHT leads (default): the bright screens pop as cards against the dark page.
 	// Flipping them together turns "dark mode is free/coherent" into part of the proof.
@@ -246,9 +259,19 @@
 	<div class="wire-inner">
 		<!-- ── 1 · HERO (What?) ────────────────────────────────────────── -->
 		<section class="beat hero">
+			<span class="hero-mark">
+				aronia
+				<svg class="hero-mark-ring" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
+					<path
+						d="M64 14 C24 16 8 44 20 68 C32 92 92 96 128 90 C170 83 196 60 188 36 C181 15 132 6 78 12 C58 14 44 18 36 26"
+						vector-effect="non-scaling-stroke"
+					/>
+				</svg>
+			</span>
 			<div class="col">
-				<h1 class="display">Reject the default AI look.</h1>
-				<p class="lead">
+				<h1 class="display" use:revealWords>Reject the default AI look.</h1>
+				<!-- Sub starts after the headline's stagger lands (~700ms) so the two sequence. -->
+				<p class="lead" use:revealWords={700}>
 					With aronia every page you build comes out looking designed, distinctive, and
 					consistent.
 				</p>
@@ -281,7 +304,7 @@
 				</div>
 			</figure>
 			<div class="cmd-row">
-				<button class="btn btn-primary" type="button">Get started</button>
+				<a class="btn btn-primary" href="#steps" onclick={goToSteps}>Get started</a>
 			</div>
 		</section>
 
@@ -382,7 +405,7 @@
 		</section>
 
 		<!-- ── 4 · HOW IT WORKS (How?) ─────────────────────────────────── -->
-		<section class="beat split how cream">
+		<section id="steps" class="beat split how cream">
 			<div class="col">
 				<h2 use:revealWords>Three steps. No code.</h2>
 				<p class="body">
@@ -593,7 +616,7 @@
 			<!-- Sign-off: the page's one final CTA, over the section glow. -->
 			<div class="signoff">
 				<h2 class="display-sm" use:revealWords>Make your next design look like a choice.</h2>
-				<a class="btn btn-primary" href="/guide">Use aronia now</a>
+				<a class="btn btn-primary" href="#steps" onclick={goToSteps}>Use aronia now</a>
 			</div>
 
 			<!-- Footer body: brand + the single outbound link. This is a self-contained
@@ -788,7 +811,7 @@
 	   (which IS in the markup) and mark the dynamic descendants :global. */
 	.wire :global(.reveal-words .word) {
 		opacity: 0.3;
-		transition: opacity 700ms cubic-bezier(0.32, 0.72, 0, 1);
+		transition: opacity 900ms cubic-bezier(0.32, 0.72, 0, 1);
 	}
 	.wire :global(.reveal-words.revealed .word) {
 		opacity: 1;
@@ -841,17 +864,47 @@
 	   so it sits close to the page top; full u8 on the bottom. Two-class selector so
 	   it outranks the desktop `.beat` padding shorthand regardless of source order. */
 	.beat.hero {
-		padding-top: var(--u4);
+		padding-top: var(--u15);
+	}
+	/* Brand wordmark pinned to the hero's top-left (shares the footer .foot-mark type).
+	   Absolute so it escapes the section's padding rhythm — the headline keeps its own top
+	   spacing as if the mark weren't there. Flush to the section's left edge (the 1080
+	   column edge); .beat is position:relative, so this anchors to the section. */
+	.hero-mark {
+		position: absolute;
+		top: var(--u6);
+		left: 0;
+		color: #3fb6ad;
+	}
+	/* Hand-drawn marker loop around the wordmark — a loose ellipse with an overshoot tail
+	   (the stroke crosses past where it began) for the real "circled by hand" tell. The SVG
+	   overlays the word, extended beyond it so the loop has breathing room; non-scaling-stroke
+	   keeps an even line weight whatever the word width. */
+	.hero-mark-ring {
+		position: absolute;
+		top: -0.3em;
+		left: -0.55em;
+		width: calc(100% + 1.1em);
+		height: calc(100% + 0.5em);
+		overflow: visible;
+		pointer-events: none;
+	}
+	.hero-mark-ring path {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 	/* Hero rides the default --night page ground (dark-canonical: cream text + cream CTA, no
 	   inversion) — it's the first of the alternating dark bands, so it needs no ground paint;
 	   .wire-inner's --night shows through. The top overscroll peek (--peek-top) tracks this
 	   same --night, so a hard-scroll above the hero stays seamless. */
-	/* Hero text is centered and wider than the default column so the headline lands
-	   as a clean two lines (via the <br />) rather than wrapping in the 62ch measure.
-	   The sub stays on a narrower centered measure for readability. */
+	/* Hero text is centered and wider than the default 62ch measure so the headline lands
+	   on a single line at desktop (it needs ~906px at the 64px display size); below that it
+	   wraps gracefully. The sub stays on a narrower centered measure for readability. */
 	.hero .col {
-		max-width: 56rem;
+		max-width: 58rem;
 		margin-inline: auto;
 		text-align: center;
 	}
@@ -873,7 +926,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--u2);
-		margin-top: var(--u4);
+		margin-top: var(--u6);
 	}
 	.btn {
 		font: inherit;
@@ -888,12 +941,31 @@
 		align-items: center;
 		justify-content: center;
 		text-decoration: none;
+		transition:
+			background-color 180ms ease,
+			border-color 180ms ease,
+			color 180ms ease;
 	}
 	.btn-primary {
 		/* Inverted CTA (Aronia board): cream fill, near-black text. */
 		background: var(--cream);
 		color: var(--night);
 		border-color: var(--cream);
+	}
+	/* Hover/focus (both CTAs) — the cream fill flips to the berry accent, the label to cream.
+	   Cream-on-berry is ~4:1 (under the 4.5 bar for normal text) but this is a transient
+	   hover state, not resting copy. */
+	.btn-primary:hover,
+	.btn-primary:focus-visible {
+		background: var(--berry);
+		border-color: var(--berry);
+		color: var(--cream);
+	}
+	/* Hero CTA only — a slightly larger, heavier label than the footer CTA (keeps the base
+	   near-black on cream). */
+	.cmd-row .btn-primary {
+		font-weight: 700;
+		font-size: 18px;
 	}
 
 	/* ── Hero marquee — looks × devices, always on ─────────
@@ -1664,12 +1736,17 @@
 	.foot-brand {
 		max-width: 42ch;
 	}
-	.foot-mark {
+	.foot-mark,
+	.hero-mark {
 		font-family: var(--font-display);
 		font-size: var(--fs-feature);
 		line-height: var(--lh-feature);
 		font-weight: 700;
 		letter-spacing: -0.01em;
+	}
+	/* Colour is per-mark: footer keeps the brand berry; the hero mark is teal (set on
+	   .hero-mark so the loop inherits it via currentColor). */
+	.foot-mark {
 		color: var(--berry);
 	}
 	.foot-tagline {
