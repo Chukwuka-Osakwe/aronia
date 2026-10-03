@@ -175,6 +175,10 @@
 		flex: 1;
 		min-width: 0;
 	}
+	/* The now-spinning badge stretches full-width (column flex); center its label in the bar. */
+	.sp-now-info :global(.riso-badge) {
+		justify-content: center;
+	}
 	.sp-track {
 		margin: 6px 0 0;
 		font-size: 30px;

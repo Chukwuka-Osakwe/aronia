@@ -1,9 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import RisoPhone from './slides/RisoPhone.svelte';
-	import NeoWindow from './slides/NeoWindow.svelte';
-	import GlassTablet from './slides/GlassTablet.svelte';
-	import SwissPhone from './slides/SwissPhone.svelte';
 
 	// Brand faces (Aronia design board): Gluten for display, SUSE for text/UI.
 	// Both variable (wght 100–900); fontsource registers them as
@@ -96,21 +92,36 @@
 	];
 
 	// ── HERO marquee — looks × devices, always on. The hero's job is RANGE: four style
-	// families, each on a DIFFERENT demo app and device, streaming past full-bleed so more
-	// than one look is on screen at any moment (the §3 coherence proof sells consistency;
-	// this sells versatility). A continuous CSS marquee — no stepping, dots or auto-advance
-	// timer — so it reads as an endless ribbon of distinct looks. Each slide carries a fixed
-	// light/dark theme so the ribbon also shows "a real dark mode for free" without needing
-	// an "active" slide. WIREFRAME: device bodies are placeholder boxes — real exported
-	// slides land later.
+	// families × light/dark, each on a DIFFERENT demo app and device, streaming past
+	// full-bleed so more than one look is on screen at any moment (the §3 coherence proof
+	// sells consistency; this sells versatility). A continuous CSS marquee — no stepping,
+	// dots or auto-advance timer — so it reads as an endless ribbon of distinct looks.
+	//
+	// Each slide is a FLAT WebP baked from the real aronia-component mockup via the dev-only
+	// /landing/capture sheet (world ground + device + screen all in one 2× image). Baking to
+	// images is deliberate: the live components hit compositing glitches when zoomed and
+	// animated together (esp. glass backdrop-filter across the loop seam); flat pixels have
+	// none of that. The capture tiles ARE the real components, so this stays an honest
+	// "built with aronia" proof — just pre-rendered. Re-capture: scripts/capture-hero.mjs.
+	//
+	// Order alternates light/dark and never repeats a family back-to-back (including across
+	// the loop wrap). Panel width is the image's own aspect ratio at the band height (square
+	// mobile → 600, desktop → 780, tablet → 900), so no per-slide width is needed.
 	const slides = [
-		{ id: 'risograph', style: 'Risograph', device: 'mobile', app: 'Simmer', category: 'Food', theme: 'light' },
-		{ id: 'neo-brutalism', style: 'Neo-Brutalism', device: 'desktop', app: 'Tally', category: 'SaaS', theme: 'dark' },
-		{ id: 'glassmorphism', style: 'Glassmorphism', device: 'tablet', app: 'Pulse', category: 'Fitness', theme: 'dark' },
-		{ id: 'swiss', style: 'Swiss', device: 'mobile', app: 'The Dispatch', category: 'News', theme: 'light' }
+		{ img: 'riso', style: 'Risograph', device: 'mobile', app: 'Simmer', category: 'food', theme: 'light' },
+		{ img: 'neo', style: 'Neo-Brutalism', device: 'desktop', app: 'Tally', category: 'SaaS', theme: 'dark' },
+		{ img: 'halo', style: 'Glassmorphism', device: 'mobile', app: 'Halo', category: 'weather', theme: 'light' },
+		{ img: 'depart', style: 'Swiss', device: 'desktop', app: 'Depart', category: 'departures', theme: 'dark' },
+		{ img: 'drop', style: 'Neo-Brutalism', device: 'tablet', app: 'Drop', category: 'sneakers', theme: 'light' },
+		{ img: 'spindle', style: 'Risograph', device: 'desktop', app: 'Spindle', category: 'vinyl', theme: 'dark' },
+		{ img: 'swiss', style: 'Swiss', device: 'mobile', app: 'The Dispatch', category: 'news', theme: 'light' },
+		{ img: 'glass', style: 'Glassmorphism', device: 'tablet', app: 'Pulse', category: 'fitness', theme: 'dark' }
 	];
 	// Rendered twice back-to-back so the marquee can loop seamlessly (animate 0 → -50%).
 	const marquee = [...slides, ...slides];
+	// Panel width per device at the 600px band height — matches each WebP's baked aspect
+	// ratio, so the width/height attrs reserve the right box (no layout shift on load).
+	const deviceW: Record<string, number> = { mobile: 600, desktop: 780, tablet: 900 };
 	let reducedMotion = $state(false);
 
 	// Section-heading word-by-word reveal, applied with `use:revealWords`. Splits the
@@ -242,30 +253,29 @@
 					consistent.
 				</p>
 			</div>
-			<!-- Looks × devices marquee — full-bleed, always on. WIREFRAME: slides are
-			     placeholder device boxes on style-keyed "world" grounds; real exported slides
-			     wire in later. The track is the slide set rendered twice; it scrolls 0 → -50%
-			     forever, so the second copy covers the seam and the loop is seamless. -->
+			<!-- Looks × devices marquee — full-bleed, always on. Each slide is a flat 2× WebP
+			     baked from the real component mockup (see the slides manifest + capture note
+			     above). The track is the slide set rendered twice; it scrolls 0 → -50% forever,
+			     so the second copy covers the seam and the loop is seamless. -->
 			<figure class="hero-carousel" aria-label="aronia across looks and devices">
 				<div class="carousel-track">
 					{#each marquee as slide, i (i)}
 						<div
 							class="carousel-slide"
-							data-style={slide.id}
 							data-theme={slide.theme}
 							aria-hidden={i >= slides.length ? 'true' : undefined}
 						>
-							<div class="slide-world">
-								{#if slide.id === 'risograph'}
-									<div class="slide-mock phone"><RisoPhone theme="light" /></div>
-								{:else if slide.id === 'neo-brutalism'}
-									<div class="slide-mock"><NeoWindow /></div>
-								{:else if slide.id === 'glassmorphism'}
-									<div class="slide-mock glass"><GlassTablet /></div>
-								{:else if slide.id === 'swiss'}
-									<div class="slide-mock phone"><SwissPhone theme="light" /></div>
-								{/if}
-							</div>
+							<img
+								class="slide-img"
+								src="/landing/hero/{slide.img}.webp"
+								alt={i < slides.length
+									? `${slide.app}, a ${slide.category} app, in aronia's ${slide.style} style on ${slide.device}`
+									: ''}
+								width={deviceW[slide.device]}
+								height="600"
+								loading="eager"
+								decoding="async"
+							/>
 						</div>
 					{/each}
 				</div>
@@ -886,7 +896,7 @@
 		border-color: var(--cream);
 	}
 
-	/* ── Hero marquee (WIREFRAME) — looks × devices, always on ─────────
+	/* ── Hero marquee — looks × devices, always on ─────────
 	   Full-bleed: margin-inline: calc(50% − 50vw) pulls the figure out of the 1080 column to
 	   the viewport edges (.wire's overflow-x: clip keeps 100vw from adding a scrollbar). Slides
 	   run hard to the viewport edges (overflow: hidden clips them). */
@@ -897,11 +907,12 @@
 	}
 	/* The slide set rendered twice, streaming left forever; -50% lands the second copy
 	   exactly where the first began. Per-slide margin-right (not flex gap) keeps the two
-	   halves equal width so that wrap is seamless. Pause on hover to inspect a look. */
+	   halves equal width so that wrap is seamless. Tune the duration here. Pause on hover to
+	   inspect a look. */
 	.carousel-track {
 		display: flex;
 		width: max-content;
-		animation: hero-marquee 10s linear infinite;
+		animation: hero-marquee 30s linear infinite;
 	}
 	.hero-carousel:hover .carousel-track {
 		animation-play-state: paused;
@@ -918,55 +929,13 @@
 		flex: 0 0 auto;
 		margin-right: var(--u4);
 	}
-	/* Style-keyed "world" ground each device sits on — a light panel that pops off the dark
-	   page (the margin gaps let --night show between). Fixed height so the ribbon stays even;
-	   widths vary with the device. Wireframe tints now; real slides carry grain/motif/bezels. */
-	.slide-world {
-		position: relative;
-		display: grid;
-		place-items: center;
-		/* A generous panel the device floats inside with room around it (not a tight wrap) —
-		   the "world" shows as margin. Height is the band; width is set per-style below so
-		   each device gets breathing space appropriate to its form factor. */
-		width: 600px;
+	/* Each slide is a flat 2× WebP with its "world" ground baked in. Fixed band height; the
+	   image's own aspect ratio sets the width (square mobile → 600, desktop → 780, tablet →
+	   900), matching the width/height attrs so there's no layout shift on load. */
+	.slide-img {
+		display: block;
 		height: 600px;
-		background: var(--paper);
-	}
-	.carousel-slide[data-style='risograph'] .slide-world {
-		/* a deeper warm paper than the phone's own, so the light riso screen lifts off it */
-		background: #e7dbc2;
-	}
-	.carousel-slide[data-style='neo-brutalism'] .slide-world {
-		width: 780px;
-		background-color: #ffe600;
-		background-image: radial-gradient(circle, rgba(17, 17, 17, 0.16) 1.6px, transparent 1.7px);
-		background-size: 22px 22px;
-	}
-	/* Glass world is the exception: it darkens (frost needs a dark backdrop to read). */
-	.carousel-slide[data-style='glassmorphism'] .slide-world {
-		width: 900px;
-		background:
-			radial-gradient(120% 120% at 15% 8%, #2a1a5c 0%, transparent 55%),
-			radial-gradient(120% 120% at 88% 92%, #4a1248 0%, transparent 55%),
-			linear-gradient(135deg, #171433, #0f1130);
-	}
-	.carousel-slide[data-style='swiss'] .slide-world {
-		background:
-			repeating-linear-gradient(to right, rgba(20, 20, 20, 0.05) 0 1px, transparent 1px 48px),
-			#ffffff;
-	}
-	/* The slide mockups (RisoPhone / NeoWindow / GlassTablet / SwissPhone) are built at natural
-	   device size; zoom scales both render AND layout box so each sits in the band and the slide
-	   width follows the device. Per-device zoom normalises HEIGHT to the band (phones are tall,
-	   desktop/tablet landscape), which leaves mobile slides narrow and landscape ones wide. */
-	.slide-mock {
-		zoom: 0.64;
-	}
-	.slide-mock.glass {
-		zoom: 0.78;
-	}
-	.slide-mock.phone {
-		zoom: 0.64;
+		width: auto;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.carousel-track {

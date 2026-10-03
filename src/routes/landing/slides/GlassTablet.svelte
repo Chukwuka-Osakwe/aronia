@@ -15,7 +15,7 @@
 		<div class="glass-dash">
 			<header class="glass-head">
 				<div>
-					<h3 class="glass-h">Good morning, Maya</h3>
+					<h3 class="glass-h">Good morning, Masaya</h3>
 					<p class="glass-sub">Tuesday, 14 May</p>
 				</div>
 				<div class="glass-head-right">
