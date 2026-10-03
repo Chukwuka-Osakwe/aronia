@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { registry } from '../../registry.js';
+	import NeoWindow from '../slides/NeoWindow.svelte';
+	import GlassTablet from '../slides/GlassTablet.svelte';
 
 	// §4 ROTATOR SPECIMENS — capture surface.
 	// The plan (2026-09-19) settled the rotator's real specimen as the SAME aronia card,
@@ -21,6 +23,34 @@
 	<p class="note">
 		Rotator specimens — one identical card per family. Screenshot each tile (not its label).
 	</p>
+
+	<!-- HERO SLIDE specimens — the device mockups themselves live in reusable components
+	     (../slides/*.svelte) so the hero marquee and this capture sheet share one source. The
+	     component carries data-theme="dark"; the "world" ground is the container's job. -->
+	<figure class="hero-specimen">
+		<div class="hero-stage">
+			<div class="hero-label">
+				<span class="hero-label-title">Neo-Brutalism</span>
+				<span class="hero-label-sub">DESKTOP · TALLY · ANALYTICS</span>
+			</div>
+			<NeoWindow />
+		</div>
+		<figcaption>Hero slide — Neo-Brutalism (desktop · Tally) · DARK</figcaption>
+	</figure>
+
+	<!-- Glass is the exception to "world stays": frost needs a dark backdrop to read, so the
+	     WORLD darkens to a deep mesh too (and the tablet carries its own dark screen mesh). -->
+	<figure class="hero-specimen">
+		<div class="hero-stage glass-stage">
+			<div class="hero-label glass-label">
+				<span class="hero-label-title">Glassmorphism</span>
+				<span class="hero-label-sub">TABLET · PULSE · FITNESS</span>
+			</div>
+			<GlassTablet />
+		</div>
+		<figcaption>Hero slide — Glassmorphism (tablet · Pulse) · DARK</figcaption>
+	</figure>
+
 	<div class="grid">
 		{#each families as fam (fam.id)}
 			{@const Card = registry[fam.id].card}
@@ -159,5 +189,57 @@
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
 		background-size: 90px 90px;
 		background-blend-mode: multiply;
+	}
+
+	/* ── HERO SLIDE stages — the "world" grounds the device components sit on ───────────
+	   Neo's world is theme-independent: brand yellow + black dot-grid stay constant (only the
+	   NeoWindow component flips dark). The label sits on this world so it uses constant black. */
+	.hero-specimen {
+		max-width: 1100px;
+		margin: 0 auto 3.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+	.hero-stage {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		padding: 56px;
+		border-radius: 16px;
+		overflow: hidden;
+		background-color: #ffe600; /* --nb-primary, constant */
+		background-image: radial-gradient(circle, rgba(17, 17, 17, 0.16) 1.6px, transparent 1.7px);
+		background-size: 24px 24px;
+	}
+	.hero-label {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		font-family: var(--nb-font);
+	}
+	.hero-label-title {
+		font-size: 42px;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		color: #111; /* constant on the yellow world */
+	}
+	.hero-label-sub {
+		font-size: 14px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: #111;
+	}
+
+	/* Glass world: darkened mesh (frost needs a dark backdrop) + off-white label. */
+	.glass-stage {
+		background:
+			radial-gradient(120% 120% at 15% 8%, #2a1a5c 0%, transparent 55%),
+			radial-gradient(120% 120% at 88% 92%, #4a1248 0%, transparent 55%),
+			linear-gradient(135deg, #171433, #0f1130);
+	}
+	.glass-label :global(*),
+	.glass-label {
+		color: #f2f2f7;
 	}
 </style>

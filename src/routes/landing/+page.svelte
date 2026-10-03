@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import RisoPhone from './slides/RisoPhone.svelte';
+	import NeoWindow from './slides/NeoWindow.svelte';
+	import GlassTablet from './slides/GlassTablet.svelte';
+	import SwissPhone from './slides/SwissPhone.svelte';
 
 	// Brand faces (Aronia design board): Gluten for display, SUSE for text/UI.
 	// Both variable (wght 100–900); fontsource registers them as
@@ -91,11 +95,22 @@
 		}
 	];
 
-	// STUBBED hero motion — crude before→after box-flip to test the BEHAVIOUR/timing
-	// only (auto-play once, rest on after; replay control; reduced-motion fallback).
-	// The real Risograph print-in (ink bloom, grain, opacity-not-transforms) is a
-	// hi-fi pass with real pixels — see the plan doc.
-	let motionPhase = $state<'before' | 'after'>('before');
+	// ── HERO marquee — looks × devices, always on. The hero's job is RANGE: four style
+	// families, each on a DIFFERENT demo app and device, streaming past full-bleed so more
+	// than one look is on screen at any moment (the §3 coherence proof sells consistency;
+	// this sells versatility). A continuous CSS marquee — no stepping, dots or auto-advance
+	// timer — so it reads as an endless ribbon of distinct looks. Each slide carries a fixed
+	// light/dark theme so the ribbon also shows "a real dark mode for free" without needing
+	// an "active" slide. WIREFRAME: device bodies are placeholder boxes — real exported
+	// slides land later.
+	const slides = [
+		{ id: 'risograph', style: 'Risograph', device: 'mobile', app: 'Simmer', category: 'Food', theme: 'light' },
+		{ id: 'neo-brutalism', style: 'Neo-Brutalism', device: 'desktop', app: 'Tally', category: 'SaaS', theme: 'dark' },
+		{ id: 'glassmorphism', style: 'Glassmorphism', device: 'tablet', app: 'Pulse', category: 'Fitness', theme: 'dark' },
+		{ id: 'swiss', style: 'Swiss', device: 'mobile', app: 'The Dispatch', category: 'News', theme: 'light' }
+	];
+	// Rendered twice back-to-back so the marquee can loop seamlessly (animate 0 → -50%).
+	const marquee = [...slides, ...slides];
 	let reducedMotion = $state(false);
 
 	// Section-heading word-by-word reveal, applied with `use:revealWords`. Splits the
@@ -182,18 +197,13 @@
 		const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 		if (mq.matches) {
 			reducedMotion = true;
-			motionPhase = 'after'; // reduced motion → skip the animation, land on the good state
-			return; // …and don't auto-rotate; the dots are the manual control instead
+			// The hero marquee halts via CSS; here just skip the §4 auto-rotate (dots are
+			// the manual control instead).
+			return;
 		}
-		// Hold on "before" (establish the pain), then settle on "after".
-		const t = setTimeout(() => (motionPhase = 'after'), 3000);
-		// Cycle the look slot so "pick a look" reads as choosing from many, not a grid.
-		// Matches the hero's 3s hold so the two motions feel unified.
+		// Cycle the §4 "pick a look" slot so it reads as choosing from many, not a grid.
 		rotTimer = setInterval(() => rotateTo((lookIndex + 1) % looks.length), 3000);
-		return () => {
-			clearTimeout(t);
-			clearInterval(rotTimer);
-		};
+		return () => clearInterval(rotTimer);
 	});
 
 	// Manual pick from the dots. Hands control to the reader: jump to the look and
@@ -203,12 +213,6 @@
 		rotateTo(i);
 		clearInterval(rotTimer);
 		rotTimer = undefined;
-	}
-
-	function replayMotion() {
-		if (reducedMotion) return;
-		motionPhase = 'before';
-		setTimeout(() => (motionPhase = 'after'), 1100);
 	}
 
 	// Copy the setup command from step 1 so a reader can grab it and run right away.
@@ -238,21 +242,33 @@
 					consistent.
 				</p>
 			</div>
-			<figure class="ba-hero-motion">
-				<div class="ba-motion" data-phase={motionPhase}>
-					<div class="ba-pane ba-before">
-						<span class="ba-tag">Before</span>
-						<span class="ph-label">[ real app — generic look ]</span>
-					</div>
-					<div class="ba-pane ba-after">
-						<span class="ba-tag">After — Risograph</span>
-						<span class="ph-label">[ same app, built with aronia ]</span>
-					</div>
-					<button class="ba-replay" type="button" onclick={replayMotion}>↻ replay</button>
+			<!-- Looks × devices marquee — full-bleed, always on. WIREFRAME: slides are
+			     placeholder device boxes on style-keyed "world" grounds; real exported slides
+			     wire in later. The track is the slide set rendered twice; it scrolls 0 → -50%
+			     forever, so the second copy covers the seam and the loop is seamless. -->
+			<figure class="hero-carousel" aria-label="aronia across looks and devices">
+				<div class="carousel-track">
+					{#each marquee as slide, i (i)}
+						<div
+							class="carousel-slide"
+							data-style={slide.id}
+							data-theme={slide.theme}
+							aria-hidden={i >= slides.length ? 'true' : undefined}
+						>
+							<div class="slide-world">
+								{#if slide.id === 'risograph'}
+									<div class="slide-mock phone"><RisoPhone theme="light" /></div>
+								{:else if slide.id === 'neo-brutalism'}
+									<div class="slide-mock"><NeoWindow /></div>
+								{:else if slide.id === 'glassmorphism'}
+									<div class="slide-mock glass"><GlassTablet /></div>
+								{:else if slide.id === 'swiss'}
+									<div class="slide-mock phone"><SwissPhone theme="light" /></div>
+								{/if}
+							</div>
+						</div>
+					{/each}
 				</div>
-				<figcaption class="stub-note">
-					Stubbed motion (before → after). Real Risograph print-in is a hi-fi pass — see plan.
-				</figcaption>
 			</figure>
 			<div class="cmd-row">
 				<button class="btn btn-primary" type="button">Get started</button>
@@ -870,100 +886,92 @@
 		border-color: var(--cream);
 	}
 
-	/* ── Hero before/after motion — the hero's stubbed crossfade still uses these
-	   (.ba-pane / .ba-before / .ba-after / .ba-tag / .ph-label). The §3 proof no longer
-	   does: it pivoted to multi-screen coherence (see .proof below). */
-	.ba-pane {
-		position: relative;
-		min-height: 240px;
-		border: 1px solid var(--line);
-		border-radius: 0;
-		background: repeating-linear-gradient(
-			-45deg,
-			var(--paper),
-			var(--paper) 10px,
-			#f6f6f6 10px,
-			#f6f6f6 20px
-		);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: var(--u4);
-	}
-	/* STUBBED hero motion: two panes stacked, cross-fading on phase change. Crude on
-	   purpose — testing behaviour/timing, not the real riso print-in. */
-	.ba-hero-motion {
+	/* ── Hero marquee (WIREFRAME) — looks × devices, always on ─────────
+	   Full-bleed: margin-inline: calc(50% − 50vw) pulls the figure out of the 1080 column to
+	   the viewport edges (.wire's overflow-x: clip keeps 100vw from adding a scrollbar). Slides
+	   run hard to the viewport edges (overflow: hidden clips them). */
+	.hero-carousel {
 		margin: var(--u6) 0 0;
+		margin-inline: calc(50% - 50vw);
+		overflow: hidden;
 	}
-	.ba-motion {
-		position: relative;
-		min-height: 320px;
+	/* The slide set rendered twice, streaming left forever; -50% lands the second copy
+	   exactly where the first began. Per-slide margin-right (not flex gap) keeps the two
+	   halves equal width so that wrap is seamless. Pause on hover to inspect a look. */
+	.carousel-track {
+		display: flex;
+		width: max-content;
+		animation: hero-marquee 10s linear infinite;
 	}
-	.ba-motion .ba-pane {
-		position: absolute;
-		inset: 0;
-		margin: 0;
-		min-height: 320px;
+	.hero-carousel:hover .carousel-track {
+		animation-play-state: paused;
 	}
-	/* ── Before/after crossfade primitive — SHARED by the hero motion and the proof
-	   tap-flip. Two stacked panes, opacity toggled by `data-phase` on the container;
-	   the default state is set by the container's initial attribute (hero = before,
-	   proof = after). */
-	.ba-before,
-	.ba-after {
-		transition: opacity 600ms ease;
-	}
-	.ba-before {
-		opacity: 1;
-	}
-	.ba-after {
-		opacity: 0;
-	}
-	[data-phase='after'] .ba-before {
-		opacity: 0;
-	}
-	[data-phase='after'] .ba-after {
-		opacity: 1;
-	}
-	.ba-replay {
-		position: absolute;
-		bottom: var(--u2);
-		right: var(--u2);
-		z-index: 2;
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		padding: 4px 8px;
-		border: 1px solid var(--ink);
-		border-radius: 0;
-		background: var(--paper);
-		color: var(--ink);
-		cursor: pointer;
-	}
-	.stub-note {
-		margin-top: var(--u1);
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		line-height: var(--lh-label);
-		color: var(--ink-3);
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.ba-before,
-		.ba-after {
-			transition: none;
+	@keyframes hero-marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
 		}
 	}
-	.ba-tag {
-		position: absolute;
-		top: var(--u2);
-		left: var(--u2);
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--ink-3);
+	.carousel-slide {
+		flex: 0 0 auto;
+		margin-right: var(--u4);
+	}
+	/* Style-keyed "world" ground each device sits on — a light panel that pops off the dark
+	   page (the margin gaps let --night show between). Fixed height so the ribbon stays even;
+	   widths vary with the device. Wireframe tints now; real slides carry grain/motif/bezels. */
+	.slide-world {
+		position: relative;
+		display: grid;
+		place-items: center;
+		/* A generous panel the device floats inside with room around it (not a tight wrap) —
+		   the "world" shows as margin. Height is the band; width is set per-style below so
+		   each device gets breathing space appropriate to its form factor. */
+		width: 600px;
+		height: 600px;
 		background: var(--paper);
-		border: 1px solid var(--line);
-		padding: 2px 6px;
+	}
+	.carousel-slide[data-style='risograph'] .slide-world {
+		/* a deeper warm paper than the phone's own, so the light riso screen lifts off it */
+		background: #e7dbc2;
+	}
+	.carousel-slide[data-style='neo-brutalism'] .slide-world {
+		width: 780px;
+		background-color: #ffe600;
+		background-image: radial-gradient(circle, rgba(17, 17, 17, 0.16) 1.6px, transparent 1.7px);
+		background-size: 22px 22px;
+	}
+	/* Glass world is the exception: it darkens (frost needs a dark backdrop to read). */
+	.carousel-slide[data-style='glassmorphism'] .slide-world {
+		width: 900px;
+		background:
+			radial-gradient(120% 120% at 15% 8%, #2a1a5c 0%, transparent 55%),
+			radial-gradient(120% 120% at 88% 92%, #4a1248 0%, transparent 55%),
+			linear-gradient(135deg, #171433, #0f1130);
+	}
+	.carousel-slide[data-style='swiss'] .slide-world {
+		background:
+			repeating-linear-gradient(to right, rgba(20, 20, 20, 0.05) 0 1px, transparent 1px 48px),
+			#ffffff;
+	}
+	/* The slide mockups (RisoPhone / NeoWindow / GlassTablet / SwissPhone) are built at natural
+	   device size; zoom scales both render AND layout box so each sits in the band and the slide
+	   width follows the device. Per-device zoom normalises HEIGHT to the band (phones are tall,
+	   desktop/tablet landscape), which leaves mobile slides narrow and landscape ones wide. */
+	.slide-mock {
+		zoom: 0.64;
+	}
+	.slide-mock.glass {
+		zoom: 0.78;
+	}
+	.slide-mock.phone {
+		zoom: 0.64;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.carousel-track {
+			animation: none;
+		}
 	}
 	/* ── §3 Proof — multi-screen coherence ────────────────────────────
 	   One app (Setlist), four real screens stacked, all sharing one Risograph look. A
@@ -1229,13 +1237,6 @@
 		border: 1px solid var(--m-line);
 	}
 
-	/* Placeholder label inside any wireframe box. */
-	.ph-label {
-		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-		font-size: var(--fs-label);
-		color: var(--ink-3);
-		text-align: center;
-	}
 
 	/* ── How it works — ledger frame ──────────────────────────────────
 	   Two rule sets on different widths: the VERTICAL rules ride the 1080 content-column edges
