@@ -5,6 +5,35 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+
+		<!-- Site-wide SEO + social defaults. og:image/url are absolute (required by
+		     scrapers); update SITE_URL here if the canonical domain changes. -->
+		<title>aronia — Reject the default AI look.</title>
+		<meta
+			name="description"
+			content="An agent-friendly design language. One command copies real, editable component source into your repo — your coding agent learns the style and builds the rest of your UI to match."
+		/>
+		<link rel="canonical" href="https://aronia-pi.vercel.app/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="aronia" />
+		<meta property="og:url" content="https://aronia-pi.vercel.app/" />
+		<meta property="og:title" content="aronia — Reject the default AI look." />
+		<meta
+			property="og:description"
+			content="An agent-friendly design language. One command copies real, editable component source into your repo — your coding agent learns the style and builds the rest of your UI to match."
+		/>
+		<meta property="og:image" content="https://aronia-pi.vercel.app/og.png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="aronia — Reject the default AI look." />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="aronia — Reject the default AI look." />
+		<meta
+			name="twitter:description"
+			content="An agent-friendly design language. One command copies real, editable component source into your repo — your coding agent learns the style and builds the rest of your UI to match."
+		/>
+		<meta name="twitter:image" content="https://aronia-pi.vercel.app/og.png" />
+
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
