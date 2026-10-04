@@ -200,6 +200,12 @@
 	// Auto-rotation timer, hoisted so a manual pick can cancel it.
 	let rotTimer: ReturnType<typeof setInterval> | undefined;
 
+	// Signoff headline cycles its key word through aronia's range of uses. Started in onMount,
+	// so it never runs under reduced motion (stays on the first word).
+	const flipWords = ['design', 'product', 'website', 'app', 'dashboard'];
+	let flipIndex = $state(0);
+	let flipTimer: ReturnType<typeof setInterval> | undefined;
+
 	// Advance the slot, remembering where we came from so the exiting pane knows to leave.
 	function rotateTo(i: number) {
 		prevIndex = lookIndex;
@@ -216,7 +222,12 @@
 		}
 		// Cycle the §4 "pick a look" slot so it reads as choosing from many, not a grid.
 		rotTimer = setInterval(() => rotateTo((lookIndex + 1) % looks.length), 3000);
-		return () => clearInterval(rotTimer);
+		// Cycle the signoff headline's key word.
+		flipTimer = setInterval(() => (flipIndex = (flipIndex + 1) % flipWords.length), 2200);
+		return () => {
+			clearInterval(rotTimer);
+			clearInterval(flipTimer);
+		};
 	});
 
 	// Manual pick from the dots. Hands control to the reader: jump to the look and
@@ -250,24 +261,30 @@
 	}
 
 	// Proof mode — the Light/Dark segmented toggle swaps the src of all four screens at
-	// once. LIGHT leads (default): the bright screens pop as cards against the dark page.
-	// Flipping them together turns "dark mode is free/coherent" into part of the proof.
-	let proofMode = $state<'dark' | 'light'>('light');
+	// once. DARK leads (default): the dark screens sit in the dark section as one continuous
+	// world. Flipping them together turns "dark mode is free/coherent" into part of the proof.
+	let proofMode = $state<'dark' | 'light'>('dark');
 </script>
+
+<!-- Brand wordmark — the teal "aronia" with a hand-drawn marker loop. Rendered in both the
+     hero (top-left) and the footer so the two can't drift; `extra` carries a placement class. -->
+{#snippet wordmark(extra = '')}
+	<span class="wordmark {extra}">
+		aronia
+		<svg class="wordmark-ring" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
+			<path
+				d="M64 14 C24 16 8 44 20 68 C32 92 92 96 128 90 C170 83 196 60 188 36 C181 15 132 6 78 12 C58 14 44 18 36 26"
+				vector-effect="non-scaling-stroke"
+			/>
+		</svg>
+	</span>
+{/snippet}
 
 <div class="wire">
 	<div class="wire-inner">
 		<!-- ── 1 · HERO (What?) ────────────────────────────────────────── -->
 		<section class="beat hero">
-			<span class="hero-mark">
-				aronia
-				<svg class="hero-mark-ring" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
-					<path
-						d="M64 14 C24 16 8 44 20 68 C32 92 92 96 128 90 C170 83 196 60 188 36 C181 15 132 6 78 12 C58 14 44 18 36 26"
-						vector-effect="non-scaling-stroke"
-					/>
-				</svg>
-			</span>
+			{@render wordmark('hero-mark')}
 			<div class="col">
 				<h1 class="display" use:revealWords>Reject the default AI look.</h1>
 				<!-- Sub starts after the headline's stagger lands (~700ms) so the two sequence. -->
@@ -365,9 +382,9 @@
 			<div class="col">
 				<h2 use:revealWords>One point of view, every screen.</h2>
 				<p class="body">
-					This is all one app — a gig finder, built one screen at a time with aronia's Risograph
-					look. Each screen is different, but they clearly belong together. That consistency is
-					the part AI can't fake. Flip it to dark and it still holds.
+					Setlist was built in a few hours with a few prompts (Opus 5.5) using aronia's
+					Risograph look. Each screen is different, but they clearly belong together and that
+					consistency is where AI struggles. Flip it to light mode to see that it still holds.
 				</p>
 			</div>
 			<div class="proof">
@@ -379,13 +396,13 @@
 						<button
 							class="mode-btn"
 							type="button"
-							aria-pressed={proofMode === 'light'}
-							onclick={() => (proofMode = 'light')}>Light</button>
+							aria-pressed={proofMode === 'dark'}
+							onclick={() => (proofMode = 'dark')}>Dark</button>
 						<button
 							class="mode-btn"
 							type="button"
-							aria-pressed={proofMode === 'dark'}
-							onclick={() => (proofMode = 'dark')}>Dark</button>
+							aria-pressed={proofMode === 'light'}
+							onclick={() => (proofMode = 'light')}>Light</button>
 					</div>
 				</div>
 				<div class="screens">
@@ -477,7 +494,10 @@
 					     caption + dot row track which one is showing. -->
 					<div class="look-rotator">
 						<figure class="look-slot">
-							<div class="look-stack">
+							<!-- The cards are decorative look specimens (the dots below are the real
+							     control), so the stack is inert: its sample buttons stay out of the tab
+							     order and the a11y tree. The figcaption names the current look. -->
+							<div class="look-stack" inert>
 								{#each looks as look, i (look.id)}
 									{@const Card = registry[look.id].card}
 									{@const Button = registry[look.id].button}
@@ -526,11 +546,6 @@
 							aronia lets you choose from a variety of styles for building your project. Pick
 							whichever one you like best.
 						</p>
-						<!-- Points at the intended /gallery route — the page doesn't exist yet, so
-						     this 404s until it's built (see landing-page plan). -->
-						<a class="gallery-link" href="/gallery">
-							Explore all the styles in more depth in the gallery →
-						</a>
 					</div>
 				</li>
 				<li class="step">
@@ -615,7 +630,15 @@
 		<div class="site-footer-inner">
 			<!-- Sign-off: the page's one final CTA, over the section glow. -->
 			<div class="signoff">
-				<h2 class="display-sm" use:revealWords>Make your next design look like a choice.</h2>
+				<!-- Stable word for assistive tech; the cycling spans are aria-hidden. All words are
+				     stacked in one grid cell so the slot is always as wide as the longest and the
+				     line never re-wraps as the word changes. -->
+				<h2 class="display-sm">
+					Make your next <span class="flip-sr">design</span><span class="flip" aria-hidden="true"
+						>{#each flipWords as w, i}<span class="flip-word" class:on={i === flipIndex}>{w}</span
+							>{/each}</span
+					> look like a choice.
+				</h2>
 				<a class="btn btn-primary" href="#steps" onclick={goToSteps}>Use aronia now</a>
 			</div>
 
@@ -624,7 +647,7 @@
 			     (the repo README fans out to install, CLI, changelog, license). -->
 			<div class="foot-body">
 				<div class="foot-brand">
-					<span class="foot-mark">aronia</span>
+					{@render wordmark()}
 					<p class="foot-tagline">A design language for coding agents.</p>
 				</div>
 			</div>
@@ -669,7 +692,8 @@
 		--night: #090507; /* page ground */
 		--cream: #eadbb8; /* primary text + primary-CTA fill */
 		--muted: #b8b0a0; /* secondary warm-gray text on dark */
-		--berry: #9b36d1; /* the one accent */
+		--berry: #9b36d1; /* primary accent */
+		--teal: #3fb6ad; /* secondary accent — hero wordmark + proof toggle */
 		--navy: #0c1137; /* secondary/support ground */
 
 		/* Semantic layer — every section reads through these, so the page
@@ -684,12 +708,9 @@
 		--paper: color-mix(in oklab, var(--cream) 7%, var(--night)); /* lifted surface box */
 		--bg: var(--night); /* page field */
 
-		/* Overscroll-peek anchors. The page is its own scroll container, so a rubber-band
-		   past EITHER end reveals .wire's background. The split-gradient peek below reads these
-		   so the top tracks the page's top ground and the bottom tracks the footer sweep —
-		   --footer-peek also feeds the footer's own tail stop so the two can't drift. */
-		--peek-top: var(--night); /* top-of-page ground (dark hero) + top overscroll peek */
-		--footer-peek: oklab(32% 0.079 0.043); /* footer sweep tail + bottom overscroll peek */
+		/* Footer sweep tail — the far/outermost stop of the footer's radial glow. (Overscroll
+		   is disabled on .wire, so there's no rubber-band peek to match anymore.) */
+		--footer-peek: oklab(32% 0.079 0.043);
 
 		--u1: 8px;
 		--u2: 16px;
@@ -721,7 +742,7 @@
 		--lh-body: 24px; /* 3 × 8 */
 		--fs-small: 14px;
 		--lh-small: 24px; /* 3 × 8 */
-		--fs-label: 12px;
+		--fs-label: 14px;
 		--lh-label: 24px; /* 3 × 8 */
 
 		/* ── Type stack (Aronia board) ────────────────────────────────
@@ -732,24 +753,24 @@
 
 		font-family: var(--font-body);
 		color: var(--ink);
-		/* The scroll container's own background shows only on rubber-band OVERSCROLL — both
-		   ends: the gap the fixed footer reveal opens beneath the FAQ, AND above the hero.
-		   A single colour can't serve both once the hero and footer differ, so this is a
-		   two-stop split pinned to the viewport: hero ground up top, footer sweep tail down
-		   below. .wire is exactly 100vh and the default `scroll` attachment pins the gradient
-		   to this box (content scrolls over it), so the hard seam sits on the viewport midline
-		   — never visible, since content covers it — and each overscroll strip reveals only
-		   its matching half. .wire-inner keeps --night as the actual page ground. */
-		background: linear-gradient(
-			to bottom,
-			var(--peek-top) 0 50%,
-			var(--footer-peek) 50% 100%
-		);
+		/* Elastic overscroll is disabled (overscroll-behavior below). With the footer pinned to
+		   100dvh it sits behind the whole viewport, so a top rubber-band would reveal its rust
+		   over the hero. No bounce → scroll just stops at the ends, no peek either way. The
+		   container ground is plain night (the page ground), so if a browser ever ignores
+		   overscroll-behavior, night — not rust — is what shows. (Replaced the old split-gradient
+		   peek, which only worked when the footer was a short band.) */
+		background: var(--night);
 		-webkit-font-smoothing: antialiased;
+		/* Let height transitions interpolate to/from `auto` (inherited) — the FAQ answers
+		   animate open/closed via ::details-content. No-op where unsupported (snaps, as before). */
+		interpolate-size: allow-keywords;
 		/* Own scroll container: the docs' global `html { overflow: hidden }` (desktop)
 		   would otherwise clip this long page, so the wireframe scrolls internally. */
 		height: 100vh;
 		overflow-y: auto;
+		/* No elastic rubber-band (see the background note) — keeps the 100dvh footer from
+		   peeking over the hero on a top overscroll. */
+		overscroll-behavior-y: none;
 		/* The proof frames break out to full-viewport width; clip (not scroll) any
 		   bleed past the edges so no horizontal scrollbar appears. */
 		overflow-x: clip;
@@ -852,9 +873,9 @@
 		margin: 0;
 	}
 	.micro {
-		font-size: var(--fs-small);
-		line-height: var(--lh-small);
-		color: var(--ink-3);
+		font-size: var(--fs-body);
+		line-height: var(--lh-body);
+		color: var(--ink-2);
 		margin: var(--u3) 0 0;
 	}
 
@@ -866,21 +887,32 @@
 	.beat.hero {
 		padding-top: var(--u15);
 	}
-	/* Brand wordmark pinned to the hero's top-left (shares the footer .foot-mark type).
-	   Absolute so it escapes the section's padding rhythm — the headline keeps its own top
-	   spacing as if the mark weren't there. Flush to the section's left edge (the 1080
-	   column edge); .beat is position:relative, so this anchors to the section. */
+	/* Brand wordmark (shared by hero + footer via the {wordmark} snippet): teal Gluten with a
+	   hand-drawn loop. position:relative + inline-block so it shrinks to the word and the loop
+	   anchors to it; the loop inherits the teal via currentColor. */
+	.wordmark {
+		position: relative;
+		display: inline-block;
+		font-family: var(--font-display);
+		font-size: var(--fs-feature);
+		line-height: var(--lh-feature);
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		color: var(--teal);
+	}
+	/* Hero places the mark in the top-left corner — absolute so it escapes the section's
+	   padding rhythm (the headline keeps its own top spacing). Flush to the 1080 column edge;
+	   .beat is position:relative, so this anchors to the section. */
 	.hero-mark {
 		position: absolute;
 		top: var(--u6);
 		left: 0;
-		color: #3fb6ad;
 	}
 	/* Hand-drawn marker loop around the wordmark — a loose ellipse with an overshoot tail
 	   (the stroke crosses past where it began) for the real "circled by hand" tell. The SVG
 	   overlays the word, extended beyond it so the loop has breathing room; non-scaling-stroke
 	   keeps an even line weight whatever the word width. */
-	.hero-mark-ring {
+	.wordmark-ring {
 		position: absolute;
 		top: -0.3em;
 		left: -0.55em;
@@ -889,7 +921,7 @@
 		overflow: visible;
 		pointer-events: none;
 	}
-	.hero-mark-ring path {
+	.wordmark-ring path {
 		fill: none;
 		stroke: currentColor;
 		stroke-width: 2;
@@ -898,8 +930,7 @@
 	}
 	/* Hero rides the default --night page ground (dark-canonical: cream text + cream CTA, no
 	   inversion) — it's the first of the alternating dark bands, so it needs no ground paint;
-	   .wire-inner's --night shows through. The top overscroll peek (--peek-top) tracks this
-	   same --night, so a hard-scroll above the hero stays seamless. */
+	   .wire-inner's --night shows through. */
 	/* Hero text is centered and wider than the default 62ch measure so the headline lands
 	   on a single line at desktop (it needs ~906px at the 64px display size); below that it
 	   wraps gracefully. The sub stays on a narrower centered measure for readability. */
@@ -1066,7 +1097,7 @@
 	   colour/contrast, and it advertises both modes before you tap. */
 	.mode-toggle {
 		display: inline-flex;
-		border: 1px solid var(--line);
+		border: 4px solid var(--teal);
 	}
 	.mode-btn {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
@@ -1080,7 +1111,7 @@
 		cursor: pointer;
 	}
 	.mode-btn + .mode-btn {
-		border-left: 1px solid var(--line);
+		border-left: 4px solid var(--teal);
 	}
 	.mode-btn[aria-pressed='true'] {
 		background: var(--ink);
@@ -1110,7 +1141,7 @@
 		line-height: var(--lh-label);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: var(--ink-3);
+		color: var(--ink-2);
 	}
 
 	/* Section 2 — the static generic-app mirror (not before/after; that's hero+proof).
@@ -1497,20 +1528,6 @@
 	.look-rotator .micro {
 		text-align: center;
 	}
-	/* Quiet link to the (future) gallery — subordinate to the page's one CTA. */
-	.gallery-link {
-		display: block;
-		margin-top: var(--u1);
-		text-align: center;
-		font-size: var(--fs-small);
-		line-height: var(--lh-small);
-		color: var(--ink);
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-	.gallery-link:hover {
-		color: var(--ink-2);
-	}
 	/* The visible marker stays an 8px square, but the button is a 28px hit surface
 	   (padding around the mark) so it's a comfortable tap/click target — well past
 	   the 24px WCAG minimum. */
@@ -1624,6 +1641,24 @@
 	.faq {
 		border-top: 1px solid var(--line);
 	}
+	/* Answer expand/collapse — height 0↔auto (needs interpolate-size on .wire) plus a fade,
+	   on the §4 rotator's ease-in-out-quart so open/close matches the page's motion. The
+	   discrete content-visibility toggle rides the same curve so the close animates too.
+	   Browsers without ::details-content just snap (the prior native behaviour). */
+	.faq::details-content {
+		height: 0;
+		overflow: hidden;
+		opacity: 0;
+		transition:
+			height 350ms cubic-bezier(0.76, 0, 0.24, 1),
+			opacity 350ms cubic-bezier(0.76, 0, 0.24, 1),
+			content-visibility 350ms;
+		transition-behavior: allow-discrete;
+	}
+	.faq[open]::details-content {
+		height: auto;
+		opacity: 1;
+	}
 	.faq:last-child {
 		border-bottom: 1px solid var(--line);
 	}
@@ -1670,7 +1705,8 @@
 		border-bottom: 1.5px solid var(--ink-2);
 		transform: rotate(45deg);
 		transform-origin: center;
-		transition: transform 200ms ease;
+		/* Same ease/duration as the answer expand so the chevron turns in sync. */
+		transition: transform 350ms cubic-bezier(0.76, 0, 0.24, 1);
 	}
 	.faq[open] .faq-icon::before {
 		transform: rotate(225deg);
@@ -1685,7 +1721,8 @@
 		color: var(--ink-2);
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.faq-icon::before {
+		.faq-icon::before,
+		.faq::details-content {
 			transition: none;
 		}
 	}
@@ -1716,6 +1753,13 @@
 		padding: var(--u8) var(--u3);
 		display: flex;
 		flex-direction: column;
+		/* Pin the footer to a full viewport and center the content block vertically within it
+		   (border-box, so this is exactly the height including padding). 100dvh tracks the
+		   *visible* viewport, so mobile address-bar chrome doesn't push content under the
+		   toolbar. min-height — not height — so it still grows if content ever exceeds it;
+		   internal spacing (padding + child margins) is untouched. */
+		min-height: 100dvh;
+		justify-content: center;
 	}
 	/* Sign-off — the page's one final CTA, sitting over the section glow. */
 	.signoff {
@@ -1724,6 +1768,33 @@
 	/* Gap down from the headline to the button is the standard headline→body u3. */
 	.signoff .display-sm {
 		margin-bottom: var(--u3);
+	}
+	/* Cycling key word. Every word shares one grid cell, so the slot is always as wide as the
+	   longest — the sentence never re-wraps as the word changes (short words leave invisible
+	   trailing space). The current word fades in over the rest; CSS opacity, so no intro fade
+	   on first paint and nothing to animate under reduced motion. */
+	.flip {
+		display: inline-grid;
+		vertical-align: baseline;
+	}
+	.flip-word {
+		grid-area: 1 / 1;
+		white-space: nowrap;
+		opacity: 0;
+		transition: opacity 320ms cubic-bezier(0.76, 0, 0.24, 1);
+	}
+	.flip-word.on {
+		opacity: 1;
+	}
+	.flip-sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
 	}
 	/* Footer body — brand block + the single outbound link (GitHub). u8 gap above it
 	   is the single source of truth (no desktop override), matching the page-wide u8. */
@@ -1736,33 +1807,23 @@
 	.foot-brand {
 		max-width: 42ch;
 	}
-	.foot-mark,
-	.hero-mark {
-		font-family: var(--font-display);
-		font-size: var(--fs-feature);
-		line-height: var(--lh-feature);
-		font-weight: 700;
-		letter-spacing: -0.01em;
-	}
-	/* Colour is per-mark: footer keeps the brand berry; the hero mark is teal (set on
-	   .hero-mark so the loop inherits it via currentColor). */
-	.foot-mark {
-		color: var(--berry);
-	}
+	/* Footer body/legal text sits on the gradient's lighter bands, so it's night (not the
+	   dark-section --ink ramp) to stay legible there; hovers lift to the berry accent (cream
+	   would disappear on a light band). */
 	.foot-tagline {
 		margin: var(--u1) 0 0;
 		font-size: var(--fs-small);
 		line-height: var(--lh-small);
-		color: var(--ink-3);
+		color: var(--night);
 	}
 	.foot-gh {
 		display: inline-flex;
 		flex: none;
-		color: var(--ink-3);
+		color: var(--night);
 		transition: color 200ms ease;
 	}
 	.foot-gh:hover {
-		color: var(--ink);
+		color: var(--berry);
 	}
 
 	/* Legal — attribution + colophon on a hairline. u8 gap above it is the single
@@ -1773,12 +1834,12 @@
 		gap: var(--u1);
 		margin-top: var(--u8);
 		padding-top: var(--u4);
-		border-top: 1px solid var(--line);
+		border-top: 1px solid var(--night);
 	}
 	.foot-legal span {
 		font-size: var(--fs-small);
 		line-height: var(--lh-small);
-		color: var(--ink-3);
+		color: var(--night);
 	}
 	.foot-legal a {
 		color: inherit;
@@ -1796,7 +1857,7 @@
 		text-decoration: none;
 	}
 	.foot-legal a:hover {
-		color: var(--ink);
+		color: var(--berry);
 	}
 
 	/* ── Wider-screen enhancement (mobile-first base is above) ─────────
@@ -1879,10 +1940,10 @@
 		   which is what we want inside .wire's own scroll container; vh tracks resizes. */
 		.wire {
 			/* The reveal runway (.wire-inner margin-bottom below) must equal the footer's
-			   rendered height, so the page scrolls off it exactly. The footer now hugs its
-			   content (no fixed band), so its height is measured at runtime and published
-			   here by use:footerReveal; this is only the pre-hydration fallback. */
-			--footer-reveal: 34rem;
+			   rendered height, so the page scrolls off it exactly. The footer is pinned to 100dvh,
+			   measured at runtime and published here by use:footerReveal; this is only the
+			   pre-hydration fallback (≈ the pinned height). */
+			--footer-reveal: 100dvh;
 		}
 		.wire-inner {
 			margin-bottom: var(--footer-reveal);
