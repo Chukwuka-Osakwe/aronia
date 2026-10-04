@@ -15,8 +15,11 @@
 	// The marketing landing page is its own world — it owns the full viewport with
 	// no docs chrome (sidebar/shell). There's no layout below the root to escape to
 	// via `@`, so the root renders bare for it. It still self-scopes all its styles.
-	// Sub-routes under /landing (e.g. the specimen capture sheet) render bare too.
-	const bare = $derived($page.route.id?.startsWith('/landing') ?? false);
+	// The landing page IS the site root (`/`); its dev-only sub-routes still live
+	// under /landing (capture/specimens/slides/riso-print-test) and render bare too.
+	const bare = $derived(
+		$page.route.id === '/' || ($page.route.id?.startsWith('/landing') ?? false)
+	);
 
 	// The sidebar is scoped to ONE style ("library") at a time: the active route's
 	// style is expanded (its components listed); every other style collapses to a
@@ -59,7 +62,10 @@
 {:else}
 <div class="shell">
 	<aside class="sidebar">
-		<a class="brand" href="/">
+		<!-- Brand points at the library index (/library), not the marketing root (/):
+		     inside the docs chrome, clicking the wordmark returns you to the grid of
+		     all styles — the behaviour this link had when that grid lived at `/`. -->
+		<a class="brand" href="/library">
 			aronia<span>agent-friendly visual library</span>
 		</a>
 

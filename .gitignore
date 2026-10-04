@@ -43,6 +43,3 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-# dev-only print test, not for shipping
-static/landing/riso-print-test.html
