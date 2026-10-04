@@ -1,0 +1,220 @@
+<!doctype html>
+<!-- THROWAWAY prototype: feel-test the Risograph "print-in" hero entrance on a real
+     Setlist image. Not part of the app — static file, delete after deciding. -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>riso print-in — feel test</title>
+<style>
+  @property --reveal { syntax: '<number>'; initial-value: 0; inherits: false; }
+
+  :root {
+    --dur: 1600ms;          /* total print duration            */
+    --grain-max: 0.55;      /* heaviest grain at the start      */
+    --grain-rest: 0.08;     /* faint grain that stays           */
+    --ghost: 14px;          /* mis-registration offset at start */
+    --feather: 14;          /* soft roller edge (in %)          */
+    --paper: #090507;       /* hero night ground                */
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--paper);
+    color: #eadbb8;
+    font: 14px/1.5 ui-monospace, 'SF Mono', Menlo, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 24px 80px;
+  }
+
+  .stage {
+    position: relative;
+    width: min(1000px, 92vw);
+    aspect-ratio: 2000 / 1096;
+    background: var(--paper);
+    overflow: hidden;
+    /* subtle printed-edge so the frame reads as a sheet */
+    box-shadow: 0 1px 0 rgba(234,219,184,0.08);
+  }
+
+  .layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+  img.layer { object-fit: cover; display: block; }
+
+  /* ── KEY plate: the real image, rolls in top→bottom with an ink bloom ───── */
+  .key {
+    z-index: 3;
+    -webkit-mask-image: linear-gradient(to bottom,
+      #000 calc(var(--reveal) * 1%),
+      transparent calc(var(--reveal) * 1% + var(--feather) * 1%));
+    mask-image: linear-gradient(to bottom,
+      #000 calc(var(--reveal) * 1%),
+      transparent calc(var(--reveal) * 1% + var(--feather) * 1%));
+  }
+
+  /* ── GHOST plate: offset, tinted, settles into registration + fades ─────── */
+  .ghost {
+    z-index: 2;
+    filter: hue-rotate(150deg) saturate(1.8);
+    mix-blend-mode: screen;
+    opacity: 0;
+  }
+
+  /* ── GRAIN: ink speckle, heavy at first then settles to a faint tooth ───── */
+  .grain {
+    z-index: 4;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    opacity: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Animations only run while .play is set (toggled for replay). */
+  .stage.play .key   { animation: roll var(--dur) cubic-bezier(.65,0,.35,1) forwards; }
+  .stage.play .ghost { animation: settle var(--dur) cubic-bezier(.4,0,.2,1) forwards; }
+  .stage.play .grain { animation: speckle var(--dur) ease-out forwards; }
+
+  @keyframes roll {
+    0%   { --reveal: 0;   filter: saturate(.25) contrast(.85) brightness(1.15) blur(3px); }
+    70%  {                filter: saturate(.9)  contrast(1.02) brightness(1.03) blur(.4px); }
+    100% { --reveal: 110; filter: saturate(1)   contrast(1)   brightness(1)   blur(0); }
+  }
+  @keyframes settle {
+    0%   { opacity: .6; transform: translate(var(--ghost), calc(var(--ghost) * .55)) scale(1.012); }
+    60%  { opacity: .4; }
+    100% { opacity: 0;  transform: translate(0,0) scale(1); }
+  }
+  @keyframes speckle {
+    0%   { opacity: var(--grain-max); }
+    80%  { opacity: calc(var(--grain-rest) * 1.6); }
+    100% { opacity: var(--grain-rest); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage.play .key { animation: none; }
+    .key { -webkit-mask-image: none; mask-image: none; }
+  }
+
+  /* ── controls ───────────────────────────────────────────────────────────── */
+  .controls { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;
+              justify-content: center; max-width: 1000px; }
+  .group { display: flex; flex-direction: column; gap: 4px; }
+  .group.spacer label { visibility: hidden; } /* reserves the label row so replay lines up */
+  .group label { opacity: .7; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+  button {
+    font: inherit; padding: 8px 14px; cursor: pointer;
+    background: #eadbb8; color: #090507; border: 0;
+  }
+  .subs button { background: transparent; color: #eadbb8; border: 1px solid #4a3f3a; padding: 6px 10px; }
+  .subs button[aria-pressed="true"] { background: #9b36d1; border-color: #9b36d1; color: #fff; }
+  .subs { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  input[type=range] { width: 150px; }
+  .val { font-variant-numeric: tabular-nums; opacity: .85; }
+  .note { opacity: .55; max-width: 1000px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="stage play" id="stage">
+    <img class="layer ghost" id="ghost" alt="" />
+    <img class="layer key"   id="key"   alt="Setlist screen printing in" />
+    <div class="layer grain"></div>
+  </div>
+
+  <div class="controls">
+    <div class="group spacer">
+      <label>replay</label>
+      <button id="replay">↻ replay</button>
+    </div>
+    <div class="group">
+      <label>subject</label>
+      <div class="subs" id="subs"></div>
+    </div>
+    <div class="group">
+      <label>duration <span class="val" id="durV"></span></label>
+      <input type="range" id="dur" min="600" max="3600" step="100" value="1600" />
+    </div>
+    <div class="group">
+      <label>grain <span class="val" id="grainV"></span></label>
+      <input type="range" id="grain" min="0" max="1" step="0.05" value="0.55" />
+    </div>
+    <div class="group">
+      <label>mis-reg <span class="val" id="ghostV"></span></label>
+      <input type="range" id="ghostr" min="0" max="40" step="1" value="14" />
+    </div>
+    <div class="group">
+      <label>roller edge <span class="val" id="featV"></span></label>
+      <input type="range" id="feat" min="2" max="40" step="1" value="14" />
+    </div>
+  </div>
+
+  <p class="note">
+    Prototype only — CSS/SVG approximation of a riso print-in (roller reveal + ink bloom +
+    grain settle + plate mis-registration) on a real Setlist screenshot. Tune the sliders,
+    hit replay. Not the final render pipeline; just here to judge the motion + feel.
+  </p>
+
+<script>
+  const SCREENS = [
+    ['discover-dark', 'Discover · dark'],
+    ['discover-light', 'Discover · light'],
+    ['artists-dark', 'Artists · dark'],
+    ['artists-light', 'Artists · light'],
+    ['gig-dark', 'Gig · dark'],
+    ['shows-dark', 'Shows · dark'],
+  ];
+  const stage = document.getElementById('stage');
+  const key = document.getElementById('key');
+  const ghost = document.getElementById('ghost');
+  let current = 'discover-dark';
+
+  function src(id) { return `/landing/setlist/${id}.webp`; }
+  function setSubject(id) {
+    current = id;
+    key.src = src(id); ghost.src = src(id);
+    [...document.querySelectorAll('#subs button')].forEach(b =>
+      b.setAttribute('aria-pressed', b.dataset.id === id));
+    replay();
+  }
+  function replay() {
+    stage.classList.remove('play');
+    void stage.offsetWidth;            // force reflow to restart animations
+    stage.classList.add('play');
+  }
+
+  // build subject buttons
+  const subs = document.getElementById('subs');
+  SCREENS.forEach(([id, label]) => {
+    const b = document.createElement('button');
+    b.textContent = label; b.dataset.id = id;
+    b.onclick = () => setSubject(id);
+    subs.appendChild(b);
+  });
+
+  // sliders → CSS vars
+  const bind = (inputId, prop, unit, valId, fmt) => {
+    const input = document.getElementById(inputId);
+    const out = document.getElementById(valId);
+    const apply = () => {
+      stage.style.setProperty(prop, input.value + unit);
+      out.textContent = fmt ? fmt(input.value) : input.value + unit;
+    };
+    input.addEventListener('input', () => { apply(); replay(); });
+    apply();
+  };
+  bind('dur', '--dur', 'ms', 'durV', v => v + 'ms');
+  bind('grain', '--grain-max', '', 'grainV', v => v);
+  bind('ghostr', '--ghost', 'px', 'ghostV', v => v + 'px');
+  bind('feat', '--feather', '', 'featV', v => v + '%');
+
+  document.getElementById('replay').onclick = replay;
+
+  // initial paint
+  setSubject(current);
+</script>
+</body>
+</html>
