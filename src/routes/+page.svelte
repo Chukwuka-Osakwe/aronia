@@ -1814,6 +1814,9 @@
 		margin: var(--u1) 0 0;
 		font-size: var(--fs-small);
 		line-height: var(--lh-small);
+		/* Bold so the night ink reads on the gradient's lighter rust bands (lifts effective
+		   contrast — small text is below the WCAG large-text threshold at this size). */
+		font-weight: 700;
 		color: var(--night);
 	}
 	.foot-gh {
@@ -1839,6 +1842,8 @@
 	.foot-legal span {
 		font-size: var(--fs-small);
 		line-height: var(--lh-small);
+		/* Bold for the same legibility reason as .foot-tagline; links inherit the weight. */
+		font-weight: 700;
 		color: var(--night);
 	}
 	.foot-legal a {
