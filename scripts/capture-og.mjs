@@ -29,10 +29,20 @@ const html = `<!doctype html>
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; }
   body {
-    background: radial-gradient(120% 140% at 12% 0%, #1a0f14 0%, #090507 55%);
+    /* The footer's "new sweep 1" rust sweep, 1:1 with src/routes/+page.svelte (.site-footer):
+       saturated rust peak lower-right fading to a deeper rust tail (footer-peek inlined). */
+    background: radial-gradient(
+      ellipse 145% 155% at 82% 128% in oklab,
+      oklab(65.9% 0.136 0.114) 0%,
+      oklab(47.3% 0.098 0.082) 20.21%,
+      oklab(48% 0.105 0.088) 35.39%,
+      oklab(34.6% 0.102 0.057) 53.7%,
+      oklab(28.1% 0.086 0.048) 72%,
+      oklab(32% 0.079 0.043) 100%
+    );
     color: #eadbb8;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    gap: 34px; padding: 0 96px; text-align: center;
+    gap: 28px; padding: 0 96px; text-align: center;
     font-family: 'SUSE', system-ui, sans-serif;
   }
   .wordmark {
@@ -45,13 +55,9 @@ const html = `<!doctype html>
     width: calc(100% + 1.1em); height: calc(100% + 0.5em); overflow: visible;
   }
   .ring path { fill: none; stroke: #3fb6ad; stroke-width: 4; stroke-linecap: round; }
-  h1 {
-    font-family: 'Gluten', cursive; font-weight: 700; font-size: 82px;
-    line-height: 1.04; letter-spacing: -0.02em; color: #eadbb8; max-width: 16ch;
-  }
   p {
-    font-size: 36px; font-weight: 400; line-height: 1.3;
-    color: color-mix(in oklab, #eadbb8 68%, #090507);
+    font-size: 44px; font-weight: 400; line-height: 1.3;
+    letter-spacing: 0.01em; color: #eadbb8;
   }
 </style></head>
 <body>
@@ -60,7 +66,6 @@ const html = `<!doctype html>
       <path d="${RING}" vector-effect="non-scaling-stroke" />
     </svg>
   </span>
-  <h1>Reject the default AI look.</h1>
   <p>An agent-friendly design language.</p>
 </body></html>`;
 
